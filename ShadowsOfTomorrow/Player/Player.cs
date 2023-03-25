@@ -16,9 +16,11 @@ namespace ShadowsOfTomorrow
         Standing,
     }
 
-    public class Player
+    public class Player : IUpdateAndDraw
     {
         public Point Location { get => hitBox.Location; private set => hitBox.Location = value; }
+        public Point Size { get => size; }
+        public Vector2 Speed { get => speed; }
 
         private Vector2 speed = Vector2.Zero;
 
@@ -42,21 +44,20 @@ namespace ShadowsOfTomorrow
         private readonly Point size = new(50, 50);
         private Rectangle hitBox;
         private readonly Texture2D playerTexture;
-
+        private readonly Game1 game;
         KeyboardState oldState = Keyboard.GetState();
 
-        private readonly Game1 game;
 
         public Player(Point startLocation, Game1 game)
         {
             hitBox = new(startLocation, size);
-            //playerTexture = game.Content.Load<Texture2D>("Sprites/QuandaleDingle");
+            playerTexture = game.Content.Load<Texture2D>("Sprites/walterwhite");
             this.game = game;
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            //spriteBatch.Draw(playerTexture, hitBox, Color.White);
+            spriteBatch.Draw(playerTexture, hitBox, Color.White);
             //spriteBatch.DrawString(game.Content.Load<SpriteFont>("Fonts/DefaultFont"), "Speed: " + Math.Round(speed.X).ToString(), Vector2.Zero, Color.White);
             //spriteBatch.DrawString(game.Content.Load<SpriteFont>("Fonts/DefaultFont"), "ChargeProcent: " + Math.Round(100 * chargeProcent).ToString() + "%", new(100, 0), Color.White);
         }
@@ -82,7 +83,12 @@ namespace ShadowsOfTomorrow
 
             ApplyGravity();
 
-            Location += speed.ToPoint();
+            (bool canMoveX, bool canMoveY) = game.map.WillCollide(this);
+
+            if (canMoveX)
+                Location += new Point((int)speed.X, 0);
+            if (canMoveY)
+                Location += new Point(0, (int)speed.Y);
         }
 
         private void SetPlayerState()
@@ -95,10 +101,8 @@ namespace ShadowsOfTomorrow
                 return;
             }
 
-
             if (ActiveState == State.Charging) // True if the last state was Charging
                 ReleaseCharge(state);
-
 
             if (speed == Vector2.Zero)
                 ActiveState = State.Standing;
@@ -110,7 +114,6 @@ namespace ShadowsOfTomorrow
         {
             if (speed.Y < maxYSpeed)
                 speed.Y += currentGravitation;
-
         }
 
         private void ReleaseCharge(KeyboardState state)
@@ -185,6 +188,7 @@ namespace ShadowsOfTomorrow
 
         private void MoveSideWays(KeyboardState state)
         {
+
             if (state.IsKeyDown(Keys.A))
             {
                 if (speed.X >= 0)

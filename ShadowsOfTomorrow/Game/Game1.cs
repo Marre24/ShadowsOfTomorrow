@@ -1,28 +1,33 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Screen = System.Windows.Forms.Screen;
 using TiledSharp;
 
 namespace ShadowsOfTomorrow
 {
     public class Game1 : Game
     {
-        private GraphicsDeviceManager _graphics;
+        private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         Player player;
+        public Map map;
 
         public Game1()
         {
-            _graphics = new GraphicsDeviceManager(this);
+            _graphics = new GraphicsDeviceManager(this)
+            {
+                PreferredBackBufferHeight = Screen.PrimaryScreen.Bounds.Height,
+                PreferredBackBufferWidth = Screen.PrimaryScreen.Bounds.Width
+            };
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
             player = new(new(100, 100), this);
-            
+            map = new(this);
 
             base.Initialize();
         }
@@ -31,15 +36,10 @@ namespace ShadowsOfTomorrow
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
         }
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
-
-
             player.Update(gameTime);
 
             base.Update(gameTime);
@@ -51,6 +51,7 @@ namespace ShadowsOfTomorrow
 
             _spriteBatch.Begin();
 
+            map.Draw(_spriteBatch);
             player.Draw(_spriteBatch);
 
             _spriteBatch.End();
