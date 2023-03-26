@@ -16,24 +16,26 @@ namespace ShadowsOfTomorrow
         public float Bottom { get => _bottom; set => _bottom = value; }
         public float Left { get => _left; set => _left = value; }
         public float Right { get => _right; set => _right = value; }
+        public string MapName { get; private set; }
+
+        public TmxMap TmxMap => map;
 
         private float _top;
         private float _bottom;
         private float _left;
         private float _right;
 
-
-
         private readonly TmxMap map;
         private readonly Texture2D tileSet;
 
+        private readonly Game1 game;
+        private readonly MapManager mapManager;
         private readonly Point size = Point.Zero;
         private readonly Point tileAmount = Point.Zero;
-        
 
-        public Map(Game1 game) 
+        public Map(Game1 game, string mapName, MapManager mapManager) 
         {
-            map = new("Content/TileSets/StartMap.tmx");
+            map = new($"Content/TileSets/{mapName}.tmx");
             tileSet = game.Content.Load<Texture2D>("TileSets/" + map.Tilesets[0].Name.ToString());
 
             size.X = map.Tilesets[0].TileWidth;
@@ -46,59 +48,61 @@ namespace ShadowsOfTomorrow
             Left = 0;
             Right = map.Width * size.X;
             Bottom = map.Height * size.Y;
+
+            MapName = mapName;
+            this.game = game;
+            this.mapManager = mapManager;
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
             foreach (TmxLayer layer in map.Layers)
-            {
                 for (var i = 0; i < layer.Tiles.Count; i++)
-                {
-                    int gid = layer.Tiles[i].Gid;
-
-                    if (gid != 0)
+                    if (layer.Tiles[i].Gid != 0)
                     {
-                        int tileFrame = gid - 1;
+                        int tileFrame = layer.Tiles[i].Gid - 1;
                         int column = tileFrame % tileAmount.X;
                         int row = (int)Math.Floor((double)tileFrame / (double)tileAmount.X);
 
                         float x = (i % map.Width) * map.TileWidth;
                         float y = (float)Math.Floor(i / (double)map.Width) * map.TileHeight;
 
-                        Rectangle tilesetRec = new Rectangle(size.X * column, size.Y * row, size.X, size.Y);
+                        Rectangle tilesetRec = new(size.X * column, size.Y * row, size.X, size.Y);
 
                         spriteBatch.Draw(tileSet, new Rectangle((int)x, (int)y, size.X, size.Y), tilesetRec, Color.White);
                     }
-                }
-            }
         }
 
         public void Update(GameTime gameTime)
         {
-
-
+            CheckIfColliedesWithDoor();
         }
 
+        private void CheckIfColliedesWithDoor()
+        {
+            TmxObjectGroup group = map.ObjectGroups.First(group => group.Name.ToLower() == "doors");
+            Dictionary<Rectangle, TmxObject> doors = new();
+
+            foreach (TmxObject obj in group.Objects)
+                doors.Add(new((int)obj.X, (int)obj.Y, (int)obj.Width, (int)obj.Height), obj);
+
+            foreach (KeyValuePair<Rectangle, TmxObject> pair in doors)
+                if (game.player.HitBox.Intersects(pair.Key))
+                    mapManager.GoToSpawnPoint(pair.Value.Name.Split('-')[1]);
+        }
 
         public (bool, bool) WillCollide(Player player)
         {
             bool canMoveX = true, canMoveY = true;
-
             TmxLayer platformLayer = GetPlatformLayer();
 
             for (int i = 0; i < platformLayer.Tiles.Count; i++)
             {
                 Rectangle tile = new(new(platformLayer.Tiles[i].X * size.X, platformLayer.Tiles[i].Y * size.Y), size);
                 if (new Rectangle(player.Location + new Point((int)player.Speed.X, 0), player.Size).Intersects(tile) && platformLayer.Tiles[i].Gid != 0)
-                {
                     canMoveX = false;
-                    break;
-                }
                 if (tile.Intersects(new(player.Location + new Point(0, (int)player.Speed.Y), player.Size)) && platformLayer.Tiles[i].Gid != 0)
-                {
                     canMoveY = false;
-                    break;
-                }
             }
             return (canMoveX, canMoveY);
         }

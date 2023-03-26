@@ -25,6 +25,9 @@
 /processorParam:TextureFormat=Color
 /build:Sprites/walterwhite.gif
 
+#begin TileSets/SecondMap.tmx
+/copy:TileSets/SecondMap.tmx
+
 #begin TileSets/StartMap.tmx
 /copy:TileSets/StartMap.tmx
 

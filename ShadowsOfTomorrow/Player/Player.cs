@@ -18,42 +18,43 @@ namespace ShadowsOfTomorrow
 
     public class Player : IUpdateAndDraw
     {
-        public Point Location { get => hitBox.Location; private set => hitBox.Location = value; }
+        public Point Location { get => hitBox.Location; set => hitBox.Location = value; }
+        public State ActiveState { get => activeState; private set => activeState = value; }
         public Point Size { get => size; }
         public Vector2 Speed { get => speed; }
+        public Rectangle HitBox { get => hitBox; }
 
+        private readonly Game1 game;
+        public readonly Camera camera = new();
+
+        private Rectangle hitBox;
+        private State activeState;
         private Vector2 speed = Vector2.Zero;
+        private readonly Point size = new(50, 50);
+        private readonly Texture2D playerTexture;
+        private KeyboardState oldState = Keyboard.GetState();
+
         private const int maxXSpeed = 15;
         private const int maxYSpeed = 8;
+        private const int jumpForce = -10;
         private const float brakeSpeed = 0.4f;
         private const float acceleration = 0.3f;
-        private const float amountOfSecondsTilFullCharge = 1.0f;
-        private float chargeProcent = 0;
-        private float startProcent;
-        private float chargeStartTime;
-        private bool firstFrameInCharge = true;
+        private const float amountOfSecondsTillFullCharge = 1.0f;
         private const float gravitation = 0.4f;
         private const float fastFallSpeed = gravitation * 3;
+
+        private float chargeProcent;
+        private float chargeStartTime;
+        private float startChargeProcent;
+        private bool firstFrameInCharge = true;
         private float currentGravitation = gravitation;
-        private const int jumpForce = -10;
 
-        public State ActiveState { get => activeState; private set => activeState = value; }
-        private State activeState;
-
-        private readonly Point size = new(50, 50);
-        private Rectangle hitBox;
-        private readonly Texture2D playerTexture;
-        private readonly Game1 game;
-        public readonly Camera camera;
-        KeyboardState oldState = Keyboard.GetState();
-
-
-        public Player(Point startLocation, Game1 game)
+        public Player(Game1 game)
         {
-            hitBox = new(startLocation, size);
+            hitBox = new(Point.Zero, size);
             playerTexture = game.Content.Load<Texture2D>("Sprites/walterwhite");
+
             this.game = game;
-            camera = new();
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -65,36 +66,23 @@ namespace ShadowsOfTomorrow
 
         public void Update(GameTime gameTime)
         {
-            camera.Follow(hitBox, game.map);
+            camera.Follow(hitBox, game.mapManager.ActiveMap);
             SetPlayerState();
 
             switch (ActiveState)
             {
                 case State.Running:
-                    CheckPlayerAction();
+                    CheckPlayerInput();
                     break;
                 case State.Charging:
                     Charge(gameTime);
                     break;
                 case State.Standing:
-                    CheckPlayerAction();
-                    break;
-                default:
+                    CheckPlayerInput();
                     break;
             }
 
-            ApplyGravity();
-
-            (bool canMoveX, bool canMoveY) = game.map.WillCollide(this);
-
-            if (canMoveX)
-                Location += new Point((int)speed.X, 0);
-            else
-                speed.X = 0;
-            if (canMoveY)
-                Location += new Point(0, (int)speed.Y);
-            else
-                speed.Y = 0;
+            MovePlayer();
         }
 
         private void SetPlayerState()
@@ -116,10 +104,22 @@ namespace ShadowsOfTomorrow
                 ActiveState = State.Running;
         }
 
-        private void ApplyGravity()
+        private void MovePlayer()
         {
             if (speed.Y < maxYSpeed)
                 speed.Y += currentGravitation;
+
+            (bool canMoveX, bool canMoveY) = game.mapManager.ActiveMap.WillCollide(this);
+
+            if (canMoveX)
+                Location += new Point((int)speed.X, 0);
+            else
+                speed.X = 0;
+
+            if (canMoveY)
+                Location += new Point(0, (int)speed.Y);
+            else
+                speed.Y = 0;
         }
 
         private void ReleaseCharge(KeyboardState state)
@@ -128,12 +128,14 @@ namespace ShadowsOfTomorrow
                 speed.X = -maxXSpeed * chargeProcent;
             else if (state.IsKeyDown(Keys.D))
                 speed.X = maxXSpeed * chargeProcent;
+            else if (state.IsKeyDown(Keys.S))
+                speed.Y = jumpForce * 2;
 
             firstFrameInCharge = true;
             chargeProcent = 0;
         }
 
-        private void CheckPlayerAction()
+        private void CheckPlayerInput()
         {
             KeyboardState state = Keyboard.GetState();
 
@@ -145,12 +147,10 @@ namespace ShadowsOfTomorrow
             else
                 currentGravitation = gravitation;
 
-            MoveSideWays(state);
+            UpdateSpeed(state);
 
             oldState = Keyboard.GetState();
         }
-
-
 
         private void Charge(GameTime gameTime)
         {
@@ -160,10 +160,10 @@ namespace ShadowsOfTomorrow
             {
                 firstFrameInCharge = false;
                 chargeStartTime = (float)gameTime.TotalGameTime.TotalSeconds;
-                startProcent = Math.Abs(speed.X) / maxXSpeed;
+                startChargeProcent = Math.Abs(speed.X) / maxXSpeed;
             }
 
-            chargeProcent = startProcent + ((float)gameTime.TotalGameTime.TotalSeconds - chargeStartTime) / amountOfSecondsTilFullCharge;
+            chargeProcent = startChargeProcent + ((float)gameTime.TotalGameTime.TotalSeconds - chargeStartTime) / amountOfSecondsTillFullCharge;
 
             if (chargeProcent > 1)
                 chargeProcent = 1;
@@ -192,9 +192,8 @@ namespace ShadowsOfTomorrow
             speed.Y = jumpForce;
         }
 
-        private void MoveSideWays(KeyboardState state)
+        private void UpdateSpeed(KeyboardState state)
         {
-
             if (state.IsKeyDown(Keys.A))
             {
                 if (speed.X >= 0)

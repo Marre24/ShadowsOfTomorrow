@@ -5,13 +5,10 @@ namespace ShadowsOfTomorrow
 {
     public class Camera
     {
-        public Matrix Transform { get => transform; private set => transform = value; }
-        private Matrix transform;
+        public Matrix Transform { get => _transform; private set => _transform = value; }
+        private Matrix _transform;
 
-        public Camera()
-        {
-
-        }
+        public Camera() { }
 
         public void Follow(Rectangle target, Map map)
         {
@@ -32,7 +29,6 @@ namespace ShadowsOfTomorrow
 
 
             var position = Matrix.CreateTranslation(-cameraCenter.X, -cameraCenter.Y, 0);
-
             var offset = Matrix.CreateTranslation(screenCenter.X, screenCenter.Y, 0);
 
             Transform = offset * position;

@@ -10,8 +10,9 @@ namespace ShadowsOfTomorrow
     {
         private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        Player player;
-        public Map map;
+
+        public Player player;
+        public MapManager mapManager;
 
         public Game1()
         {
@@ -26,8 +27,11 @@ namespace ShadowsOfTomorrow
 
         protected override void Initialize()
         {
-            player = new(new(1000, 600), this);
-            map = new(this);
+            player = new(this);
+            mapManager = new(this);
+            mapManager.Add(new(this, "StartMap", mapManager));
+            mapManager.Add(new(this, "SecondMap", mapManager));
+            mapManager.GoToSpawnPoint("1");
 
             base.Initialize();
         }
@@ -35,11 +39,11 @@ namespace ShadowsOfTomorrow
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-
         }
 
         protected override void Update(GameTime gameTime)
         {
+            mapManager.ActiveMap.Update(gameTime);
             player.Update(gameTime);
 
             base.Update(gameTime);
@@ -51,12 +55,10 @@ namespace ShadowsOfTomorrow
 
             _spriteBatch.Begin(transformMatrix: player.camera.Transform);
 
-            map.Draw(_spriteBatch);
+            mapManager.Draw(_spriteBatch);
             player.Draw(_spriteBatch);
 
             _spriteBatch.End();
-
-
             base.Draw(gameTime);
         }
     }
