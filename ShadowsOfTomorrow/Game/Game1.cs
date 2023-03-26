@@ -26,7 +26,7 @@ namespace ShadowsOfTomorrow
 
         protected override void Initialize()
         {
-            player = new(new(100, 100), this);
+            player = new(new(1000, 600), this);
             map = new(this);
 
             base.Initialize();
@@ -49,7 +49,7 @@ namespace ShadowsOfTomorrow
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            _spriteBatch.Begin();
+            _spriteBatch.Begin(transformMatrix: player.camera.Transform);
 
             map.Draw(_spriteBatch);
             player.Draw(_spriteBatch);

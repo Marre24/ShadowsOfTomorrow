@@ -12,6 +12,18 @@ namespace ShadowsOfTomorrow
 {
     public class Map : IUpdateAndDraw
     {
+        public float Top { get => _top; set => _top = value; }
+        public float Bottom { get => _bottom; set => _bottom = value; }
+        public float Left { get => _left; set => _left = value; }
+        public float Right { get => _right; set => _right = value; }
+
+        private float _top;
+        private float _bottom;
+        private float _left;
+        private float _right;
+
+
+
         private readonly TmxMap map;
         private readonly Texture2D tileSet;
 
@@ -29,6 +41,11 @@ namespace ShadowsOfTomorrow
 
             tileAmount.X = tileSet.Width / size.X;
             tileAmount.Y = tileSet.Height / size.Y;
+
+            Top = 0;
+            Left = 0;
+            Right = map.Width * size.X;
+            Bottom = map.Height * size.Y;
         }
 
         public void Draw(SpriteBatch spriteBatch)

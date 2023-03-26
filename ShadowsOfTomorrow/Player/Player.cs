@@ -23,7 +23,6 @@ namespace ShadowsOfTomorrow
         public Vector2 Speed { get => speed; }
 
         private Vector2 speed = Vector2.Zero;
-
         private const int maxXSpeed = 15;
         private const int maxYSpeed = 8;
         private const float brakeSpeed = 0.4f;
@@ -45,6 +44,7 @@ namespace ShadowsOfTomorrow
         private Rectangle hitBox;
         private readonly Texture2D playerTexture;
         private readonly Game1 game;
+        public readonly Camera camera;
         KeyboardState oldState = Keyboard.GetState();
 
 
@@ -53,6 +53,7 @@ namespace ShadowsOfTomorrow
             hitBox = new(startLocation, size);
             playerTexture = game.Content.Load<Texture2D>("Sprites/walterwhite");
             this.game = game;
+            camera = new();
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -64,6 +65,7 @@ namespace ShadowsOfTomorrow
 
         public void Update(GameTime gameTime)
         {
+            camera.Follow(hitBox, game.map);
             SetPlayerState();
 
             switch (ActiveState)
@@ -87,8 +89,12 @@ namespace ShadowsOfTomorrow
 
             if (canMoveX)
                 Location += new Point((int)speed.X, 0);
+            else
+                speed.X = 0;
             if (canMoveY)
                 Location += new Point(0, (int)speed.Y);
+            else
+                speed.Y = 0;
         }
 
         private void SetPlayerState()
