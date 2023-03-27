@@ -41,13 +41,11 @@ namespace ShadowsOfTomorrow
         private const float acceleration = 0.3f;
         private const float amountOfSecondsTillFullCharge = 1.0f;
         private const float gravitation = 0.4f;
-        private const float fastFallSpeed = gravitation * 3;
 
         private float chargeProcent;
         private float chargeStartTime;
         private float startChargeProcent;
         private bool firstFrameInCharge = true;
-        private float currentGravitation = gravitation;
 
         public Player(Game1 game)
         {
@@ -107,7 +105,7 @@ namespace ShadowsOfTomorrow
         private void MovePlayer()
         {
             if (speed.Y < maxYSpeed)
-                speed.Y += currentGravitation;
+                speed.Y += gravitation;
 
             (bool canMoveX, bool canMoveY) = game.mapManager.ActiveMap.WillCollide(this);
 
@@ -142,11 +140,6 @@ namespace ShadowsOfTomorrow
             if (state.IsKeyDown(Keys.Space) && oldState.IsKeyUp(Keys.Space))
                 Jump();
 
-            if (state.IsKeyDown(Keys.S))
-                FastFall();
-            else
-                currentGravitation = gravitation;
-
             UpdateSpeed(state);
 
             oldState = Keyboard.GetState();
@@ -178,13 +171,6 @@ namespace ShadowsOfTomorrow
                 if (speed.X > 0)
                     speed.X -= brakeSpeed;
             }
-        }
-
-        private void FastFall()
-        {
-            if (oldState.IsKeyUp(Keys.S) && speed.Y < 0)
-                speed.Y = 0.1f;
-            currentGravitation = fastFallSpeed;
         }
 
         private void Jump()
