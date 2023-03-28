@@ -33,6 +33,7 @@ namespace ShadowsOfTomorrow
         public void SetActiveMapTo(int i, TmxObject spawnPoint)
         {
             ActiveMapIndex = i;
+            game.player.Location = new((int)spawnPoint.X, (int)spawnPoint.Y);
         }
 
         public void SetActiveMapTo(string name, TmxObject spawnPoint)

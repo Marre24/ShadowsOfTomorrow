@@ -12,6 +12,7 @@ namespace ShadowsOfTomorrow
 {
     public class Map : IUpdateAndDraw
     {
+        public Point Size {  get => size; }
         public float Top { get => _top; set => _top = value; }
         public float Bottom { get => _bottom; set => _bottom = value; }
         public float Left { get => _left; set => _left = value; }
@@ -101,13 +102,18 @@ namespace ShadowsOfTomorrow
                 Rectangle tile = new(new(platformLayer.Tiles[i].X * size.X, platformLayer.Tiles[i].Y * size.Y), size);
                 if (new Rectangle(player.Location + new Point((int)player.Speed.X, 0), player.Size).Intersects(tile) && platformLayer.Tiles[i].Gid != 0)
                     canMoveX = false;
-                if (tile.Intersects(new(player.Location + new Point(0, (int)player.Speed.Y), player.Size)) && platformLayer.Tiles[i].Gid != 0)
+                if (tile.Intersects(new(player.Location.X, player.Location.Y + (int)player.Speed.Y, player.Size.X, player.Size.Y)) && platformLayer.Tiles[i].Gid != 0)
+                {
                     canMoveY = false;
+                    player.isGrounded = true;
+                    break;
+                } else
+                    player.isGrounded = false;   
             }
             return (canMoveX, canMoveY);
         }
 
-        private TmxLayer GetPlatformLayer()
+        public TmxLayer GetPlatformLayer()
         {
             TmxLayer platformLayer = null;
 

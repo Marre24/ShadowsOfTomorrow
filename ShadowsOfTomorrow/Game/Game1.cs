@@ -16,17 +16,16 @@ namespace ShadowsOfTomorrow
 
         public Game1()
         {
-            _graphics = new GraphicsDeviceManager(this)
-            {
-                PreferredBackBufferHeight = Screen.PrimaryScreen.Bounds.Height,
-                PreferredBackBufferWidth = Screen.PrimaryScreen.Bounds.Width
-            };
+            _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }
 
         protected override void Initialize()
         {
+            _graphics.PreferredBackBufferHeight = Screen.PrimaryScreen.Bounds.Height;
+            _graphics.PreferredBackBufferWidth = Screen.PrimaryScreen.Bounds.Width;
+
             player = new(this);
             mapManager = new(this);
             mapManager.Add(new(this, "StartMap", mapManager));

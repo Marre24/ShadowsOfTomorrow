@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TiledSharp;
 
 namespace ShadowsOfTomorrow
 {
@@ -45,24 +46,24 @@ namespace ShadowsOfTomorrow
         private KeyboardState oldState = Keyboard.GetState();
 
         private const int maxXSpeed = 15;
-        private const int maxYSpeed = 8;
+        private const int maxYSpeed = 10;
         private const int jumpForce = -10;
         private const float brakeSpeed = 0.4f;
         private const float acceleration = 0.3f;
         private const float amountOfSecondsTillFullCharge = 1.0f;
         private const float gravitation = 0.4f;
 
+        public bool isGrounded;
         private float chargeProcent;
         private float chargeStartTime;
         private float startChargeProcent;
         private bool firstFrameInCharge = true;
-        private bool isGrounded = false;
 
         public Player(Game1 game)
         {
             hitBox = new(Point.Zero, size);
-            rightTexture = game.Content.Load<Texture2D>("Sprites/InkedWalterWhiteRight");
-            leftTexture = game.Content.Load<Texture2D>("Sprites/InkedWalterWhiteLeft");
+            rightTexture = game.Content.Load<Texture2D>("Sprites/GuyRight");
+            leftTexture = game.Content.Load<Texture2D>("Sprites/GuyLeft");
 
             this.game = game;
         }
@@ -137,27 +138,14 @@ namespace ShadowsOfTomorrow
             (bool canMoveX, bool canMoveY) = game.mapManager.ActiveMap.WillCollide(this);
 
             if (canMoveX)
-            {
-
                 Location += new Point((int)speed.X, 0);
-            }
             else
-            {
-
                 speed.X = 0;
-            }
 
             if (canMoveY)
                 Location += new Point(0, (int)speed.Y);
             else
-                speed.Y = 0;
-
-            HasPlatformUnder();
-        }
-
-        private void HasPlatformUnder()
-        {
-            //skriv
+                speed.Y = 1;
 
         }
 
@@ -211,6 +199,8 @@ namespace ShadowsOfTomorrow
                     speed.X += brakeSpeed;
                 if (speed.X > 0)
                     speed.X -= brakeSpeed;
+                if (-brakeSpeed < speed.X && speed.X < brakeSpeed)
+                    speed.X = 0;
             }
         }
 
