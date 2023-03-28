@@ -14,7 +14,15 @@ namespace ShadowsOfTomorrow
         Running,
         Charging,
         Standing,
+        AirDashing,
     }
+
+    public enum Facing
+    {
+        Right,
+        Left,
+    }
+
 
     public class Player : IUpdateAndDraw
     {
@@ -27,11 +35,13 @@ namespace ShadowsOfTomorrow
         private readonly Game1 game;
         public readonly Camera camera = new();
 
+        private Facing facing;
         private Rectangle hitBox;
         private State activeState;
         private Vector2 speed = Vector2.Zero;
         private readonly Point size = new(50, 50);
-        private readonly Texture2D playerTexture;
+        private readonly Texture2D rightTexture;
+        private readonly Texture2D leftTexture;
         private KeyboardState oldState = Keyboard.GetState();
 
         private const int maxXSpeed = 15;
@@ -46,18 +56,23 @@ namespace ShadowsOfTomorrow
         private float chargeStartTime;
         private float startChargeProcent;
         private bool firstFrameInCharge = true;
+        private bool isGrounded = false;
 
         public Player(Game1 game)
         {
             hitBox = new(Point.Zero, size);
-            playerTexture = game.Content.Load<Texture2D>("Sprites/walterwhite");
+            rightTexture = game.Content.Load<Texture2D>("Sprites/InkedWalterWhiteRight");
+            leftTexture = game.Content.Load<Texture2D>("Sprites/InkedWalterWhiteLeft");
 
             this.game = game;
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(playerTexture, hitBox, Color.White);
+            if (facing == Facing.Right)
+                spriteBatch.Draw(rightTexture, hitBox, Color.White);
+            if (facing == Facing.Left)
+                spriteBatch.Draw(leftTexture, hitBox, Color.White);
             //spriteBatch.DrawString(game.Content.Load<SpriteFont>("Fonts/DefaultFont"), "Speed: " + Math.Round(speed.X).ToString(), Vector2.Zero, Color.White);
             //spriteBatch.DrawString(game.Content.Load<SpriteFont>("Fonts/DefaultFont"), "ChargeProcent: " + Math.Round(100 * chargeProcent).ToString() + "%", new(100, 0), Color.White);
         }
@@ -66,6 +81,7 @@ namespace ShadowsOfTomorrow
         {
             camera.Follow(hitBox, game.mapManager.ActiveMap);
             SetPlayerState();
+            SetPlayerDirection();
 
             switch (ActiveState)
             {
@@ -78,6 +94,8 @@ namespace ShadowsOfTomorrow
                 case State.Standing:
                     CheckPlayerInput();
                     break;
+                case State.AirDashing:
+                    break;
             }
 
             MovePlayer();
@@ -86,20 +104,29 @@ namespace ShadowsOfTomorrow
         private void SetPlayerState()
         {
             KeyboardState state = Keyboard.GetState();
-
+            
             if (state.IsKeyDown(Keys.LeftShift))
             {
                 ActiveState = State.Charging;
                 return;
             }
-
-            if (ActiveState == State.Charging) // True if the last state was Charging
+            
+            if (ActiveState == State.Charging && isGrounded) // True if the last state was Charging
                 ReleaseCharge(state);
 
             if (speed == Vector2.Zero)
                 ActiveState = State.Standing;
             else
                 ActiveState = State.Running;
+        }
+
+        private void SetPlayerDirection()
+        {
+            if (Keyboard.GetState().IsKeyDown(Keys.D))
+                facing = Facing.Right;
+            else if (Keyboard.GetState().IsKeyDown(Keys.A))
+                facing = Facing.Left;
+
         }
 
         private void MovePlayer()
@@ -110,14 +137,28 @@ namespace ShadowsOfTomorrow
             (bool canMoveX, bool canMoveY) = game.mapManager.ActiveMap.WillCollide(this);
 
             if (canMoveX)
+            {
+
                 Location += new Point((int)speed.X, 0);
+            }
             else
+            {
+
                 speed.X = 0;
+            }
 
             if (canMoveY)
                 Location += new Point(0, (int)speed.Y);
             else
                 speed.Y = 0;
+
+            HasPlatformUnder();
+        }
+
+        private void HasPlatformUnder()
+        {
+            //skriv
+
         }
 
         private void ReleaseCharge(KeyboardState state)
