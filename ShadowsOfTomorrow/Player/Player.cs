@@ -7,15 +7,25 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TiledSharp;
+using SharpDX.Direct3D9;
 
 namespace ShadowsOfTomorrow
 {
-    public enum State
+    public enum Mach
     {
-        Running,
-        Charging,
         Standing,
-        AirDashing,
+        Walking,
+        Running,
+        Sprinting,
+    }
+
+    public enum Action
+    {
+        Standing,
+        Moving,
+        Crouching,
+        GroundPounding,
+        Attacking,
     }
 
     public enum Facing
@@ -28,8 +38,11 @@ namespace ShadowsOfTomorrow
     public class Player : IUpdateAndDraw
     {
         public Point Location { get => hitBox.Location; set => hitBox.Location = value; }
-        public State ActiveState { get => activeState; private set => activeState = value; }
-        public Point Size { get => size; }
+        public Mach ActiveMach { get => _activeMach; private set => _activeMach = value; }
+        public Mach OldMach { get; private set; }
+        public Action CurrentAction { get; private set; } = Action.Standing;
+        public Action OldAction { get; private set; } = Action.Standing;
+        public Point Size { get => activeSize; private set { hitBox.Size = value; activeSize = value; } }
         public Vector2 Speed { get => speed; }
         public Rectangle HitBox { get => hitBox; }
 
@@ -38,33 +51,36 @@ namespace ShadowsOfTomorrow
 
         private Facing facing;
         private Rectangle hitBox;
-        private State activeState;
+        private Mach _activeMach;
         private Vector2 speed = Vector2.Zero;
-        private readonly Point size = new(50, 50);
+        private Point activeSize = new(50, 50);
+        private Point size = new(50, 50);
+        private Point crouchingSize = new(50, 25);
         private readonly Texture2D rightTexture;
         private readonly Texture2D leftTexture;
+        private readonly SpriteFont font;
         private KeyboardState oldState = Keyboard.GetState();
 
-        private const int maxXSpeed = 15;
+        public bool isGrounded;
+
+        private const int walkingSpeed = 5;
+        private const int runningSpeed = 10;
+        private const int sprintingSpeed = 15;
         private const int maxYSpeed = 10;
         private const int jumpForce = -10;
-        private const float brakeSpeed = 0.4f;
-        private const float acceleration = 0.3f;
-        private const float amountOfSecondsTillFullCharge = 1.0f;
+        private const float brakeSpeed = 0.2f;
+        private const float acceleration = 0.25f;
         private const float gravitation = 0.4f;
+        private const float groundPoundSpeed = 12.0f;
+        private const float groundPoundAcceleration = 1.0f;
 
-        public bool isGrounded;
-        private float chargeProcent;
-        private float chargeStartTime;
-        private float startChargeProcent;
-        private bool firstFrameInCharge = true;
 
         public Player(Game1 game)
         {
             hitBox = new(Point.Zero, size);
             rightTexture = game.Content.Load<Texture2D>("Sprites/GuyRight");
             leftTexture = game.Content.Load<Texture2D>("Sprites/GuyLeft");
-
+            font = game.Content.Load<SpriteFont>("Fonts/DefaultFont");
             this.game = game;
         }
 
@@ -74,51 +90,20 @@ namespace ShadowsOfTomorrow
                 spriteBatch.Draw(rightTexture, hitBox, Color.White);
             if (facing == Facing.Left)
                 spriteBatch.Draw(leftTexture, hitBox, Color.White);
-            //spriteBatch.DrawString(game.Content.Load<SpriteFont>("Fonts/DefaultFont"), "Speed: " + Math.Round(speed.X).ToString(), Vector2.Zero, Color.White);
-            //spriteBatch.DrawString(game.Content.Load<SpriteFont>("Fonts/DefaultFont"), "ChargeProcent: " + Math.Round(100 * chargeProcent).ToString() + "%", new(100, 0), Color.White);
+            spriteBatch.DrawString(font, "Speed: " + Math.Round(speed.X).ToString(), camera.Window.Location.ToVector2(), Color.White);
+            spriteBatch.DrawString(font, ActiveMach.ToString(), camera.Window.Location.ToVector2() + new Vector2(0, 25), Color.White);
+            spriteBatch.DrawString(font, CurrentAction.ToString(), camera.Window.Location.ToVector2() + new Vector2(0, 50), Color.White);
         }
 
         public void Update(GameTime gameTime)
         {
-            camera.Follow(hitBox, game.mapManager.ActiveMap);
+            camera.Follow(new(new(hitBox.Left, hitBox.Bottom - size.Y), size), game.mapManager.ActiveMap);
+
             SetPlayerState();
             SetPlayerDirection();
 
-            switch (ActiveState)
-            {
-                case State.Running:
-                    CheckPlayerInput();
-                    break;
-                case State.Charging:
-                    Charge(gameTime);
-                    break;
-                case State.Standing:
-                    CheckPlayerInput();
-                    break;
-                case State.AirDashing:
-                    break;
-            }
-
+            CheckPlayerInput();
             MovePlayer();
-        }
-
-        private void SetPlayerState()
-        {
-            KeyboardState state = Keyboard.GetState();
-            
-            if (state.IsKeyDown(Keys.LeftShift))
-            {
-                ActiveState = State.Charging;
-                return;
-            }
-            
-            if (ActiveState == State.Charging && isGrounded) // True if the last state was Charging
-                ReleaseCharge(state);
-
-            if (speed == Vector2.Zero)
-                ActiveState = State.Standing;
-            else
-                ActiveState = State.Running;
         }
 
         private void SetPlayerDirection()
@@ -127,12 +112,123 @@ namespace ShadowsOfTomorrow
                 facing = Facing.Right;
             else if (Keyboard.GetState().IsKeyDown(Keys.A))
                 facing = Facing.Left;
+        }
 
+        private void SetPlayerState()
+        {
+            OldMach = ActiveMach;
+
+            if (Speed.X == 0)
+                ActiveMach = Mach.Standing;
+            if (speed.X >= walkingSpeed || speed.X <= walkingSpeed)
+                ActiveMach = Mach.Walking;
+            if ((speed.X < -walkingSpeed || speed.X > walkingSpeed) && (Keyboard.GetState().IsKeyDown(Keys.LeftShift) || OldMach == Mach.Running))
+                ActiveMach = Mach.Running;
+            if ((speed.X < -runningSpeed || speed.X > runningSpeed) && (Keyboard.GetState().IsKeyDown(Keys.LeftShift) || OldMach == Mach.Sprinting))
+                ActiveMach = Mach.Sprinting;
+
+            OldAction = CurrentAction;
+        }
+
+        private void CheckPlayerInput()
+        {
+            KeyboardState keyboardState = Keyboard.GetState();
+
+            switch (ActiveMach)
+            {
+                case Mach.Running:
+                    break;
+                case Mach.Sprinting:
+                    break;
+                default:                                                                //Standing or Walking
+                    if (keyboardState.IsKeyDown(Keys.S) && isGrounded && OldAction == Action.Standing)
+                        Crouch();
+                    else if (OldAction == Action.Crouching && keyboardState.IsKeyUp(Keys.S))
+                    {
+                        Size = size;
+                        Location -= new Point(0, crouchingSize.Y);
+                        CurrentAction = Action.Standing;
+                    }
+                    if (keyboardState.IsKeyDown(Keys.Space) && oldState.IsKeyUp(Keys.Space))
+                        Jump();
+                    if (keyboardState.IsKeyDown(Keys.S) && !isGrounded && CurrentAction != Action.Crouching)
+                        GroundPound();
+                    else if (isGrounded && CurrentAction == Action.GroundPounding)
+                        CurrentAction = Action.Standing;
+                    break;
+            }
+            
+            UpdateSpeed(keyboardState);
+
+            oldState = Keyboard.GetState();
+        }
+
+        private void GroundPound()
+        {
+            if (CurrentAction != Action.GroundPounding)
+            {
+                CurrentAction = Action.GroundPounding;
+                speed.Y = 0;
+            }
+        }
+
+        private void Crouch()
+        {
+            if (CurrentAction == Action.Crouching)
+                return;
+            Size = crouchingSize;
+            Location += new Point(0, crouchingSize.Y);
+            CurrentAction = Action.Crouching;
+        }
+
+        private void Jump()
+        {
+            speed.Y = jumpForce;
+        }
+
+        private void UpdateSpeed(KeyboardState state)
+        {
+            switch (ActiveMach)
+            {
+                case Mach.Running:
+                    if (state.IsKeyDown(Keys.A) && speed.X >= -runningSpeed)
+                        speed.X -= acceleration / 4;
+                    if (state.IsKeyDown(Keys.D) && speed.X <= runningSpeed)
+                        speed.X += acceleration / 4;
+                    break;
+                case Mach.Sprinting:
+                    if (state.IsKeyDown(Keys.A) && speed.X >= -sprintingSpeed)
+                        speed.X -= acceleration / 8;
+                    if (state.IsKeyDown(Keys.D) && speed.X <= sprintingSpeed)
+                        speed.X += acceleration / 8;
+                    break;
+                default:
+                    if (state.IsKeyDown(Keys.A) && speed.X >= -walkingSpeed)
+                        speed.X -= acceleration;
+                    if (state.IsKeyDown(Keys.D) && speed.X <= walkingSpeed)
+                        speed.X += acceleration;
+                    break;
+            }
+            WillSlowDown();
+        }
+        private void WillSlowDown()
+        {
+            if (Keyboard.GetState().IsKeyUp(Keys.A) && Keyboard.GetState().IsKeyUp(Keys.D))
+            {
+                if (speed.X < 0)
+                    speed.X += brakeSpeed;
+                if (speed.X > 0)
+                    speed.X -= brakeSpeed;
+                if (-brakeSpeed < speed.X && speed.X < brakeSpeed)
+                    speed.X = 0;
+            }
         }
 
         private void MovePlayer()
         {
-            if (speed.Y < maxYSpeed)
+            if (CurrentAction == Action.GroundPounding && speed.Y < groundPoundSpeed)
+                speed.Y += groundPoundAcceleration;
+            else if (speed.Y < maxYSpeed)
                 speed.Y += gravitation;
 
             (bool canMoveX, bool canMoveY) = game.mapManager.ActiveMap.WillCollide(this);
@@ -146,95 +242,6 @@ namespace ShadowsOfTomorrow
                 Location += new Point(0, (int)speed.Y);
             else
                 speed.Y = 1;
-
-        }
-
-        private void ReleaseCharge(KeyboardState state)
-        {
-            if (state.IsKeyDown(Keys.A))
-                speed.X = -maxXSpeed * chargeProcent;
-            else if (state.IsKeyDown(Keys.D))
-                speed.X = maxXSpeed * chargeProcent;
-            else if (state.IsKeyDown(Keys.S))
-                speed.Y = jumpForce * 2;
-
-            firstFrameInCharge = true;
-            chargeProcent = 0;
-        }
-
-        private void CheckPlayerInput()
-        {
-            KeyboardState state = Keyboard.GetState();
-
-            if (state.IsKeyDown(Keys.Space) && oldState.IsKeyUp(Keys.Space))
-                Jump();
-
-            UpdateSpeed(state);
-
-            oldState = Keyboard.GetState();
-        }
-
-        private void Charge(GameTime gameTime)
-        {
-            SlowDown();                                             //You slow down because you can not move while charging
-
-            if (firstFrameInCharge)
-            {
-                firstFrameInCharge = false;
-                chargeStartTime = (float)gameTime.TotalGameTime.TotalSeconds;
-                startChargeProcent = Math.Abs(speed.X) / maxXSpeed;
-            }
-
-            chargeProcent = startChargeProcent + ((float)gameTime.TotalGameTime.TotalSeconds - chargeStartTime) / amountOfSecondsTillFullCharge;
-
-            if (chargeProcent > 1)
-                chargeProcent = 1;
-        }
-
-        private void SlowDown()
-        {
-            if ((Keyboard.GetState().IsKeyUp(Keys.A) && Keyboard.GetState().IsKeyUp(Keys.D)) || ActiveState == State.Charging)
-            {
-                if (speed.X < 0)
-                    speed.X += brakeSpeed;
-                if (speed.X > 0)
-                    speed.X -= brakeSpeed;
-                if (-brakeSpeed < speed.X && speed.X < brakeSpeed)
-                    speed.X = 0;
-            }
-        }
-
-        private void Jump()
-        {
-            speed.Y = jumpForce;
-        }
-
-        private void UpdateSpeed(KeyboardState state)
-        {
-            if (state.IsKeyDown(Keys.A))
-            {
-                if (speed.X >= 0)
-                    speed.X -= brakeSpeed;
-                else if (speed.X >= -5)
-                    speed.X -= acceleration;
-                else if (speed.X >= -10)
-                    speed.X -= acceleration / 2;
-                else if (speed.X >= -maxXSpeed)
-                    speed.X -= acceleration / 4;
-            }
-
-            if (state.IsKeyDown(Keys.D))
-            {
-                if (speed.X <= 0)
-                    speed.X += brakeSpeed;
-                if (speed.X <= 5)
-                    speed.X += acceleration;
-                else if (speed.X <= 10)
-                    speed.X += acceleration / 2;
-                else if (speed.X <= maxXSpeed)
-                    speed.X += acceleration / 4;
-            }
-            SlowDown();
         }
     }
 }
