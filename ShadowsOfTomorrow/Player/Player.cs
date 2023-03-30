@@ -28,6 +28,7 @@ namespace ShadowsOfTomorrow
         GroundPounding,
         Attacking,
         Turning,
+        Rolling,
     }
 
     public enum Facing
@@ -35,7 +36,6 @@ namespace ShadowsOfTomorrow
         Right,
         Left,
     }
-
 
     public class Player : IUpdateAndDraw
     {
@@ -77,7 +77,6 @@ namespace ShadowsOfTomorrow
         private const float groundPoundSpeed = 12.0f;
         private const float groundPoundAcceleration = 1.0f;
 
-
         public Player(Game1 game)
         {
             hitBox = new(Point.Zero, size);
@@ -108,32 +107,32 @@ namespace ShadowsOfTomorrow
             CheckPlayerInput();
             CheckPlayerAction();
             MovePlayer();
-        }
 
-        
-
-        private void SetPlayerDirection()
-        {
-            if (Keyboard.GetState().IsKeyDown(Keys.D))
-                facing = Facing.Right;
-            else if (Keyboard.GetState().IsKeyDown(Keys.A))
-                facing = Facing.Left;
+            oldState = Keyboard.GetState();
+            OldMach = ActiveMach;
+            OldAction = CurrentAction;
         }
 
         private void SetPlayerState()
         {
-            OldMach = ActiveMach; 
+            KeyboardState keyboardState = Keyboard.GetState();
 
             if (Speed.X == 0)
                 ActiveMach = Mach.Standing;
             if (speed.X <= -walkingSpeed || speed.X <= walkingSpeed)
                 ActiveMach = Mach.Walking;
-            if ((speed.X < -walkingSpeed || speed.X > walkingSpeed) && (Keyboard.GetState().IsKeyDown(Keys.LeftShift) || OldMach == Mach.Running))
+            if ((speed.X < -walkingSpeed || speed.X > walkingSpeed) && (keyboardState.IsKeyDown(Keys.LeftShift) || OldMach == Mach.Running) && CurrentAction != Action.Crouching)
                 ActiveMach = Mach.Running;
-            if ((speed.X < -runningSpeed || speed.X > runningSpeed) && (Keyboard.GetState().IsKeyDown(Keys.LeftShift) || OldMach == Mach.Sprinting))
+            if ((speed.X < -runningSpeed || speed.X > runningSpeed) && (keyboardState.IsKeyDown(Keys.LeftShift) || OldMach == Mach.Sprinting) && CurrentAction != Action.Crouching)
                 ActiveMach = Mach.Sprinting;
-
-            OldAction = CurrentAction;
+        }
+        
+        private void SetPlayerDirection()
+        {
+            if (Keyboard.GetState().IsKeyDown(Keys.D))
+                facing = Facing.Right;
+            if (Keyboard.GetState().IsKeyDown(Keys.A))
+                facing = Facing.Left;
         }
 
         private void CheckPlayerInput()
@@ -142,11 +141,16 @@ namespace ShadowsOfTomorrow
 
             switch (ActiveMach)
             {
-                case Mach.Running:
+                case Mach.Running or Mach.Sprinting:
+                    if (keyboardState.IsKeyDown(Keys.S) && isGrounded)
+                        CurrentAction = Action.Rolling;
+                    else if (OldAction == Action.Rolling && keyboardState.IsKeyUp(Keys.S))
+                        StandUp();
+                    if (keyboardState.IsKeyDown(Keys.Space) && oldState.IsKeyUp(Keys.Space))
+                        Jump();
                     break;
-                case Mach.Sprinting:
-                    break;
-                default:                                                                //Standing or Walking
+
+                case Mach.Standing or Mach.Walking:
                     if (keyboardState.IsKeyDown(Keys.S) && isGrounded && OldAction == Action.Standing)
                         CurrentAction = Action.Crouching;
                     else if (OldAction == Action.Crouching && keyboardState.IsKeyUp(Keys.S))
@@ -161,8 +165,6 @@ namespace ShadowsOfTomorrow
             }
             
             UpdateSpeed(keyboardState);
-
-            oldState = Keyboard.GetState();
         }
 
         private void CheckPlayerAction()
@@ -175,6 +177,11 @@ namespace ShadowsOfTomorrow
                     break;
                 case Action.Crouching:
                     Crouch();
+                    break;
+                case Action.Rolling:
+                    Roll();
+                    if (speed.X <= walkingSpeed)
+                        StandUp();
                     break;
                 case Action.GroundPounding:
                     break;
@@ -202,9 +209,9 @@ namespace ShadowsOfTomorrow
                             speed.X = -1 * speedBeforeTurn;
                             CurrentAction = Action.Moving;
                             ActiveMach = Mach.Sprinting;
-                            if (speedBeforeTurn < -walkingSpeed)
+                            if (speedBeforeTurn > walkingSpeed)
                                 ActiveMach = Mach.Running;
-                            if (speedBeforeTurn < -runningSpeed)
+                            if (speedBeforeTurn > runningSpeed)
                                 ActiveMach = Mach.Sprinting;
                         }
                     }
@@ -216,22 +223,28 @@ namespace ShadowsOfTomorrow
 
         }
 
+        private void Roll()
+        {
+            if (OldAction == Action.Rolling)
+                return;
+            Size = crouchingSize;
+            Location += new Point(0, crouchingSize.Y);
+        }
+
         private void GroundPound()
         {
-            if (CurrentAction != Action.GroundPounding)
-            {
-                CurrentAction = Action.GroundPounding;
-                speed.Y = 0;
-            }
+            if (CurrentAction == Action.GroundPounding)
+                return;
+            CurrentAction = Action.GroundPounding;
+            speed.Y = 0;
         }
 
         private void Crouch()
         {
-            if (CurrentAction == Action.Crouching)
+            if (OldAction == Action.Crouching)
                 return;
             Size = crouchingSize;
             Location += new Point(0, crouchingSize.Y);
-            
         }
 
         private void StandUp()
@@ -282,7 +295,7 @@ namespace ShadowsOfTomorrow
                     else if (state.IsKeyDown(Keys.D) && speed.X <= sprintingSpeed)
                         speed.X += acceleration / 8;
                     break;
-                default:
+                case Mach.Standing or Mach.Walking:
                     if (state.IsKeyDown(Keys.A) && speed.X >= -walkingSpeed)
                         speed.X -= acceleration;
                     if (state.IsKeyDown(Keys.D) && speed.X <= walkingSpeed)
