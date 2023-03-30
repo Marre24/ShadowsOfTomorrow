@@ -55,9 +55,9 @@ namespace ShadowsOfTomorrow
         private Rectangle hitBox;
         private Mach _activeMach;
         private Vector2 speed = Vector2.Zero;
-        private Point activeSize = new(50, 50);
-        private Point size = new(50, 50);
-        private Point crouchingSize = new(50, 25);
+        private Point activeSize = new(32 * scale, 32 * scale);
+        private Point size = new(32 * scale, 32 * scale);
+        private Point crouchingSize = new(32 * scale, 16 * scale);
         private readonly Texture2D rightTexture;
         private readonly Texture2D leftTexture;
         private readonly SpriteFont font;
@@ -65,6 +65,8 @@ namespace ShadowsOfTomorrow
 
         public bool isGrounded;
         private float speedBeforeTurn;
+
+        private const int scale = 2;
 
         private const int walkingSpeed = 5;
         private const int runningSpeed = 10;
@@ -80,8 +82,8 @@ namespace ShadowsOfTomorrow
         public Player(Game1 game)
         {
             hitBox = new(Point.Zero, size);
-            rightTexture = game.Content.Load<Texture2D>("Sprites/GuyRight");
-            leftTexture = game.Content.Load<Texture2D>("Sprites/GuyLeft");
+            rightTexture = game.Content.Load<Texture2D>("Sprites/Ninja");
+            leftTexture = game.Content.Load<Texture2D>("Sprites/Ninja");
             font = game.Content.Load<SpriteFont>("Fonts/DefaultFont");
             this.game = game;
         }
@@ -174,6 +176,7 @@ namespace ShadowsOfTomorrow
                 case Action.Standing:
                     break;
                 case Action.Moving:
+                    StandUp();
                     break;
                 case Action.Crouching:
                     Crouch();
@@ -188,6 +191,7 @@ namespace ShadowsOfTomorrow
                 case Action.Attacking:
                     break;
                 case Action.Turning:
+                    StandUp();
                     if (speedBeforeTurn < 0)
                     {
                         speed.X += brakeSpeed;
@@ -249,6 +253,8 @@ namespace ShadowsOfTomorrow
 
         private void StandUp()
         {
+            if (CurrentAction != Action.Rolling && CurrentAction != Action.Crouching)
+                return; 
             Size = size;
             Location -= new Point(0, crouchingSize.Y);
             CurrentAction = Action.Standing;
@@ -304,6 +310,7 @@ namespace ShadowsOfTomorrow
             }
             WillSlowDown();
         }
+
         private void WillSlowDown()
         {
             if (Keyboard.GetState().IsKeyUp(Keys.A) && Keyboard.GetState().IsKeyUp(Keys.D))
