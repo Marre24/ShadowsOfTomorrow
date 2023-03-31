@@ -23,7 +23,6 @@ namespace ShadowsOfTomorrow
     public enum Action
     {
         Standing,
-        Moving,
         Crouching,
         GroundPounding,
         Attacking,
@@ -97,6 +96,7 @@ namespace ShadowsOfTomorrow
             spriteBatch.DrawString(font, "Speed: " + Math.Round(speed.X).ToString(), camera.Window.Location.ToVector2(), Color.White);
             spriteBatch.DrawString(font, ActiveMach.ToString(), camera.Window.Location.ToVector2() + new Vector2(0, 25), Color.White);
             spriteBatch.DrawString(font, CurrentAction.ToString(), camera.Window.Location.ToVector2() + new Vector2(0, 50), Color.White);
+            spriteBatch.DrawString(font, isGrounded.ToString(), camera.Window.Location.ToVector2() + new Vector2(0, 75), Color.White);
         }
 
         public void Update(GameTime gameTime)
@@ -175,15 +175,12 @@ namespace ShadowsOfTomorrow
             {
                 case Action.Standing:
                     break;
-                case Action.Moving:
-                    StandUp();
-                    break;
                 case Action.Crouching:
                     Crouch();
                     break;
                 case Action.Rolling:
                     Roll();
-                    if (speed.X <= walkingSpeed)
+                    if (-walkingSpeed <= speed.X && speed.X <= walkingSpeed)
                         StandUp();
                     break;
                 case Action.GroundPounding:
@@ -198,7 +195,7 @@ namespace ShadowsOfTomorrow
                         if (speed.X >= 0)
                         {
                             speed.X = -1 * speedBeforeTurn;
-                            CurrentAction = Action.Moving;
+                            StandUp();
                             if (speedBeforeTurn < -walkingSpeed)
                                 ActiveMach = Mach.Running;
                             if (speedBeforeTurn < -runningSpeed)
@@ -211,7 +208,7 @@ namespace ShadowsOfTomorrow
                         if (speed.X <= 0)
                         {
                             speed.X = -1 * speedBeforeTurn;
-                            CurrentAction = Action.Moving;
+                            StandUp();
                             ActiveMach = Mach.Sprinting;
                             if (speedBeforeTurn > walkingSpeed)
                                 ActiveMach = Mach.Running;
@@ -223,13 +220,11 @@ namespace ShadowsOfTomorrow
                 default:
                     break;
             }
-
-
         }
 
         private void Roll()
         {
-            if (OldAction == Action.Rolling)
+            if (OldAction == Action.Rolling || OldAction == Action.Crouching)
                 return;
             Size = crouchingSize;
             Location += new Point(0, crouchingSize.Y);
@@ -245,7 +240,7 @@ namespace ShadowsOfTomorrow
 
         private void Crouch()
         {
-            if (OldAction == Action.Crouching)
+            if (OldAction == Action.Crouching ||OldAction == Action.Rolling)
                 return;
             Size = crouchingSize;
             Location += new Point(0, crouchingSize.Y);
@@ -253,7 +248,7 @@ namespace ShadowsOfTomorrow
 
         private void StandUp()
         {
-            if (CurrentAction != Action.Rolling && CurrentAction != Action.Crouching)
+            if (OldAction != Action.Rolling && OldAction != Action.Crouching)
                 return; 
             Size = size;
             Location -= new Point(0, crouchingSize.Y);
