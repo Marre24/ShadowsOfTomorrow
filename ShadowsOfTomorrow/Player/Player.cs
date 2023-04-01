@@ -38,6 +38,11 @@ namespace ShadowsOfTomorrow
 
     public class Player : IUpdateAndDraw
     {
+        readonly AnimationManager animationManager = new();
+
+        private readonly Animation idle;
+
+
         public Point Location { get => hitBox.Location; set => hitBox.Location = value; }
         public Mach ActiveMach { get => _activeMach; private set => _activeMach = value; }
         public Mach OldMach { get; private set; }
@@ -57,8 +62,6 @@ namespace ShadowsOfTomorrow
         private Point activeSize = new(32 * scale, 32 * scale);
         private Point size = new(32 * scale, 32 * scale);
         private Point crouchingSize = new(32 * scale, 16 * scale);
-        private readonly Texture2D rightTexture;
-        private readonly Texture2D leftTexture;
         private readonly SpriteFont font;
         private KeyboardState oldState = Keyboard.GetState();
 
@@ -81,18 +84,45 @@ namespace ShadowsOfTomorrow
         public Player(Game1 game)
         {
             hitBox = new(Point.Zero, size);
-            rightTexture = game.Content.Load<Texture2D>("Sprites/Ninja");
-            leftTexture = game.Content.Load<Texture2D>("Sprites/Ninja");
+
+            idle = new(game.Content.Load<Texture2D>("Sprites/Player/IdleLeft"), game.Content.Load<Texture2D>("Sprites/Player/IdleRight"), 18);
             font = game.Content.Load<SpriteFont>("Fonts/DefaultFont");
+
             this.game = game;
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            if (facing == Facing.Right)
-                spriteBatch.Draw(rightTexture, hitBox, Color.White);
-            if (facing == Facing.Left)
-                spriteBatch.Draw(leftTexture, hitBox, Color.White);
+            switch (ActiveMach)
+            {
+                case Mach.Standing:
+                    switch (CurrentAction)
+                    {
+                        case Action.Standing:
+                            animationManager.Play(idle);
+                            break;
+                        case Action.Crouching:
+                            break;
+                        case Action.GroundPounding:
+                            break;
+                        case Action.Attacking:
+                            break;
+                    }
+
+                    break;
+                case Mach.Walking:
+                    break;
+                case Mach.Running:
+                    break;
+                case Mach.Sprinting:
+                    break;
+                default:
+                    break;
+            }
+
+
+            animationManager.Draw(spriteBatch, Location.ToVector2(), facing);
+
             spriteBatch.DrawString(font, "Speed: " + Math.Round(speed.X).ToString(), camera.Window.Location.ToVector2(), Color.White);
             spriteBatch.DrawString(font, ActiveMach.ToString(), camera.Window.Location.ToVector2() + new Vector2(0, 25), Color.White);
             spriteBatch.DrawString(font, CurrentAction.ToString(), camera.Window.Location.ToVector2() + new Vector2(0, 50), Color.White);
@@ -103,25 +133,27 @@ namespace ShadowsOfTomorrow
         {
             camera.Follow(new(new(hitBox.Left, hitBox.Bottom - size.Y), size), game.mapManager.ActiveMap);
 
-            SetPlayerState(); 
+            SetPlayerMach(); 
             SetPlayerDirection();
 
             CheckPlayerInput();
             CheckPlayerAction();
             MovePlayer();
 
+            animationManager.Update(gameTime);
+
             oldState = Keyboard.GetState();
             OldMach = ActiveMach;
             OldAction = CurrentAction;
         }
 
-        private void SetPlayerState()
+        private void SetPlayerMach()
         {
             KeyboardState keyboardState = Keyboard.GetState();
 
             if (Speed.X == 0)
                 ActiveMach = Mach.Standing;
-            if (speed.X <= -walkingSpeed || speed.X <= walkingSpeed)
+            else if (speed.X <= -walkingSpeed || speed.X <= walkingSpeed)
                 ActiveMach = Mach.Walking;
             if ((speed.X < -walkingSpeed || speed.X > walkingSpeed) && (keyboardState.IsKeyDown(Keys.LeftShift) || OldMach == Mach.Running) && CurrentAction != Action.Crouching)
                 ActiveMach = Mach.Running;
@@ -173,8 +205,6 @@ namespace ShadowsOfTomorrow
         {
             switch (CurrentAction)
             {
-                case Action.Standing:
-                    break;
                 case Action.Crouching:
                     Crouch();
                     break;
@@ -182,8 +212,6 @@ namespace ShadowsOfTomorrow
                     Roll();
                     if (-walkingSpeed <= speed.X && speed.X <= walkingSpeed)
                         StandUp();
-                    break;
-                case Action.GroundPounding:
                     break;
                 case Action.Attacking:
                     break;
@@ -196,6 +224,8 @@ namespace ShadowsOfTomorrow
                         {
                             speed.X = -1 * speedBeforeTurn;
                             StandUp();
+                            if (OldAction != Action.Rolling && OldAction != Action.Crouching)
+                                CurrentAction = Action.Standing; 
                             if (speedBeforeTurn < -walkingSpeed)
                                 ActiveMach = Mach.Running;
                             if (speedBeforeTurn < -runningSpeed)
@@ -209,6 +239,8 @@ namespace ShadowsOfTomorrow
                         {
                             speed.X = -1 * speedBeforeTurn;
                             StandUp();
+                            if (OldAction != Action.Rolling && OldAction != Action.Crouching)
+                                CurrentAction = Action.Standing;
                             ActiveMach = Mach.Sprinting;
                             if (speedBeforeTurn > walkingSpeed)
                                 ActiveMach = Mach.Running;
