@@ -38,9 +38,10 @@ namespace ShadowsOfTomorrow
 
     public class Player : IUpdateAndDraw
     {
-        readonly AnimationManager animationManager = new();
+        readonly AnimationManager animationManager;
 
         private readonly Animation idle;
+        private readonly Animation walking;
 
 
         public Point Location { get => hitBox.Location; set => hitBox.Location = value; }
@@ -48,7 +49,8 @@ namespace ShadowsOfTomorrow
         public Mach OldMach { get; private set; }
         public Action CurrentAction { get; private set; } = Action.Standing;
         public Action OldAction { get; private set; } = Action.Standing;
-        public Point Size { get => activeSize; private set { hitBox.Size = value; activeSize = value; } }
+        public Point Size { get => new(animationManager.Animation.FrameWidth, animationManager.Animation.FrameHeight); }
+        public Point OldSize { get; set; }
         public Vector2 Speed { get => speed; }
         public Rectangle HitBox { get => hitBox; }
 
@@ -59,16 +61,11 @@ namespace ShadowsOfTomorrow
         private Rectangle hitBox;
         private Mach _activeMach;
         private Vector2 speed = Vector2.Zero;
-        private Point activeSize = new(32 * scale, 32 * scale);
-        private Point size = new(32 * scale, 32 * scale);
-        private Point crouchingSize = new(32 * scale, 16 * scale);
         private readonly SpriteFont font;
         private KeyboardState oldState = Keyboard.GetState();
 
         public bool isGrounded;
         private float speedBeforeTurn;
-
-        private const int scale = 2;
 
         private const int walkingSpeed = 5;
         private const int runningSpeed = 10;
@@ -83,12 +80,14 @@ namespace ShadowsOfTomorrow
 
         public Player(Game1 game)
         {
-            hitBox = new(Point.Zero, size);
 
             idle = new(game.Content.Load<Texture2D>("Sprites/Player/IdleLeft"), game.Content.Load<Texture2D>("Sprites/Player/IdleRight"), 18);
+            walking = new(game.Content.Load<Texture2D>("Sprites/Player/WalkingLeft"), game.Content.Load<Texture2D>("Sprites/Player/WalkingRight"), 8);
             font = game.Content.Load<SpriteFont>("Fonts/DefaultFont");
 
             this.game = game;
+
+            animationManager = new(idle);
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -111,6 +110,22 @@ namespace ShadowsOfTomorrow
 
                     break;
                 case Mach.Walking:
+                    switch (CurrentAction)
+                    {
+                        case Action.Standing:
+                            animationManager.Play(walking);
+                            break;
+                        case Action.Crouching:
+                            break;
+                        case Action.GroundPounding:
+                            break;
+                        case Action.Attacking:
+                            break;
+                        case Action.Turning:
+                            break;
+                        default:
+                            break;
+                    }
                     break;
                 case Mach.Running:
                     break;
@@ -131,9 +146,18 @@ namespace ShadowsOfTomorrow
 
         public void Update(GameTime gameTime)
         {
-            camera.Follow(new(new(hitBox.Left, hitBox.Bottom - size.Y), size), game.mapManager.ActiveMap);
+            int diff = Math.Abs(OldSize.Y - Size.Y);
 
-            SetPlayerMach(); 
+            if (Size.Y < OldSize.Y)
+                Location += new Point(0, diff);
+            if (Size.Y > OldSize.Y)
+                Location -= new Point(0, diff);
+            
+
+            hitBox = new Rectangle(Location, Size);
+            camera.Follow(new(new(hitBox.Left, hitBox.Bottom - 32), new(32, 32)), game.mapManager.ActiveMap);
+
+            SetPlayerMach();
             SetPlayerDirection();
 
             CheckPlayerInput();
@@ -145,6 +169,7 @@ namespace ShadowsOfTomorrow
             oldState = Keyboard.GetState();
             OldMach = ActiveMach;
             OldAction = CurrentAction;
+            OldSize = Size;
         }
 
         private void SetPlayerMach()
@@ -160,7 +185,7 @@ namespace ShadowsOfTomorrow
             if ((speed.X < -runningSpeed || speed.X > runningSpeed) && (keyboardState.IsKeyDown(Keys.LeftShift) || OldMach == Mach.Sprinting) && CurrentAction != Action.Crouching)
                 ActiveMach = Mach.Sprinting;
         }
-        
+
         private void SetPlayerDirection()
         {
             if (Keyboard.GetState().IsKeyDown(Keys.D))
@@ -197,7 +222,7 @@ namespace ShadowsOfTomorrow
                         CurrentAction = Action.Standing;
                     break;
             }
-            
+
             UpdateSpeed(keyboardState);
         }
 
@@ -207,11 +232,6 @@ namespace ShadowsOfTomorrow
             {
                 case Action.Crouching:
                     Crouch();
-                    break;
-                case Action.Rolling:
-                    Roll();
-                    if (-walkingSpeed <= speed.X && speed.X <= walkingSpeed)
-                        StandUp();
                     break;
                 case Action.Attacking:
                     break;
@@ -225,7 +245,7 @@ namespace ShadowsOfTomorrow
                             speed.X = -1 * speedBeforeTurn;
                             StandUp();
                             if (OldAction != Action.Rolling && OldAction != Action.Crouching)
-                                CurrentAction = Action.Standing; 
+                                CurrentAction = Action.Standing;
                             if (speedBeforeTurn < -walkingSpeed)
                                 ActiveMach = Mach.Running;
                             if (speedBeforeTurn < -runningSpeed)
@@ -254,14 +274,6 @@ namespace ShadowsOfTomorrow
             }
         }
 
-        private void Roll()
-        {
-            if (OldAction == Action.Rolling || OldAction == Action.Crouching)
-                return;
-            Size = crouchingSize;
-            Location += new Point(0, crouchingSize.Y);
-        }
-
         private void GroundPound()
         {
             if (CurrentAction == Action.GroundPounding)
@@ -272,18 +284,14 @@ namespace ShadowsOfTomorrow
 
         private void Crouch()
         {
-            if (OldAction == Action.Crouching ||OldAction == Action.Rolling)
+            if (OldAction == Action.Crouching || OldAction == Action.Rolling)
                 return;
-            Size = crouchingSize;
-            Location += new Point(0, crouchingSize.Y);
         }
 
         private void StandUp()
         {
             if (OldAction != Action.Rolling && OldAction != Action.Crouching)
-                return; 
-            Size = size;
-            Location -= new Point(0, crouchingSize.Y);
+                return;
             CurrentAction = Action.Standing;
         }
 

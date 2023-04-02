@@ -10,12 +10,15 @@ namespace ShadowsOfTomorrow
 {
     public class AnimationManager
     {
+        public Animation Animation { get => _animation; }
+
         private Animation _animation;
 
         private float _timer;
 
-        public AnimationManager()
+        public AnimationManager(Animation animation)
         {
+            _animation = animation;
         }
 
         public void Play(Animation animation)
