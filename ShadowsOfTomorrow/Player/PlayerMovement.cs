@@ -4,8 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using static SharpDX.XAudio2.SourceVoice;
 
 namespace ShadowsOfTomorrow
 {
@@ -56,7 +54,6 @@ namespace ShadowsOfTomorrow
                         Jump();
                     break;
                 case Mach.Standing or Mach.Walking:
-
                     if (keyboardState.IsKeyDown(Keys.S) && player.isGrounded && player.OldAction == Action.Standing)
                         player.CurrentAction = Action.Crouching;
                     else if (player.OldAction == Action.Crouching && keyboardState.IsKeyUp(Keys.S))
@@ -83,40 +80,43 @@ namespace ShadowsOfTomorrow
                     break;
                 case Action.Turning:
                     StandUp();
-                    if (speedBeforeTurn < 0)
-                    {
-                        player.HorisontalSpeed += brakeSpeed;
-                        if (player.Speed.X >= 0)
-                        {
-                            player.HorisontalSpeed = -1 * speedBeforeTurn;
-                            StandUp();
-                            if (player.OldAction != Action.Rolling && player.OldAction != Action.Crouching)
-                                player.CurrentAction = Action.Standing;
-                            if (speedBeforeTurn < -walkingSpeed)
-                                player.ActiveMach = Mach.Running;
-                            if (speedBeforeTurn < -runningSpeed)
-                                player.ActiveMach = Mach.Sprinting;
-                        }
-                    }
-                    if (speedBeforeTurn > 0)
-                    {
-                        player.HorisontalSpeed -= brakeSpeed;
-                        if (player.Speed.X <= 0)
-                        {
-                            player.HorisontalSpeed = -1 * speedBeforeTurn;
-                            StandUp();
-                            if (player.OldAction != Action.Rolling && player.OldAction != Action.Crouching)
-                                player.CurrentAction = Action.Standing;
-                            player.ActiveMach = Mach.Sprinting;
-                            if (speedBeforeTurn > walkingSpeed)
-                                player.ActiveMach = Mach.Running;
-                            if (speedBeforeTurn > runningSpeed)
-                                player.ActiveMach = Mach.Sprinting;
-                        }
-                    }
+                    Turn();
                     break;
                 default:
                     break;
+            }
+        }
+
+        private void Turn()
+        {
+            if (speedBeforeTurn < 0)
+            {
+                player.HorisontalSpeed += brakeSpeed;
+                if (player.Speed.X >= 0)
+                {
+                    player.HorisontalSpeed = -1 * speedBeforeTurn;
+                    StandUp();
+                    if (player.OldAction != Action.Rolling && player.OldAction != Action.Crouching)
+                        player.CurrentAction = Action.Standing;
+                    if (speedBeforeTurn < -walkingSpeed)
+                        player.ActiveMach = Mach.Running;
+                    if (speedBeforeTurn < -runningSpeed)
+                        player.ActiveMach = Mach.Sprinting;
+                }
+                return;
+            }
+            player.HorisontalSpeed -= brakeSpeed;
+            if (player.Speed.X <= 0)
+            {
+                player.HorisontalSpeed = -1 * speedBeforeTurn;
+                StandUp();
+                if (player.OldAction != Action.Rolling && player.OldAction != Action.Crouching)
+                    player.CurrentAction = Action.Standing;
+                player.ActiveMach = Mach.Sprinting;
+                if (speedBeforeTurn > walkingSpeed)
+                    player.ActiveMach = Mach.Running;
+                if (speedBeforeTurn > runningSpeed)
+                    player.ActiveMach = Mach.Sprinting;
             }
         }
 
@@ -127,6 +127,7 @@ namespace ShadowsOfTomorrow
             player.CurrentAction = Action.GroundPounding;
             player.VerticalSpeed = 0;
         }
+
         private void Crouch()
         {
             if (player.OldAction == Action.Crouching || player.OldAction == Action.Rolling)
@@ -213,7 +214,7 @@ namespace ShadowsOfTomorrow
 
             (bool canMoveX, bool canMoveY) = game.mapManager.ActiveMap.WillCollide(player);
 
-            if (canMoveX)
+            if (canMoveX && player.CurrentAction != Action.GroundPounding)
                 player.Location += new Point((int)player.Speed.X, 0);
             else
                 player.HorisontalSpeed = 0;
@@ -223,6 +224,5 @@ namespace ShadowsOfTomorrow
             else
                 player.VerticalSpeed = 1;
         }
-
     }
 }
