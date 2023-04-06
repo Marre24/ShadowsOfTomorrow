@@ -100,9 +100,9 @@ namespace ShadowsOfTomorrow
             for (int i = 0; i < platformLayer.Tiles.Count; i++)
             {
                 Rectangle tile = new(new(platformLayer.Tiles[i].X * size.X, platformLayer.Tiles[i].Y * size.Y), size);
-                if (new Rectangle(player.Location + new Point((int)player.Speed.X, 0), player.Size).Intersects(tile) && platformLayer.Tiles[i].Gid != 0)
+                if (new Rectangle(player.Location + new Point((int)player.playerMovement.HorisontalSpeed, 0), player.Size).Intersects(tile) && platformLayer.Tiles[i].Gid != 0)
                     canMoveX = false;
-                if (tile.Intersects(new(player.Location.X, player.Location.Y + (int)player.Speed.Y, player.Size.X, player.Size.Y)) && platformLayer.Tiles[i].Gid != 0)
+                if (tile.Intersects(new(player.Location.X, player.Location.Y + (int)player.playerMovement.VerticalSpeed, player.Size.X, player.Size.Y)) && platformLayer.Tiles[i].Gid != 0)
                 {
                     canMoveY = false;
                     player.isGrounded = true;

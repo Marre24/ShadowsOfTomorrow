@@ -12,6 +12,7 @@ namespace ShadowsOfTomorrow
         private SpriteBatch _spriteBatch;
 
         public Player player;
+        Boss boss;
         public MapManager mapManager;
 
         public Game1()
@@ -28,6 +29,7 @@ namespace ShadowsOfTomorrow
             _graphics.ApplyChanges();
 
             player = new(this);
+            boss = new(this);
             mapManager = new(this);
             mapManager.Add(new(this, "StartMap", mapManager));
             mapManager.Add(new(this, "SecondMap", mapManager));
@@ -57,6 +59,7 @@ namespace ShadowsOfTomorrow
 
             mapManager.Draw(_spriteBatch);
             player.Draw(_spriteBatch);
+            boss.Draw(_spriteBatch);
 
             _spriteBatch.End();
             base.Draw(gameTime);

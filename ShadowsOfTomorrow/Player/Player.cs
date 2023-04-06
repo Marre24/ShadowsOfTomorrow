@@ -48,9 +48,6 @@ namespace ShadowsOfTomorrow
         public Action OldAction { get; private set; } = Action.Standing;
         public Point Size { get => new(animationManager.Animation.FrameWidth, animationManager.Animation.FrameHeight); }
         public Point OldSize { get; set; }
-        public Vector2 Speed { get => _speed; set => _speed = value; }
-        public float VerticalSpeed { get => _speed.Y; set => _speed.Y = value; }
-        public float HorisontalSpeed { get => _speed.X; set => _speed.X = value; }
         public Rectangle HitBox { get => hitBox; }
         public Facing Facing { get; set; }
 
@@ -60,7 +57,6 @@ namespace ShadowsOfTomorrow
 
         private Rectangle hitBox;
         private Mach _activeMach;
-        private Vector2 _speed = Vector2.Zero;
 
         public bool isGrounded;
 
@@ -124,7 +120,7 @@ namespace ShadowsOfTomorrow
 
             animationManager.Draw(spriteBatch, Location.ToVector2(), Facing);
 
-            spriteBatch.DrawString(font, "Speed: " + Math.Round(_speed.X).ToString(), camera.Window.Location.ToVector2(), Color.White);
+            spriteBatch.DrawString(font, "Speed: " + Math.Round(playerMovement.Speed.X).ToString(), camera.Window.Location.ToVector2(), Color.White);
             spriteBatch.DrawString(font, ActiveMach.ToString(), camera.Window.Location.ToVector2() + new Vector2(0, 25), Color.White);
             spriteBatch.DrawString(font, CurrentAction.ToString(), camera.Window.Location.ToVector2() + new Vector2(0, 50), Color.White);
             spriteBatch.DrawString(font, isGrounded.ToString(), camera.Window.Location.ToVector2() + new Vector2(0, 75), Color.White);
@@ -159,14 +155,14 @@ namespace ShadowsOfTomorrow
         {
             KeyboardState keyboardState = Keyboard.GetState();
 
-            if (Speed.X == 0)
+            if (playerMovement.Speed.X == 0)
                 ActiveMach = Mach.Standing;
-            else if (_speed.X <= -PlayerMovement.walkingSpeed || _speed.X <= PlayerMovement.walkingSpeed)
+            else if (playerMovement.Speed.X <= -PlayerMovement.walkingSpeed || playerMovement.Speed.X <= PlayerMovement.walkingSpeed)
                 ActiveMach = Mach.Walking;
-            if ((_speed.X < -PlayerMovement.walkingSpeed || _speed.X > PlayerMovement.walkingSpeed) && 
+            if ((playerMovement.Speed.X < -PlayerMovement.walkingSpeed || playerMovement.Speed.X > PlayerMovement.walkingSpeed) && 
                 (keyboardState.IsKeyDown(Keys.LeftShift) || OldMach == Mach.Running) && CurrentAction != Action.Crouching)
                 ActiveMach = Mach.Running;
-            if ((_speed.X < -PlayerMovement.runningSpeed || _speed.X > PlayerMovement.runningSpeed) && 
+            if ((playerMovement.Speed.X < -PlayerMovement.runningSpeed || playerMovement.Speed.X > PlayerMovement.runningSpeed) && 
                 (keyboardState.IsKeyDown(Keys.LeftShift) || OldMach == Mach.Sprinting) && CurrentAction != Action.Crouching)
                 ActiveMach = Mach.Sprinting;
         }
