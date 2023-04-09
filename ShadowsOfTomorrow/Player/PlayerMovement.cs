@@ -42,6 +42,8 @@ namespace ShadowsOfTomorrow
             CheckPlayerInput();
             CheckPlayerAction();
             MovePlayer();
+
+            oldState = Keyboard.GetState();
         }
 
         private void CheckPlayerInput()
@@ -103,29 +105,41 @@ namespace ShadowsOfTomorrow
                 HorisontalSpeed += brakeSpeed;
                 if (HorisontalSpeed >= 0)
                 {
-                    HorisontalSpeed = -1 * speedBeforeTurn;
-                    StandUp();
-                    if (player.OldAction != Action.Rolling && player.OldAction != Action.Crouching)
-                        player.CurrentAction = Action.Standing;
-                    if (speedBeforeTurn < -walkingSpeed)
-                        player.ActiveMach = Mach.Running;
-                    if (speedBeforeTurn < -runningSpeed)
-                        player.ActiveMach = Mach.Sprinting;
+                    if (player.isGrounded)
+                    {
+                        HorisontalSpeed = -1 * speedBeforeTurn;
+                        StandUp();
+                        if (player.OldAction != Action.Rolling && player.OldAction != Action.Crouching)
+                            player.CurrentAction = Action.Standing;
+                        if (speedBeforeTurn < -walkingSpeed)
+                            player.ActiveMach = Mach.Running;
+                        if (speedBeforeTurn < -runningSpeed)
+                            player.ActiveMach = Mach.Sprinting;
+                        return;
+                    }
+                    HorisontalSpeed = 0;
                 }
                 return;
             }
             HorisontalSpeed -= brakeSpeed;
             if (HorisontalSpeed <= 0)
             {
-                HorisontalSpeed = -1 * speedBeforeTurn;
-                StandUp();
-                if (player.OldAction != Action.Rolling && player.OldAction != Action.Crouching)
-                    player.CurrentAction = Action.Standing;
-                player.ActiveMach = Mach.Sprinting;
-                if (speedBeforeTurn > walkingSpeed)
-                    player.ActiveMach = Mach.Running;
-                if (speedBeforeTurn > runningSpeed)
+                if (player.isGrounded)
+                {
+                    HorisontalSpeed = -1 * speedBeforeTurn;
+                    StandUp();
+                    if (player.OldAction != Action.Rolling && player.OldAction != Action.Crouching)
+                        player.CurrentAction = Action.Standing;
                     player.ActiveMach = Mach.Sprinting;
+                    if (speedBeforeTurn > walkingSpeed)
+                        player.ActiveMach = Mach.Running;
+                    if (speedBeforeTurn > runningSpeed)
+                        player.ActiveMach = Mach.Sprinting;
+                    return;
+                }
+                HorisontalSpeed = 0;
+
+                
             }
         }
 

@@ -10,17 +10,19 @@ namespace ShadowsOfTomorrow
 {
     public class Boss : Speech, IUpdateAndDraw
     {
-        SpriteFont font;
+        readonly SpriteFont font;
+        readonly Texture2D texture;
 
         public Boss(Game1 game) 
         {
             font = game.Content.Load<SpriteFont>("Fonts/DefaultFont");
+            texture = game.Content.Load<Texture2D>("Sprites/Bosses/BoneTurtle");
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.DrawString(font, dialogue.GetMessage(), new(1000, 1000), Color.White);
-
+            spriteBatch.Draw(texture, new Vector2(1000, 700), Color.White);
         }
 
         public void Update(GameTime gameTime)

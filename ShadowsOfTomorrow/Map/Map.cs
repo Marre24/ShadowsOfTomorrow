@@ -33,6 +33,7 @@ namespace ShadowsOfTomorrow
         private readonly MapManager mapManager;
         private readonly Point size = Point.Zero;
         private readonly Point tileAmount = Point.Zero;
+        public List<Point> destroyedTiles = new();
 
         public Map(Game1 game, string mapName, MapManager mapManager) 
         {
@@ -61,6 +62,7 @@ namespace ShadowsOfTomorrow
                 for (var i = 0; i < layer.Tiles.Count; i++)
                     if (layer.Tiles[i].Gid != 0)
                     {
+                        
                         int tileFrame = layer.Tiles[i].Gid - 1;
                         int column = tileFrame % tileAmount.X;
                         int row = (int)Math.Floor((double)tileFrame / (double)tileAmount.X);
@@ -70,13 +72,22 @@ namespace ShadowsOfTomorrow
 
                         Rectangle tilesetRec = new(size.X * column, size.Y * row, size.X, size.Y);
 
-                        spriteBatch.Draw(tileSet, new Rectangle((int)x, (int)y, size.X, size.Y), tilesetRec, Color.White);
+                        if (layer.Name != "DestroyableBlocks" || !TileIsDestroyed(layer.Tiles[i]))
+                            spriteBatch.Draw(tileSet, new Rectangle((int)x, (int)y, size.X, size.Y), tilesetRec, Color.White);
                     }
         }
 
         public void Update(GameTime gameTime)
         {
             CheckIfColliedesWithDoor();
+        }
+
+        private bool TileIsDestroyed(TmxLayerTile tile)
+        {
+            foreach (Point point in destroyedTiles)
+                if (point == new Point(tile.X, tile.Y))
+                    return true;
+            return false;
         }
 
         private void CheckIfColliedesWithDoor()
@@ -97,18 +108,22 @@ namespace ShadowsOfTomorrow
             bool canMoveX = true, canMoveY = true;
             TmxLayer platformLayer = GetPlatformLayer();
 
-            for (int i = 0; i < platformLayer.Tiles.Count; i++)
+            foreach (var tile in platformLayer.Tiles)
             {
-                Rectangle tile = new(new(platformLayer.Tiles[i].X * size.X, platformLayer.Tiles[i].Y * size.Y), size);
-                if (new Rectangle(player.Location + new Point((int)player.playerMovement.HorisontalSpeed, 0), player.Size).Intersects(tile) && platformLayer.Tiles[i].Gid != 0)
+                Rectangle rec = new(new(tile.X * size.X, tile.Y * size.Y), size);
+                if (player.NextHorizontalHitBox.Intersects(rec) && tile.Gid != 0)
+                {
                     canMoveX = false;
-                if (tile.Intersects(new(player.Location.X, player.Location.Y + (int)player.playerMovement.VerticalSpeed, player.Size.X, player.Size.Y)) && platformLayer.Tiles[i].Gid != 0)
+                }
+                if (player.NextVerticalHitBox.Intersects(rec) && tile.Gid != 0)
                 {
                     canMoveY = false;
                     player.isGrounded = true;
+                    player.playerMovement.VerticalSpeed = 0;
                     break;
-                } else
-                    player.isGrounded = false;   
+                }
+                else
+                    player.isGrounded = false;
             }
             return (canMoveX, canMoveY);
         }

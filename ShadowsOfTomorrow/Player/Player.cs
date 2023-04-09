@@ -34,7 +34,7 @@ namespace ShadowsOfTomorrow
 
     public class Player : IUpdateAndDraw
     {
-        readonly AnimationManager animationManager;
+        public readonly AnimationManager animationManager;
 
         private readonly Animation idle;
         private readonly Animation walking;
@@ -49,6 +49,8 @@ namespace ShadowsOfTomorrow
         public Point Size { get => new(animationManager.Animation.FrameWidth, animationManager.Animation.FrameHeight); }
         public Point OldSize { get; set; }
         public Rectangle HitBox { get => hitBox; }
+        public Rectangle NextVerticalHitBox { get => new(new(Location.X, Location.Y + (int)Math.Round(playerMovement.VerticalSpeed)), Size); }
+        public Rectangle NextHorizontalHitBox { get => new(new(Location.X + (int)Math.Round(playerMovement.HorisontalSpeed), Location.Y), Size); }
         public Facing Facing { get; set; }
 
         private readonly Game1 game;
@@ -73,6 +75,48 @@ namespace ShadowsOfTomorrow
         }
 
         public void Draw(SpriteBatch spriteBatch)
+        {
+            animationManager.Draw(spriteBatch, Location.ToVector2(), Facing);
+
+            spriteBatch.DrawString(font, "Speed: " + Math.Round(playerMovement.HorisontalSpeed, 2).ToString(), camera.Window.Location.ToVector2(), Color.White);
+            spriteBatch.DrawString(font, ActiveMach.ToString(), camera.Window.Location.ToVector2() + new Vector2(0, 25), Color.White);
+            spriteBatch.DrawString(font, CurrentAction.ToString(), camera.Window.Location.ToVector2() + new Vector2(0, 50), Color.White);
+            spriteBatch.DrawString(font, isGrounded.ToString(), camera.Window.Location.ToVector2() + new Vector2(0, 75), Color.White);
+        }
+
+        public void Update(GameTime gameTime)
+        {
+            SetAnimation();
+
+            UpdateHitBox();
+
+            camera.Follow(new(new(hitBox.Left, hitBox.Bottom - 32), new(32, 32)), game.mapManager.ActiveMap);
+
+            SetPlayerMach();
+            SetPlayerDirection();
+
+            playerMovement.Update(gameTime);
+
+            animationManager.Update(gameTime);
+
+            OldMach = ActiveMach;
+            OldAction = CurrentAction;
+            OldSize = Size;
+        }
+
+        private void UpdateHitBox()
+        {
+            int yDiff = Math.Abs(OldSize.Y - Size.Y);
+
+            if (Size.Y < OldSize.Y)
+                Location += new Point(0, yDiff);
+            if (Size.Y > OldSize.Y)
+                Location -= new Point(0, yDiff);
+
+            hitBox = new Rectangle(hitBox.Location, Size);
+        }
+
+        private void SetAnimation()
         {
             switch (ActiveMach)
             {
@@ -116,53 +160,20 @@ namespace ShadowsOfTomorrow
                 default:
                     break;
             }
-
-
-            animationManager.Draw(spriteBatch, Location.ToVector2(), Facing);
-
-            spriteBatch.DrawString(font, "Speed: " + Math.Round(playerMovement.Speed.X).ToString(), camera.Window.Location.ToVector2(), Color.White);
-            spriteBatch.DrawString(font, ActiveMach.ToString(), camera.Window.Location.ToVector2() + new Vector2(0, 25), Color.White);
-            spriteBatch.DrawString(font, CurrentAction.ToString(), camera.Window.Location.ToVector2() + new Vector2(0, 50), Color.White);
-            spriteBatch.DrawString(font, isGrounded.ToString(), camera.Window.Location.ToVector2() + new Vector2(0, 75), Color.White);
-        }
-
-        public void Update(GameTime gameTime)
-        {
-            int diff = Math.Abs(OldSize.Y - Size.Y);
-
-            if (Size.Y < OldSize.Y)
-                Location += new Point(0, diff);
-            if (Size.Y > OldSize.Y)
-                Location -= new Point(0, diff);
-            
-
-            hitBox = new Rectangle(Location, Size);
-            camera.Follow(new(new(hitBox.Left, hitBox.Bottom - 32), new(32, 32)), game.mapManager.ActiveMap);
-
-            SetPlayerMach();
-            SetPlayerDirection();
-
-            playerMovement.Update(gameTime);
-
-            animationManager.Update(gameTime);
-
-            OldMach = ActiveMach;
-            OldAction = CurrentAction;
-            OldSize = Size;
         }
 
         private void SetPlayerMach()
         {
             KeyboardState keyboardState = Keyboard.GetState();
 
-            if (playerMovement.Speed.X == 0)
+            if (playerMovement.HorisontalSpeed == 0 && keyboardState.IsKeyUp(Keys.A) && keyboardState.IsKeyUp(Keys.D))
                 ActiveMach = Mach.Standing;
-            else if (playerMovement.Speed.X <= -PlayerMovement.walkingSpeed || playerMovement.Speed.X <= PlayerMovement.walkingSpeed)
+            if ((playerMovement.HorisontalSpeed <= -PlayerMovement.walkingSpeed || playerMovement.HorisontalSpeed <= PlayerMovement.walkingSpeed) && playerMovement.HorisontalSpeed != 0)
                 ActiveMach = Mach.Walking;
-            if ((playerMovement.Speed.X < -PlayerMovement.walkingSpeed || playerMovement.Speed.X > PlayerMovement.walkingSpeed) && 
+            if ((playerMovement.HorisontalSpeed < -PlayerMovement.walkingSpeed || playerMovement.HorisontalSpeed > PlayerMovement.walkingSpeed) && 
                 (keyboardState.IsKeyDown(Keys.LeftShift) || OldMach == Mach.Running) && CurrentAction != Action.Crouching)
                 ActiveMach = Mach.Running;
-            if ((playerMovement.Speed.X < -PlayerMovement.runningSpeed || playerMovement.Speed.X > PlayerMovement.runningSpeed) && 
+            if ((playerMovement.HorisontalSpeed < -PlayerMovement.runningSpeed || playerMovement.HorisontalSpeed > PlayerMovement.runningSpeed) && 
                 (keyboardState.IsKeyDown(Keys.LeftShift) || OldMach == Mach.Sprinting) && CurrentAction != Action.Crouching)
                 ActiveMach = Mach.Sprinting;
         }
