@@ -73,6 +73,10 @@ namespace ShadowsOfTomorrow
                         player.CurrentAction = Action.Standing;
                     break;
             }
+
+            if (keyboardState.IsKeyDown(Keys.J) && oldState.IsKeyUp(Keys.J) && player.CurrentAction != Action.GroundPounding && player.CurrentAction != Action.Turning)
+                player.playerAttacking.Attack();
+
             UpdateSpeed(keyboardState);
         }
 
@@ -107,6 +111,7 @@ namespace ShadowsOfTomorrow
                 {
                     if (player.isGrounded)
                     {
+                        
                         HorisontalSpeed = -1 * speedBeforeTurn;
                         StandUp();
                         if (player.OldAction != Action.Rolling && player.OldAction != Action.Crouching)
@@ -138,8 +143,6 @@ namespace ShadowsOfTomorrow
                     return;
                 }
                 HorisontalSpeed = 0;
-
-                
             }
         }
 
@@ -171,6 +174,8 @@ namespace ShadowsOfTomorrow
 
         private void UpdateSpeed(KeyboardState state)
         {
+            if (player.CurrentAction == Action.Turning)
+                return;
             switch (player.ActiveMach)
             {
                 case Mach.Running:

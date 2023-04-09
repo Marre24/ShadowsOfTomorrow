@@ -35,6 +35,7 @@ namespace ShadowsOfTomorrow
     public class Player : IUpdateAndDraw
     {
         public readonly AnimationManager animationManager;
+        
 
         private readonly Animation idle;
         private readonly Animation walking;
@@ -56,6 +57,7 @@ namespace ShadowsOfTomorrow
         private readonly Game1 game;
         public readonly Camera camera = new();
         public readonly PlayerMovement playerMovement;
+        public readonly PlayerAttacking playerAttacking;
 
         private Rectangle hitBox;
         private Mach _activeMach;
@@ -72,11 +74,13 @@ namespace ShadowsOfTomorrow
 
             animationManager = new(idle);
             playerMovement = new(this, game);
+            playerAttacking = new(this, game);
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
             animationManager.Draw(spriteBatch, Location.ToVector2(), Facing);
+            playerAttacking.Draw(spriteBatch);
 
             spriteBatch.DrawString(font, "Speed: " + Math.Round(playerMovement.HorisontalSpeed, 2).ToString(), camera.Window.Location.ToVector2(), Color.White);
             spriteBatch.DrawString(font, ActiveMach.ToString(), camera.Window.Location.ToVector2() + new Vector2(0, 25), Color.White);
@@ -87,17 +91,15 @@ namespace ShadowsOfTomorrow
         public void Update(GameTime gameTime)
         {
             SetAnimation();
-
             UpdateHitBox();
-
-            camera.Follow(new(new(hitBox.Left, hitBox.Bottom - 32), new(32, 32)), game.mapManager.ActiveMap);
-
             SetPlayerMach();
             SetPlayerDirection();
 
-            playerMovement.Update(gameTime);
+            camera.Follow(new(new(hitBox.Left, hitBox.Bottom - 32), new(32, 32)), game.mapManager.ActiveMap);
 
+            playerMovement.Update(gameTime);
             animationManager.Update(gameTime);
+            playerAttacking.Update(gameTime);
 
             OldMach = ActiveMach;
             OldAction = CurrentAction;
@@ -107,11 +109,15 @@ namespace ShadowsOfTomorrow
         private void UpdateHitBox()
         {
             int yDiff = Math.Abs(OldSize.Y - Size.Y);
+            int xDiff = Math.Abs(OldSize.X - Size.X);
+
 
             if (Size.Y < OldSize.Y)
                 Location += new Point(0, yDiff);
             if (Size.Y > OldSize.Y)
                 Location -= new Point(0, yDiff);
+            if (OldSize.X < Size.X && Facing == Facing.Right)
+                Location -= new Point(xDiff, 0);
 
             hitBox = new Rectangle(hitBox.Location, Size);
         }

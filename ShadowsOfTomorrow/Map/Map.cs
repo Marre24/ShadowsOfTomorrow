@@ -1,11 +1,14 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SharpDX.Direct2D1.Effects;
+using SharpDX.DirectWrite;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using TiledSharp;
 
 namespace ShadowsOfTomorrow
@@ -72,7 +75,7 @@ namespace ShadowsOfTomorrow
 
                         Rectangle tilesetRec = new(size.X * column, size.Y * row, size.X, size.Y);
 
-                        if (layer.Name != "DestroyableBlocks" || !TileIsDestroyed(layer.Tiles[i]))
+                        if (layer.Name != "DestroyableTiles" || !TileIsDestroyed(layer.Tiles[i]))
                             spriteBatch.Draw(tileSet, new Rectangle((int)x, (int)y, size.X, size.Y), tilesetRec, Color.White);
                     }
         }
@@ -85,7 +88,7 @@ namespace ShadowsOfTomorrow
         private bool TileIsDestroyed(TmxLayerTile tile)
         {
             foreach (Point point in destroyedTiles)
-                if (point == new Point(tile.X, tile.Y))
+                if (point == new Point(tile.X, tile.Y) * Size)
                     return true;
             return false;
         }
@@ -106,38 +109,67 @@ namespace ShadowsOfTomorrow
         public (bool, bool) WillCollide(Player player)
         {
             bool canMoveX = true, canMoveY = true;
-            TmxLayer platformLayer = GetPlatformLayer();
-
-            foreach (var tile in platformLayer.Tiles)
-            {
-                Rectangle rec = new(new(tile.X * size.X, tile.Y * size.Y), size);
-                if (player.NextHorizontalHitBox.Intersects(rec) && tile.Gid != 0)
-                {
-                    canMoveX = false;
-                }
-                if (player.NextVerticalHitBox.Intersects(rec) && tile.Gid != 0)
-                {
-                    canMoveY = false;
-                    player.isGrounded = true;
-                    player.playerMovement.VerticalSpeed = 0;
-                    break;
-                }
-                else
-                    player.isGrounded = false;
-            }
+            List<TmxLayer> collisionLayers = GetCollisionLayers();
+            foreach (TmxLayer layer in collisionLayers)
+                foreach (var tile in layer.Tiles)
+                    if (!destroyedTiles.Contains(new(tile.X * size.X, tile.Y * size.Y)))
+                    {
+                        Rectangle rec = new(new(tile.X * size.X, tile.Y * size.Y), size);
+                        if (player.NextHorizontalHitBox.Intersects(rec) && tile.Gid != 0)
+                        {
+                            canMoveX = false;
+                        }
+                        if (player.NextVerticalHitBox.Intersects(rec) && tile.Gid != 0)
+                        {
+                            if (IsGroundPoundingBlock(player.NextVerticalHitBox) && player.CurrentAction == Action.GroundPounding)
+                                RemoveTiles(player.NextVerticalHitBox);
+                            else
+                            {
+                                canMoveY = false;
+                                player.isGrounded = true;
+                                player.playerMovement.VerticalSpeed = 0;
+                                break;
+                            }
+                        }
+                        else if (player.playerMovement.VerticalSpeed != 0)
+                            player.isGrounded = false;
+                    }
             return (canMoveX, canMoveY);
         }
 
-        public TmxLayer GetPlatformLayer()
+        private (bool, bool) CheckCollision(TmxLayerTile tile, Player player)
         {
-            TmxLayer platformLayer = null;
+            bool canMoveX = true, canMoveY = true;
+            
+            return (canMoveX, canMoveY);
+        }
+
+        private void RemoveTiles(Rectangle rectangle)
+        {
+            foreach (TmxLayerTile tile in map.Layers["DestroyableTiles"].Tiles)
+                if (!destroyedTiles.Contains(new(tile.X * Size.X, tile.Y * Size.Y)))
+                    if (rectangle.Intersects(new(new(tile.X * Size.X, tile.Y * Size.Y), Size)) && tile.Gid != 0)
+                        destroyedTiles.Add(new(tile.X * Size.X, tile.Y * Size.Y));
+        }
+
+        private bool IsGroundPoundingBlock(Rectangle rectangle)
+        {
+            TmxLayer layer = map.Layers["DestroyableTiles"];
+
+            foreach (TmxLayerTile tile in layer.Tiles)
+                if (!destroyedTiles.Contains(new(tile.X * Size.X, tile.Y * Size.Y)))
+                    if (rectangle.Intersects(new(new(tile.X * Size.X, tile.Y * Size.Y), Size)) && tile.Gid != 0)
+                        return true;
+            return false;
+        }
+
+        public List<TmxLayer> GetCollisionLayers()
+        {
+            List<TmxLayer> platformLayer = new();
 
             foreach (TmxLayer layer in map.Layers)
-                if (layer.Name.ToLower() == "platforms")
-                    platformLayer = layer;
-
-            if (platformLayer == null)
-                throw new Exception("There was no layer with the name platforms in the tmx file");
+                if (layer.Name.ToLower() == "platforms" || layer.Name.ToLower() == "destroyabletiles" || layer.Name.ToLower() == "walls")
+                    platformLayer.Add(layer);
 
             return platformLayer;
         }
