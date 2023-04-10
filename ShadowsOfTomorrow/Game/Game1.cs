@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Screen = System.Windows.Forms.Screen;
 using TiledSharp;
+using System.Windows.Forms.Design;
 
 namespace ShadowsOfTomorrow
 {
@@ -12,8 +13,8 @@ namespace ShadowsOfTomorrow
         private SpriteBatch _spriteBatch;
 
         public Player player;
-        Boss boss;
         public MapManager mapManager;
+        public WindowManager windowManager;
 
         public Game1()
         {
@@ -29,8 +30,10 @@ namespace ShadowsOfTomorrow
             _graphics.ApplyChanges();
 
             player = new(this);
-            boss = new(this);
+            windowManager = new(this);
             mapManager = new(this);
+
+
             mapManager.Add(new(this, "StartMap", mapManager));
             mapManager.Add(new(this, "SecondMap", mapManager));
             mapManager.GoToSpawnPoint("1");
@@ -45,7 +48,10 @@ namespace ShadowsOfTomorrow
 
         protected override void Update(GameTime gameTime)
         {
-            mapManager.ActiveMap.Update(gameTime);
+            if (player.CurrentAction == Action.Talking)
+                windowManager.Update(gameTime);
+
+            mapManager.Update(gameTime);
             player.Update(gameTime);
 
             base.Update(gameTime);
@@ -57,9 +63,12 @@ namespace ShadowsOfTomorrow
 
             _spriteBatch.Begin(transformMatrix: player.camera.Transform);
 
+            
+
             mapManager.Draw(_spriteBatch);
             player.Draw(_spriteBatch);
-            boss.Draw(_spriteBatch);
+            if (player.CurrentAction == Action.Talking)
+                windowManager.Draw(_spriteBatch);
 
             _spriteBatch.End();
             base.Draw(gameTime);

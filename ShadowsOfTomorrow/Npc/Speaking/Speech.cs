@@ -6,11 +6,18 @@ using System.Threading.Tasks;
 
 namespace ShadowsOfTomorrow
 {
-    public abstract class Speech
+    public class Speech
     {
-        protected Dialogue dialogue = DialogueReader.GetDialogueFor("");
+        public Dialogue Dialogue => dialogue;
+        protected Dialogue dialogue;
 
+        public Speech(string name) 
+        {
+            dialogue = new(name);
+        }
 
-
+        public virtual void Answer(int choice) { }
+        
+        
     }
 }

@@ -37,7 +37,7 @@ namespace ShadowsOfTomorrow
             this.game = game;
         }
 
-        public void Update(GameTime gameTime)
+        public void Update()
         {
             CheckPlayerInput();
             CheckPlayerAction();
@@ -49,6 +49,11 @@ namespace ShadowsOfTomorrow
         private void CheckPlayerInput()
         {
             KeyboardState keyboardState = Keyboard.GetState();
+            if (player.CurrentAction == Action.Talking)
+            {
+                WillSlowDown();
+                return;
+            }
 
             switch (player.ActiveMach)
             {
@@ -76,6 +81,11 @@ namespace ShadowsOfTomorrow
 
             if (keyboardState.IsKeyDown(Keys.J) && oldState.IsKeyUp(Keys.J) && player.CurrentAction != Action.GroundPounding && player.CurrentAction != Action.Turning)
                 player.playerAttacking.Attack();
+            if (game.mapManager.ActiveMap.boss != null && player.HitBox.Intersects(game.mapManager.ActiveMap.boss.HitBox) && Keyboard.GetState().IsKeyDown(Keys.K))
+            {
+                game.windowManager.SetDialogue(game.mapManager.ActiveMap.boss.Dialogue);
+                player.CurrentAction = Action.Talking;
+            }
 
             UpdateSpeed(keyboardState);
         }
@@ -222,7 +232,7 @@ namespace ShadowsOfTomorrow
 
         private void WillSlowDown()
         {
-            if (Keyboard.GetState().IsKeyUp(Keys.A) && Keyboard.GetState().IsKeyUp(Keys.D))
+            if (Keyboard.GetState().IsKeyUp(Keys.A) && Keyboard.GetState().IsKeyUp(Keys.D) || player.CurrentAction == Action.Talking)
             {
                 if (HorisontalSpeed < 0)
                     HorisontalSpeed += brakeSpeed;

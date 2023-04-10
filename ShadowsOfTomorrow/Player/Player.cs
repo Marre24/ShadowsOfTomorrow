@@ -24,6 +24,7 @@ namespace ShadowsOfTomorrow
         Attacking,
         Turning,
         Rolling,
+        Talking,
     }
 
     public enum Facing
@@ -97,7 +98,7 @@ namespace ShadowsOfTomorrow
 
             camera.Follow(new(new(hitBox.Left, hitBox.Bottom - 32), new(32, 32)), game.mapManager.ActiveMap);
 
-            playerMovement.Update(gameTime);
+            playerMovement.Update();
             animationManager.Update(gameTime);
             playerAttacking.Update(gameTime);
 
@@ -130,6 +131,9 @@ namespace ShadowsOfTomorrow
                     switch (CurrentAction)
                     {
                         case Action.Standing:
+                            animationManager.Play(idle);
+                            break;
+                        case Action.Talking: 
                             animationManager.Play(idle);
                             break;
                         case Action.Crouching:
@@ -186,6 +190,9 @@ namespace ShadowsOfTomorrow
 
         private void SetPlayerDirection()
         {
+            if (CurrentAction == Action.Talking)
+                return;
+
             if (Keyboard.GetState().IsKeyDown(Keys.D))
                 Facing = Facing.Right;
             if (Keyboard.GetState().IsKeyDown(Keys.A))

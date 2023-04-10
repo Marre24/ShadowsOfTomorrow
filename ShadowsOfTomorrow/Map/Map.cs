@@ -23,6 +23,7 @@ namespace ShadowsOfTomorrow
         public string MapName { get; private set; }
 
         public TmxMap TmxMap => map;
+        public Boss boss;
 
         private float _top;
         private float _bottom;
@@ -43,6 +44,7 @@ namespace ShadowsOfTomorrow
             map = new($"Content/TileSets/{mapName}.tmx");
             tileSet = game.Content.Load<Texture2D>("TileSets/" + map.Tilesets[0].Name.ToString());
 
+
             size.X = map.Tilesets[0].TileWidth;
             size.Y = map.Tilesets[0].TileHeight;
 
@@ -57,6 +59,16 @@ namespace ShadowsOfTomorrow
             MapName = mapName;
             this.game = game;
             this.mapManager = mapManager;
+
+            LoadBoss();
+        }
+
+        private void LoadBoss()
+        {
+            if (!map.ObjectGroups.Contains("Bosspawnpoint"))
+                return;
+
+            boss = new(game, "Treevor", new((int)map.ObjectGroups["Bosspawnpoint"].Objects.First().X, (int)map.ObjectGroups["Bosspawnpoint"].Objects.First().Y));
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -78,11 +90,14 @@ namespace ShadowsOfTomorrow
                         if (layer.Name != "DestroyableTiles" || !TileIsDestroyed(layer.Tiles[i]))
                             spriteBatch.Draw(tileSet, new Rectangle((int)x, (int)y, size.X, size.Y), tilesetRec, Color.White);
                     }
+
+            boss?.Draw(spriteBatch);
         }
 
         public void Update(GameTime gameTime)
         {
             CheckIfColliedesWithDoor();
+            boss?.Update(gameTime);
         }
 
         private bool TileIsDestroyed(TmxLayerTile tile)
@@ -134,13 +149,6 @@ namespace ShadowsOfTomorrow
                         else if (player.playerMovement.VerticalSpeed != 0)
                             player.isGrounded = false;
                     }
-            return (canMoveX, canMoveY);
-        }
-
-        private (bool, bool) CheckCollision(TmxLayerTile tile, Player player)
-        {
-            bool canMoveX = true, canMoveY = true;
-            
             return (canMoveX, canMoveY);
         }
 

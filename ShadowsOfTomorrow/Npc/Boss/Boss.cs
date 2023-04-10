@@ -1,33 +1,39 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
-using System.Windows.Forms;
 
 namespace ShadowsOfTomorrow
 {
     public class Boss : Speech, IUpdateAndDraw
     {
-        readonly SpriteFont font;
+        public Rectangle HitBox { get => new(location, new(texture.Width, texture.Height)); }
+
+        private Point location;
+
         readonly Texture2D texture;
 
-        public Boss(Game1 game) 
+        public Boss(Game1 game, string name, Point location) : base(name)
         {
-            font = game.Content.Load<SpriteFont>("Fonts/DefaultFont");
             texture = game.Content.Load<Texture2D>("Sprites/Bosses/BoneTurtle");
+            this.location = location;
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(font, dialogue.GetMessage(), new(1000, 1000), Color.White);
-            spriteBatch.Draw(texture, new Vector2(1000, 700), Color.White);
+            spriteBatch.Draw(texture, location.ToVector2(), Color.White);
         }
 
         public void Update(GameTime gameTime)
         {
-            throw new NotImplementedException();
+            
+
         }
+
+        
     }
 }

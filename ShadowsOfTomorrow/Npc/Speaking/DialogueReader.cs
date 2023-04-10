@@ -9,15 +9,28 @@ namespace ShadowsOfTomorrow
 {
     public static class DialogueReader
     {
-        public static Dialogue GetDialogueFor(string npcName)
+        public static Dictionary<string, Dictionary<string, string>> GetDialogueFor(string npcName)
         {
-            Dialogue dialogue = new Dialogue();
+            Dictionary<string, Dictionary<string, string>> dialogue = new();
 
-            using (TextReader reader = new StreamReader("Content/TextFiles/Dialogue.txt"))
+            TextReader reader = new StreamReader("Content/TextFiles/Dialogue.txt");
+            List<string> textFromFile = reader.ReadToEnd().Replace("\n", string.Empty).Split("\r").ToList();
+            for (int i = textFromFile.IndexOf(npcName) + 1; i < textFromFile.Count; i++)
             {
-                dialogue.dialogue.Add(reader.ReadLine());
-            }
+                if (!textFromFile[i].Contains('|') && textFromFile[i] != npcName)
+                    break;
 
+                List<string> keyValue = textFromFile[i].Split('|').ToList();
+                string key = keyValue[0];
+                List<string> value = keyValue[1].Replace("[", string.Empty).Split(']').ToList();
+                value.Remove("");
+                Dictionary<string, string> questionsAndAnswers = new();
+                foreach (string str in value)
+                    questionsAndAnswers.Add(str.Split(';')[0], str.Split(';')[1]);
+
+                dialogue.Add(key, questionsAndAnswers);
+
+            }
 
             return dialogue;
         }
