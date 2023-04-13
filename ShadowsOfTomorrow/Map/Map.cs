@@ -133,6 +133,10 @@ namespace ShadowsOfTomorrow
                         if (player.NextHorizontalHitBox.Intersects(rec) && tile.Gid != 0)
                         {
                             canMoveX = false;
+                            if (player.Facing == Facing.Right)
+                                player.Location += new Point(tile.X * size.X - player.HitBox.Right, 0);
+                            else
+                                player.Location += new Point(rec.Right - player.HitBox.Left, 0);
                         }
                         if (player.NextVerticalHitBox.Intersects(rec) && tile.Gid != 0)
                         {
@@ -178,10 +182,26 @@ namespace ShadowsOfTomorrow
             List<TmxLayer> platformLayer = new();
 
             foreach (TmxLayer layer in map.Layers)
-                if (layer.Name.ToLower() == "platforms" || layer.Name.ToLower() == "destroyabletiles" || layer.Name.ToLower() == "walls")
+                if (layer.Name.ToLower() == "platforms" || layer.Name.ToLower() == "destroyabletiles")
                     platformLayer.Add(layer);
 
             return platformLayer;
+        }
+
+        internal bool IsNextToWall(Player player)
+        {
+            foreach (var layer in GetCollisionLayers())
+                foreach (var tile in layer.Tiles)
+                    if (!destroyedTiles.Contains(new(tile.X * size.X, tile.Y * size.Y)) && tile.Gid != 0)
+                    {
+                        Rectangle rec = new(new(tile.X * size.X, tile.Y * size.Y), size);
+                        if (player.Facing == Facing.Right && rec.Intersects(new(player.Location + new Point(1, 0), player.Size)))
+                            return true;
+                        if (player.Facing == Facing.Left && rec.Intersects(new(player.Location + new Point(-1, 0), player.Size)))
+                            return true;
+                    }
+
+            return false;
         }
     }
 }

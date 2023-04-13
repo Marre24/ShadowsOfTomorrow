@@ -25,6 +25,8 @@ namespace ShadowsOfTomorrow
         Turning,
         Rolling,
         Talking,
+        WallClimbing,
+        Stunned
     }
 
     public enum Facing
@@ -59,6 +61,7 @@ namespace ShadowsOfTomorrow
         public readonly Camera camera = new();
         public readonly PlayerMovement playerMovement;
         public readonly PlayerAttacking playerAttacking;
+        private readonly Input input;
 
         private Rectangle hitBox;
         private Mach _activeMach;
@@ -76,6 +79,7 @@ namespace ShadowsOfTomorrow
             animationManager = new(idle);
             playerMovement = new(this, game);
             playerAttacking = new(this, game);
+            input = new(this, game);
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -83,10 +87,11 @@ namespace ShadowsOfTomorrow
             animationManager.Draw(spriteBatch, Location.ToVector2(), Facing);
             playerAttacking.Draw(spriteBatch);
 
-            spriteBatch.DrawString(font, "Speed: " + Math.Round(playerMovement.HorisontalSpeed, 2).ToString(), camera.Window.Location.ToVector2(), Color.White);
-            spriteBatch.DrawString(font, ActiveMach.ToString(), camera.Window.Location.ToVector2() + new Vector2(0, 25), Color.White);
-            spriteBatch.DrawString(font, CurrentAction.ToString(), camera.Window.Location.ToVector2() + new Vector2(0, 50), Color.White);
-            spriteBatch.DrawString(font, isGrounded.ToString(), camera.Window.Location.ToVector2() + new Vector2(0, 75), Color.White);
+            spriteBatch.DrawString(font, "Horisontal Speed: " + Math.Round(playerMovement.HorisontalSpeed, 2).ToString(), camera.Window.Location.ToVector2(), Color.White);
+            spriteBatch.DrawString(font, "Vertical Speed: " + Math.Round(playerMovement.VerticalSpeed, 2).ToString(), camera.Window.Location.ToVector2() + new Vector2(0, 25), Color.White);
+            spriteBatch.DrawString(font, ActiveMach.ToString(), camera.Window.Location.ToVector2() + new Vector2(0, 50), Color.White);
+            spriteBatch.DrawString(font, CurrentAction.ToString(), camera.Window.Location.ToVector2() + new Vector2(0, 75), Color.White);
+            spriteBatch.DrawString(font, isGrounded.ToString(), camera.Window.Location.ToVector2() + new Vector2(0, 100), Color.White);
         }
 
         public void Update(GameTime gameTime)
@@ -98,6 +103,7 @@ namespace ShadowsOfTomorrow
 
             camera.Follow(new(new(hitBox.Left, hitBox.Bottom - 32), new(32, 32)), game.mapManager.ActiveMap);
 
+            input.CheckPlayerInput();
             playerMovement.Update();
             animationManager.Update(gameTime);
             playerAttacking.Update(gameTime);
