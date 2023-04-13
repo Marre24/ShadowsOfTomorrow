@@ -120,7 +120,7 @@ namespace ShadowsOfTomorrow
                 if (game.player.HitBox.Intersects(pair.Key))
                     mapManager.GoToSpawnPoint(pair.Value.Name.Split('-')[1]);
         }
-
+        bool oldX = true;
         public (bool, bool) WillCollide(Player player)
         {
             bool canMoveX = true, canMoveY = true;
@@ -133,9 +133,9 @@ namespace ShadowsOfTomorrow
                         if (player.NextHorizontalHitBox.Intersects(rec) && tile.Gid != 0)
                         {
                             canMoveX = false;
-                            if (player.Facing == Facing.Right)
+                            if (player.Facing == Facing.Right && player.playerMovement.HorisontalSpeed > 0 && oldX)
                                 player.Location += new Point(tile.X * size.X - player.HitBox.Right, 0);
-                            else
+                            else if (player.playerMovement.HorisontalSpeed < 0 && oldX)
                                 player.Location += new Point(rec.Right - player.HitBox.Left, 0);
                         }
                         if (player.NextVerticalHitBox.Intersects(rec) && tile.Gid != 0)
@@ -153,6 +153,7 @@ namespace ShadowsOfTomorrow
                         else if (player.playerMovement.VerticalSpeed != 0)
                             player.isGrounded = false;
                     }
+            oldX = canMoveX;
             return (canMoveX, canMoveY);
         }
 

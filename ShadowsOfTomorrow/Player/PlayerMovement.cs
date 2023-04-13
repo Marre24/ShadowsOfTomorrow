@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -235,7 +236,7 @@ namespace ShadowsOfTomorrow
 
             CheckForWallClimb(canMoveX, canMoveY);
 
-            if (canMoveX && player.CurrentAction != Action.GroundPounding)
+            if (canMoveX && player.CurrentAction != Action.GroundPounding && player.CurrentAction != Action.WallClimbing)
                 player.Location += new Point((int)HorisontalSpeed, 0);
             else 
                 HorisontalSpeed = 0;
@@ -248,13 +249,18 @@ namespace ShadowsOfTomorrow
 
         private void CheckForWallClimb(bool x, bool y)
         {
-            if (x && player.CurrentAction == Action.WallClimbing && !game.mapManager.ActiveMap.IsNextToWall(player))
+            if (player.CurrentAction == Action.Turning)
+                return;
+
+            if (x && player.CurrentAction == Action.WallClimbing && !game.mapManager.ActiveMap.IsNextToWall(player) && player.Facing == facingWall)
             {
                 HorisontalSpeed = speedBeforeWallClimb;
                 StandUp();
             }
-            else if (!x && (player.ActiveMach == Mach.Running || player.ActiveMach == Mach.Sprinting) && player.CurrentAction != Action.WallClimbing)
+            if (!x && (player.ActiveMach == Mach.Running || player.ActiveMach == Mach.Sprinting) && player.CurrentAction != Action.WallClimbing)
                 StartWallClimb();
+            if (x && player.CurrentAction == Action.WallClimbing && !game.mapManager.ActiveMap.IsNextToWall(player))
+                StandUp();
 
             if (!y && player.CurrentAction == Action.WallClimbing && !player.isGrounded)
             {
@@ -269,6 +275,7 @@ namespace ShadowsOfTomorrow
 
         private void StartWallClimb()
         {
+            Debug.WriteLine("now");
             player.CurrentAction = Action.WallClimbing;
             facingWall = player.Facing;
             speedBeforeWallClimb = HorisontalSpeed;

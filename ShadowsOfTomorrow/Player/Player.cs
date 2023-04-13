@@ -123,8 +123,8 @@ namespace ShadowsOfTomorrow
                 Location += new Point(0, yDiff);
             if (Size.Y > OldSize.Y)
                 Location -= new Point(0, yDiff);
-            if (OldSize.X < Size.X && Facing == Facing.Right)
-                Location -= new Point(xDiff, 0);
+            //if (OldSize.X < Size.X && Facing == Facing.Right)
+            //    Location -= new Point(xDiff, 0);
 
             hitBox = new Rectangle(hitBox.Location, Size);
         }
