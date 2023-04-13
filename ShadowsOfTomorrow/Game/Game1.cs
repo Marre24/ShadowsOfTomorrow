@@ -34,8 +34,13 @@ namespace ShadowsOfTomorrow
             mapManager = new(this);
 
 
-            mapManager.Add(new(this, "StartMap", mapManager));
-            mapManager.Add(new(this, "SecondMap", mapManager));
+            mapManager.Add(new(this, "LandingSite", mapManager));
+            mapManager.Add(new(this, "LearnControllsMap", mapManager));
+            mapManager.Add(new(this, "CrashSite", mapManager));
+            mapManager.Add(new(this, "LearnMelee", mapManager));
+            mapManager.Add(new(this, "RunFromBranches", mapManager));
+            mapManager.Add(new(this, "PlantCity", mapManager));
+            mapManager.Add(new(this, "BossRoom", mapManager));
             mapManager.GoToSpawnPoint("1");
 
             base.Initialize();

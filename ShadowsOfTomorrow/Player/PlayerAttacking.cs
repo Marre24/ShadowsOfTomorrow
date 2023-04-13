@@ -34,6 +34,22 @@ namespace ShadowsOfTomorrow
         {
             player.CurrentAction = Action.Attacking;
 
+            CheckIfHittingTiles();
+            CheckIfHittingBoss();
+        }
+
+        private void CheckIfHittingBoss()
+        {
+            if (game.mapManager.ActiveMap.boss == null)
+                return;
+
+            if (game.mapManager.ActiveMap.boss.HitBox.Intersects(Hitbox))
+                game.mapManager.ActiveMap.boss.OnHit();
+
+        }
+
+        private void CheckIfHittingTiles()
+        {
             Map map = game.mapManager.ActiveMap;
             TmxLayer layer = map.TmxMap.Layers["DestroyableTiles"];
 

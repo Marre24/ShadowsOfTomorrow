@@ -75,7 +75,7 @@ namespace ShadowsOfTomorrow
         {
             foreach (TmxLayer layer in map.Layers)
                 for (var i = 0; i < layer.Tiles.Count; i++)
-                    if (layer.Tiles[i].Gid != 0)
+                    if (layer.Tiles[i].Gid != 0 && layer.Name != "prototype")
                     {
                         
                         int tileFrame = layer.Tiles[i].Gid - 1;
@@ -162,6 +162,8 @@ namespace ShadowsOfTomorrow
 
         private bool IsGroundPoundingBlock(Rectangle rectangle)
         {
+            if (!map.Layers.Contains("DestroyableTiles"))
+                return false;
             TmxLayer layer = map.Layers["DestroyableTiles"];
 
             foreach (TmxLayerTile tile in layer.Tiles)

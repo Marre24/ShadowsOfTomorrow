@@ -92,13 +92,13 @@
 /processorParam:TextureFormat=Color
 /build:Sprites/Player/WalkingRight.png
 
-#begin TileSets/SecondMap.tmx
-/copy:TileSets/SecondMap.tmx
+#begin TileSets/BossRoom.tmx
+/copy:TileSets/BossRoom.tmx
 
-#begin TileSets/StartMap.tmx
-/copy:TileSets/StartMap.tmx
+#begin TileSets/CrashSite.tmx
+/copy:TileSets/CrashSite.tmx
 
-#begin TileSets/Terrain (32x32).png
+#begin TileSets/GrassTileSet.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -108,8 +108,23 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:TileSets/Terrain (32x32).png;TileSets/Terrain.png
+/build:TileSets/GrassTileSet.png
 
-#begin TileSets/Terrain.tsx
-/copy:TileSets/Terrain.tsx
+#begin TileSets/GrassTileSet.tsx
+/copy:TileSets/GrassTileSet.tsx
+
+#begin TileSets/LandingSite.tmx
+/copy:TileSets/LandingSite.tmx
+
+#begin TileSets/LearnControllsMap.tmx
+/copy:TileSets/LearnControllsMap.tmx
+
+#begin TileSets/LearnMelee.tmx
+/copy:TileSets/LearnMelee.tmx
+
+#begin TileSets/PlantCity.tmx
+/copy:TileSets/PlantCity.tmx
+
+#begin TileSets/RunFromBranches.tmx
+/copy:TileSets/RunFromBranches.tmx
 

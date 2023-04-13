@@ -26,10 +26,10 @@ namespace ShadowsOfTomorrow
             if (playerCenter.Y + screenCenter.Y >= map.Bottom)
                 cameraCenter.Y = (int)map.Bottom - screenCenter.Y;
 
-            if (playerCenter.X - screenCenter.X <= map.Left)
-                cameraCenter.X = screenCenter.X + (int)map.Left;
-            if (playerCenter.X + screenCenter.X >= map.Right)
-                cameraCenter.X = (int)map.Right - screenCenter.X;
+            if (playerCenter.X - screenCenter.X <= map.Left + 2 * 48)
+                cameraCenter.X = screenCenter.X + (int)map.Left + 2 * 48;
+            if (playerCenter.X + screenCenter.X >= map.Right - 2 * 48)
+                cameraCenter.X = (int)map.Right - screenCenter.X - 2 * 48;
 
 
             var position = Matrix.CreateTranslation(-cameraCenter.X, -cameraCenter.Y, 0);

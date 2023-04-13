@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -14,8 +15,9 @@ namespace ShadowsOfTomorrow
         public Rectangle HitBox { get => new(location, new(texture.Width, texture.Height)); }
 
         private Point location;
-
         readonly Texture2D texture;
+
+        private int health = 10;
 
         public Boss(Game1 game, string name, Point location) : base(name)
         {
@@ -34,6 +36,9 @@ namespace ShadowsOfTomorrow
 
         }
 
-        
+        internal void OnHit()
+        {
+            health--;
+        }
     }
 }

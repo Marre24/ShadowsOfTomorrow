@@ -114,7 +114,14 @@ namespace ShadowsOfTomorrow
 
         private void Turn()
         {
-            if (speedBeforeTurn < 0)
+            KeyboardState state = Keyboard.GetState();
+            if (state.IsKeyDown(Keys.D) && state.IsKeyDown(Keys.A))
+            {
+                player.CurrentAction = Action.Standing;
+                return;
+            }
+
+            if (speedBeforeTurn < 0 && state.IsKeyDown(Keys.D) && state.IsKeyUp(Keys.A))
             {
                 HorisontalSpeed += brakeSpeed;
                 if (HorisontalSpeed >= 0)
@@ -136,24 +143,32 @@ namespace ShadowsOfTomorrow
                 }
                 return;
             }
-            HorisontalSpeed -= brakeSpeed;
-            if (HorisontalSpeed <= 0)
+            if (speedBeforeTurn < 0 && state.IsKeyUp(Keys.D))
+                player.CurrentAction = Action.Standing;
+
+            if (speedBeforeTurn > 0 && state.IsKeyDown(Keys.A) && state.IsKeyUp(Keys.D))
             {
-                if (player.isGrounded)
+                HorisontalSpeed -= brakeSpeed;
+                if (HorisontalSpeed <= 0)
                 {
-                    HorisontalSpeed = -1 * speedBeforeTurn;
-                    StandUp();
-                    if (player.OldAction != Action.Rolling && player.OldAction != Action.Crouching)
-                        player.CurrentAction = Action.Standing;
-                    player.ActiveMach = Mach.Sprinting;
-                    if (speedBeforeTurn > walkingSpeed)
-                        player.ActiveMach = Mach.Running;
-                    if (speedBeforeTurn > runningSpeed)
+                    if (player.isGrounded)
+                    {
+                        HorisontalSpeed = -1 * speedBeforeTurn;
+                        StandUp();
+                        if (player.OldAction != Action.Rolling && player.OldAction != Action.Crouching)
+                            player.CurrentAction = Action.Standing;
                         player.ActiveMach = Mach.Sprinting;
-                    return;
+                        if (speedBeforeTurn > walkingSpeed)
+                            player.ActiveMach = Mach.Running;
+                        if (speedBeforeTurn > runningSpeed)
+                            player.ActiveMach = Mach.Sprinting;
+                        return;
+                    }
+                    HorisontalSpeed = 0;
                 }
-                HorisontalSpeed = 0;
             }
+            if (speedBeforeTurn > 0 && state.IsKeyUp(Keys.A))
+                player.CurrentAction = Action.Standing;
         }
 
         private void GroundPound()
