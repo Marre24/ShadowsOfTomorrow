@@ -130,6 +130,9 @@ namespace ShadowsOfTomorrow
                     if (!destroyedTiles.Contains(new(tile.X * size.X, tile.Y * size.Y)))
                     {
                         Rectangle rec = new(new(tile.X * size.X, tile.Y * size.Y), size);
+                        if (tile.Gid != 0)
+                            CheckForUnWantedCollision(player, rec);
+
                         if (player.NextHorizontalHitBox.Intersects(rec) && tile.Gid != 0)
                         {
                             canMoveX = false;
@@ -145,7 +148,8 @@ namespace ShadowsOfTomorrow
                             else
                             {
                                 canMoveY = false;
-                                player.isGrounded = true;
+                                if (player.playerMovement.VerticalSpeed > 0)
+                                    player.isGrounded = true;
                                 player.playerMovement.VerticalSpeed = 0;
                                 break;
                             }
@@ -155,6 +159,18 @@ namespace ShadowsOfTomorrow
                     }
             oldX = canMoveX;
             return (canMoveX, canMoveY);
+        }
+
+        private void CheckForUnWantedCollision(Player player, Rectangle tile)
+        {
+            if (!player.HitBox.Intersects(tile))
+                return;
+
+            if (tile.Left - player.HitBox.Right <= tile.Right - player.HitBox.Left)
+                player.Location -= new Point(player.HitBox.Right - tile.Left, 0);
+            else
+                player.Location -= new Point(tile.Right - player.HitBox.Left, 0);
+
         }
 
         private void RemoveTiles(Rectangle rectangle)

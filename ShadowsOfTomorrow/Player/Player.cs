@@ -92,6 +92,7 @@ namespace ShadowsOfTomorrow
             spriteBatch.DrawString(font, ActiveMach.ToString(), camera.Window.Location.ToVector2() + new Vector2(0, 50), Color.White);
             spriteBatch.DrawString(font, CurrentAction.ToString(), camera.Window.Location.ToVector2() + new Vector2(0, 75), Color.White);
             spriteBatch.DrawString(font, isGrounded.ToString(), camera.Window.Location.ToVector2() + new Vector2(0, 100), Color.White);
+            spriteBatch.DrawString(font, game.mapManager.ActiveMap.IsNextToWall(this).ToString(), camera.Window.Location.ToVector2() + new Vector2(0, 125), Color.White);
         }
 
         public void Update(GameTime gameTime)
@@ -123,8 +124,8 @@ namespace ShadowsOfTomorrow
                 Location += new Point(0, yDiff);
             if (Size.Y > OldSize.Y)
                 Location -= new Point(0, yDiff);
-            //if (OldSize.X < Size.X && Facing == Facing.Right)
-            //    Location -= new Point(xDiff, 0);
+            if (OldSize.X < Size.X && Facing == Facing.Right)
+                Location -= new Point(xDiff, 0);
 
             hitBox = new Rectangle(hitBox.Location, Size);
         }
@@ -182,16 +183,20 @@ namespace ShadowsOfTomorrow
         {
             KeyboardState keyboardState = Keyboard.GetState();
 
-            if (playerMovement.HorisontalSpeed == 0 && keyboardState.IsKeyUp(Keys.A) && keyboardState.IsKeyUp(Keys.D))
+
+            if (playerMovement.HorisontalSpeed == 0)
                 ActiveMach = Mach.Standing;
             if ((playerMovement.HorisontalSpeed <= -PlayerMovement.walkingSpeed || playerMovement.HorisontalSpeed <= PlayerMovement.walkingSpeed) && playerMovement.HorisontalSpeed != 0)
                 ActiveMach = Mach.Walking;
             if ((playerMovement.HorisontalSpeed < -PlayerMovement.walkingSpeed || playerMovement.HorisontalSpeed > PlayerMovement.walkingSpeed) && 
-                (keyboardState.IsKeyDown(Keys.LeftShift) || OldMach == Mach.Running) && CurrentAction != Action.Crouching)
+                (keyboardState.IsKeyDown(Keys.LeftShift) || playerMovement.HorisontalSpeed < -PlayerMovement.walkingSpeed - 1 || playerMovement.HorisontalSpeed > PlayerMovement.walkingSpeed + 1) 
+                && CurrentAction != Action.Crouching)
                 ActiveMach = Mach.Running;
             if ((playerMovement.HorisontalSpeed < -PlayerMovement.runningSpeed || playerMovement.HorisontalSpeed > PlayerMovement.runningSpeed) && 
-                (keyboardState.IsKeyDown(Keys.LeftShift) || OldMach == Mach.Sprinting) && CurrentAction != Action.Crouching)
+                (keyboardState.IsKeyDown(Keys.LeftShift) || playerMovement.HorisontalSpeed < -PlayerMovement.runningSpeed - 1 || playerMovement.HorisontalSpeed > PlayerMovement.runningSpeed + 1) 
+                && CurrentAction != Action.Crouching)
                 ActiveMach = Mach.Sprinting;
+
         }
 
         private void SetPlayerDirection()

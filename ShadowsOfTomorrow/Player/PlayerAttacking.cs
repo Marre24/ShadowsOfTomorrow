@@ -51,6 +51,8 @@ namespace ShadowsOfTomorrow
         private void CheckIfHittingTiles()
         {
             Map map = game.mapManager.ActiveMap;
+            if (!map.TmxMap.Layers.Contains("DestroyableTiles"))
+                return;
             TmxLayer layer = map.TmxMap.Layers["DestroyableTiles"];
 
             foreach (TmxLayerTile tile in layer.Tiles)
