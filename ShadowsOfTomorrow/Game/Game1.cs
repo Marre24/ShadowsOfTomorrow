@@ -41,7 +41,7 @@ namespace ShadowsOfTomorrow
             mapManager.Add(new(this, "RunFromBranches", mapManager));
             mapManager.Add(new(this, "PlantCity", mapManager));
             mapManager.Add(new(this, "BossRoom", mapManager));
-            mapManager.GoToSpawnPoint("1");
+            mapManager.GoToSpawnPoint("13");
 
             base.Initialize();
         }
@@ -53,6 +53,12 @@ namespace ShadowsOfTomorrow
 
         protected override void Update(GameTime gameTime)
         {
+            if (player.CurrentAction == Action.Ended)
+            {
+                windowManager.Update(gameTime);
+                return;
+            }
+
             if (player.CurrentAction == Action.Talking)
                 windowManager.Update(gameTime);
 
@@ -68,7 +74,12 @@ namespace ShadowsOfTomorrow
 
             _spriteBatch.Begin(transformMatrix: player.camera.Transform);
 
-            
+            if (player.CurrentAction == Action.Ended)
+            {
+                windowManager.Draw(_spriteBatch);
+                _spriteBatch.End();
+                return;
+            }
 
             mapManager.Draw(_spriteBatch);
             player.Draw(_spriteBatch);

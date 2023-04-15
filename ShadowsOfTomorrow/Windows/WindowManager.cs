@@ -12,6 +12,7 @@ namespace ShadowsOfTomorrow
     {
         private readonly Game1 game;
         private DialogueWindow dialogueWindow;
+        private EndingScreen endingScreen;
 
         public WindowManager(Game1 game) 
         {
@@ -28,12 +29,22 @@ namespace ShadowsOfTomorrow
             if (game.player.CurrentAction == Action.Talking)
                 dialogueWindow.Draw(spriteBatch);
 
+            if (game.player.CurrentAction == Action.Ended)
+                endingScreen.Draw(spriteBatch);
+
         }
 
         public void Update(GameTime gameTime)
         {
             if (game.player.CurrentAction == Action.Talking)
                 dialogueWindow.Update(gameTime);
+            if (game.player.CurrentAction == Action.Ended)
+                endingScreen.Update(gameTime);
+        }
+
+        public void SetEnd(Boss boss)
+        {
+            endingScreen = new(game, game.player, boss);
         }
     }
 }

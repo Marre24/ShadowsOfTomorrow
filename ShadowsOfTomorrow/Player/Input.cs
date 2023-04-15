@@ -10,14 +10,12 @@ namespace ShadowsOfTomorrow
     public class Input
     {
         private readonly Player player;
-        private readonly Game1 game;
 
         KeyboardState oldState = Keyboard.GetState();
 
-        public Input(Player player, Game1 game)
+        public Input(Player player)
         {
             this.player = player;
-            this.game = game;
         }
 
         public void CheckPlayerInput()
@@ -52,11 +50,7 @@ namespace ShadowsOfTomorrow
 
             if (keyboardState.IsKeyDown(Keys.J) && oldState.IsKeyUp(Keys.J) && player.CurrentAction != Action.GroundPounding && player.CurrentAction != Action.Turning)
                 player.playerAttacking.Attack();
-            if (game.mapManager.ActiveMap.boss != null && player.HitBox.Intersects(game.mapManager.ActiveMap.boss.HitBox) && Keyboard.GetState().IsKeyDown(Keys.K))
-            {
-                game.windowManager.SetDialogue(game.mapManager.ActiveMap.boss.Dialogue);
-                player.CurrentAction = Action.Talking;
-            }
+            
             oldState = keyboardState;
         }
 

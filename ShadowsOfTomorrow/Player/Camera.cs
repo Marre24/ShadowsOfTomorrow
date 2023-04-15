@@ -16,10 +16,18 @@ namespace ShadowsOfTomorrow
 
         public void Follow(Rectangle target, Map map)
         {
-            Point playerCenter = new(target.Location.X + (target.Width / 2), target.Location.Y + (target.Height / 2));
+            Point playerCenter = new(target.Location.X + (target.Width / 2), target.Location.Y - 150);
             Point screenCenter = new(Screen.PrimaryScreen.Bounds.Width / 2, Screen.PrimaryScreen.Bounds.Height / 2);
-
             Point cameraCenter = playerCenter;
+
+            if (map == null)
+                goto SetMatrix;
+
+            if (map.MapName.ToLower() == "bossroom")
+            {
+                cameraCenter = new Point(1000, 800);
+                goto SetMatrix;
+            }
 
             if (playerCenter.Y - screenCenter.Y <= map.Top)
                 cameraCenter.Y = screenCenter.Y + (int)map.Top;
@@ -31,13 +39,25 @@ namespace ShadowsOfTomorrow
             if (playerCenter.X + screenCenter.X >= map.Right - 2 * 48)
                 cameraCenter.X = (int)map.Right - screenCenter.X - 2 * 48;
 
-
+            SetMatrix:
             var position = Matrix.CreateTranslation(-cameraCenter.X, -cameraCenter.Y, 0);
             var offset = Matrix.CreateTranslation(screenCenter.X, screenCenter.Y, 0);
 
             Transform = offset * position;
 
             UpdateWindow(cameraCenter);
+        }
+
+        public void Follow(Point target)
+        {
+            Point screenCenter = new(Screen.PrimaryScreen.Bounds.Width / 2, Screen.PrimaryScreen.Bounds.Height / 2);
+
+            var position = Matrix.CreateTranslation(-target.X, -target.Y, 0);
+            var offset = Matrix.CreateTranslation(screenCenter.X, screenCenter.Y, 0);
+
+            Transform = offset * position;
+
+            UpdateWindow(target);
         }
 
         private void UpdateWindow(Point target)

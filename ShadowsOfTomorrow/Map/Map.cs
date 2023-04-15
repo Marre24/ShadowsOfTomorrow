@@ -1,7 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SharpDX.Direct2D1.Effects;
-using SharpDX.DirectWrite;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +22,13 @@ namespace ShadowsOfTomorrow
 
         public TmxMap TmxMap => map;
         public Boss boss;
+        private readonly List<Npc> npcs = new();
+        private readonly Dictionary<string, bool> npcNames = new()
+        {
+            { "Blossom", true},
+            { "Marigold", false},
+            { "Violet", true}
+        };
 
         private float _top;
         private float _bottom;
@@ -61,14 +66,26 @@ namespace ShadowsOfTomorrow
             this.mapManager = mapManager;
 
             LoadBoss();
+            LoadNpcs();
         }
 
         private void LoadBoss()
         {
-            if (!map.ObjectGroups.Contains("Bosspawnpoint"))
+            if (!map.ObjectGroups.Contains("BossSpawnpoint"))
                 return;
 
-            boss = new(game, "Treevor", new((int)map.ObjectGroups["Bosspawnpoint"].Objects.First().X, (int)map.ObjectGroups["Bosspawnpoint"].Objects.First().Y));
+            boss = new(game, "Treevor", new((int)map.ObjectGroups["BossSpawnpoint"].Objects.First().X, (int)map.ObjectGroups["BossSpawnpoint"].Objects.First().Y));
+        }
+
+        private void LoadNpcs()
+        {
+            if (!map.ObjectGroups.Contains("NpcSpawnPoint"))
+                return;
+
+            TmxList<TmxObject> tmxObject = map.ObjectGroups["NpcSpawnPoint"].Objects;
+
+            for (int i = 0; i < tmxObject.Count; i++)
+                npcs.Add(new(game, new((int)tmxObject[i].X, (int)tmxObject[i].Y), game.player, npcNames.ElementAt(i).Key, npcNames.ElementAt(i).Value));
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -92,12 +109,16 @@ namespace ShadowsOfTomorrow
                     }
 
             boss?.Draw(spriteBatch);
+            foreach (Npc npc in npcs)
+                npc.Draw(spriteBatch);
         }
 
         public void Update(GameTime gameTime)
         {
-            CheckIfColliedesWithDoor();
+            CheckIfCollidesWithDoor();
             boss?.Update(gameTime);
+            foreach (Npc npc in npcs)
+                npc.Update(gameTime);
         }
 
         private bool TileIsDestroyed(TmxLayerTile tile)
@@ -108,7 +129,7 @@ namespace ShadowsOfTomorrow
             return false;
         }
 
-        private void CheckIfColliedesWithDoor()
+        private void CheckIfCollidesWithDoor()
         {
             TmxObjectGroup group = map.ObjectGroups.First(group => group.Name.ToLower() == "doors");
             Dictionary<Rectangle, TmxObject> doors = new();
@@ -118,7 +139,15 @@ namespace ShadowsOfTomorrow
 
             foreach (KeyValuePair<Rectangle, TmxObject> pair in doors)
                 if (game.player.HitBox.Intersects(pair.Key))
+                {
+                    if (pair.Value.Name.ToLower() == "end")
+                    {
+                        game.windowManager.SetEnd(boss);
+                        game.player.CurrentAction = Action.Ended;
+                        break;
+                    }
                     mapManager.GoToSpawnPoint(pair.Value.Name.Split('-')[1]);
+                }
         }
         bool oldX = true;
         public (bool, bool) WillCollide(Player player)
@@ -136,9 +165,9 @@ namespace ShadowsOfTomorrow
                         if (player.NextHorizontalHitBox.Intersects(rec) && tile.Gid != 0)
                         {
                             canMoveX = false;
-                            if (player.Facing == Facing.Right && player.playerMovement.HorisontalSpeed > 0 && oldX)
+                            if (player.Facing == Facing.Right && player.playerMovement.HorizontalSpeed > 0 && oldX)
                                 player.Location += new Point(tile.X * size.X - player.HitBox.Right, 0);
-                            else if (player.playerMovement.HorisontalSpeed < 0 && oldX)
+                            else if (player.playerMovement.HorizontalSpeed < 0 && oldX)
                                 player.Location += new Point(rec.Right - player.HitBox.Left, 0);
                         }
                         if (player.NextVerticalHitBox.Intersects(rec) && tile.Gid != 0)
@@ -161,7 +190,7 @@ namespace ShadowsOfTomorrow
             return (canMoveX, canMoveY);
         }
 
-        private void CheckForUnWantedCollision(Player player, Rectangle tile)
+        private static void CheckForUnWantedCollision(Player player, Rectangle tile)
         {
             if (!player.HitBox.Intersects(tile))
                 return;

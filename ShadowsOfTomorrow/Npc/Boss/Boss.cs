@@ -14,14 +14,17 @@ namespace ShadowsOfTomorrow
     {
         public Rectangle HitBox { get => new(location, new(texture.Width, texture.Height)); }
 
+        private readonly Game1 game;
         private Point location;
         readonly Texture2D texture;
 
         private int health = 10;
+        internal bool wasKilled;
 
         public Boss(Game1 game, string name, Point location) : base(name)
         {
-            texture = game.Content.Load<Texture2D>("Sprites/Bosses/BoneTurtle");
+            texture = game.Content.Load<Texture2D>("Sprites/Bosses/TreevorLeaf_x3");
+            this.game = game;
             this.location = location;
         }
 
@@ -32,8 +35,18 @@ namespace ShadowsOfTomorrow
 
         public void Update(GameTime gameTime)
         {
-            
+            if (health <= 0)
+            {
+                wasKilled = true;
+                return;
+            }
 
+
+            if (game.player.HitBox.Intersects(HitBox) && Keyboard.GetState().IsKeyDown(Keys.K))
+            {
+                game.windowManager.SetDialogue(Dialogue);
+                game.player.CurrentAction = Action.Talking;
+            }
         }
 
         internal void OnHit()

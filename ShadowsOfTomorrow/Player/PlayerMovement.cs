@@ -12,19 +12,19 @@ namespace ShadowsOfTomorrow
     {
         public Vector2 Speed { get => _speed; set => _speed = value; }
         public float VerticalSpeed { get => _speed.Y; set => _speed.Y = value; }
-        public float HorisontalSpeed { get => _speed.X; set => _speed.X = value; }
+        public float HorizontalSpeed { get => _speed.X; set => _speed.X = value; }
 
         private readonly Player player;
         private readonly Game1 game;
 
-        public const int walkingSpeed = 5;
+        public const int walkingSpeed = 6;
         public const int runningSpeed = 10;
-        public const int sprintingSpeed = 15;
+        public const int sprintingSpeed = 13;
         private const int maxYSpeed = 10;
         private const int jumpForce = -10;
         private const float brakeSpeed = 0.2f;
         private const float acceleration = 0.25f;
-        private const float gravitation = 0.4f;
+        private const float gravitation = 0.5f;
         private const float groundPoundSpeed = 12.0f;
         private const float groundPoundAcceleration = 1.0f;
 
@@ -67,7 +67,7 @@ namespace ShadowsOfTomorrow
                     Turn();
                     break;
                 case Action.Rolling:
-                    if (HorisontalSpeed <= walkingSpeed && HorisontalSpeed >= -walkingSpeed)
+                    if (HorizontalSpeed <= walkingSpeed && HorizontalSpeed >= -walkingSpeed)
                         StandUp();
                     break;
             }
@@ -84,10 +84,10 @@ namespace ShadowsOfTomorrow
 
             if (speedBeforeTurn < 0 && state.IsKeyDown(Keys.D) && state.IsKeyUp(Keys.A))
             {
-                HorisontalSpeed += brakeSpeed;
-                if (HorisontalSpeed >= 0 && player.isGrounded)
+                HorizontalSpeed += brakeSpeed;
+                if (HorizontalSpeed >= 0 && player.isGrounded)
                 {
-                    HorisontalSpeed = -1 * speedBeforeTurn;
+                    HorizontalSpeed = -1 * speedBeforeTurn;
                     StandUp();
                     if (player.OldAction != Action.Rolling && player.OldAction != Action.Crouching)
                         player.CurrentAction = Action.Standing;
@@ -97,17 +97,17 @@ namespace ShadowsOfTomorrow
                         player.ActiveMach = Mach.Sprinting;
                     return;
                 }
-                else if (HorisontalSpeed >= 0 && !player.isGrounded)
-                    HorisontalSpeed = 0;
+                else if (HorizontalSpeed >= 0 && !player.isGrounded)
+                    HorizontalSpeed = 0;
                 return;
             }
 
             if (speedBeforeTurn > 0 && state.IsKeyDown(Keys.A) && state.IsKeyUp(Keys.D))
             {
-                HorisontalSpeed -= brakeSpeed;
-                if (HorisontalSpeed <= 0 && player.isGrounded)
+                HorizontalSpeed -= brakeSpeed;
+                if (HorizontalSpeed <= 0 && player.isGrounded)
                 {
-                    HorisontalSpeed = -1 * speedBeforeTurn;
+                    HorizontalSpeed = -1 * speedBeforeTurn;
                     StandUp();
                     if (player.OldAction != Action.Rolling && player.OldAction != Action.Crouching)
                         player.CurrentAction = Action.Standing;
@@ -117,8 +117,8 @@ namespace ShadowsOfTomorrow
                         player.ActiveMach = Mach.Sprinting;
                     return;
                 }
-                else if (HorisontalSpeed <= 0 && !player.isGrounded)
-                    HorisontalSpeed = 0;
+                else if (HorizontalSpeed <= 0 && !player.isGrounded)
+                    HorizontalSpeed = 0;
             }
 
             if (speedBeforeTurn < 0 && state.IsKeyUp(Keys.D))
@@ -167,42 +167,42 @@ namespace ShadowsOfTomorrow
             switch (player.ActiveMach)
             {
                 case Mach.Running:
-                    if (state.IsKeyDown(Keys.A) && HorisontalSpeed > 0 && player.CurrentAction != Action.Turning)
+                    if (state.IsKeyDown(Keys.A) && HorizontalSpeed > 0 && player.CurrentAction != Action.Turning)
                     {
                         player.CurrentAction = Action.Turning;
-                        speedBeforeTurn = HorisontalSpeed;
+                        speedBeforeTurn = HorizontalSpeed;
                     }
-                    else if (state.IsKeyDown(Keys.A) && HorisontalSpeed >= -runningSpeed)
-                        HorisontalSpeed -= acceleration / 4;
-                    if (state.IsKeyDown(Keys.D) && HorisontalSpeed < 0 && player.CurrentAction != Action.Turning)
+                    else if (state.IsKeyDown(Keys.A) && HorizontalSpeed >= -runningSpeed)
+                        HorizontalSpeed -= acceleration / 4;
+                    if (state.IsKeyDown(Keys.D) && HorizontalSpeed < 0 && player.CurrentAction != Action.Turning)
                     {
                         player.CurrentAction = Action.Turning;
-                        speedBeforeTurn = HorisontalSpeed;
+                        speedBeforeTurn = HorizontalSpeed;
                     }
-                    else if (state.IsKeyDown(Keys.D) && HorisontalSpeed <= runningSpeed)
-                        HorisontalSpeed += acceleration / 4;
+                    else if (state.IsKeyDown(Keys.D) && HorizontalSpeed <= runningSpeed)
+                        HorizontalSpeed += acceleration / 4;
                     break;
                 case Mach.Sprinting:
-                    if (state.IsKeyDown(Keys.A) && HorisontalSpeed > 0 && player.CurrentAction != Action.Turning)
+                    if (state.IsKeyDown(Keys.A) && HorizontalSpeed > 0 && player.CurrentAction != Action.Turning)
                     {
                         player.CurrentAction = Action.Turning;
-                        speedBeforeTurn = HorisontalSpeed;
+                        speedBeforeTurn = HorizontalSpeed;
                     }
-                    else if (state.IsKeyDown(Keys.A) && HorisontalSpeed >= -sprintingSpeed)
-                        HorisontalSpeed -= acceleration / 8;
-                    if (state.IsKeyDown(Keys.D) && HorisontalSpeed < 0 && player.CurrentAction != Action.Turning)
+                    else if (state.IsKeyDown(Keys.A) && HorizontalSpeed >= -sprintingSpeed)
+                        HorizontalSpeed -= acceleration / 8;
+                    if (state.IsKeyDown(Keys.D) && HorizontalSpeed < 0 && player.CurrentAction != Action.Turning)
                     {
                         player.CurrentAction = Action.Turning;
-                        speedBeforeTurn = HorisontalSpeed;
+                        speedBeforeTurn = HorizontalSpeed;
                     }
-                    else if (state.IsKeyDown(Keys.D) && HorisontalSpeed <= sprintingSpeed)
-                        HorisontalSpeed += acceleration / 8;
+                    else if (state.IsKeyDown(Keys.D) && HorizontalSpeed <= sprintingSpeed)
+                        HorizontalSpeed += acceleration / 8;
                     break;
                 case Mach.Standing or Mach.Walking:
-                    if (state.IsKeyDown(Keys.A) && HorisontalSpeed >= -walkingSpeed)
-                        HorisontalSpeed -= acceleration;
-                    if (state.IsKeyDown(Keys.D) && HorisontalSpeed <= walkingSpeed)
-                        HorisontalSpeed += acceleration;
+                    if (state.IsKeyDown(Keys.A) && HorizontalSpeed >= -walkingSpeed)
+                        HorizontalSpeed -= acceleration;
+                    if (state.IsKeyDown(Keys.D) && HorizontalSpeed <= walkingSpeed)
+                        HorizontalSpeed += acceleration;
                     break;
             }
             SlowDown:
@@ -213,12 +213,12 @@ namespace ShadowsOfTomorrow
         {
             if (Keyboard.GetState().IsKeyUp(Keys.A) && Keyboard.GetState().IsKeyUp(Keys.D) || player.CurrentAction == Action.Talking)
             {
-                if (HorisontalSpeed < 0)
-                    HorisontalSpeed += brakeSpeed;
-                if (HorisontalSpeed > 0)
-                    HorisontalSpeed -= brakeSpeed;
-                if (-brakeSpeed < HorisontalSpeed && HorisontalSpeed < brakeSpeed)
-                    HorisontalSpeed = 0;
+                if (HorizontalSpeed < 0)
+                    HorizontalSpeed += brakeSpeed;
+                if (HorizontalSpeed > 0)
+                    HorizontalSpeed -= brakeSpeed;
+                if (-brakeSpeed < HorizontalSpeed && HorizontalSpeed < brakeSpeed)
+                    HorizontalSpeed = 0;
             }
         }
 
@@ -230,16 +230,16 @@ namespace ShadowsOfTomorrow
                 VerticalSpeed += gravitation;
 
             if (game.mapManager.ActiveMap.IsNextToWall(player))
-                HorisontalSpeed = 0;
+                HorizontalSpeed = 0;
 
             (bool canMoveX, bool canMoveY) = game.mapManager.ActiveMap.WillCollide(player);
 
             CheckForWallClimb(canMoveX, canMoveY);
 
             if (canMoveX && player.CurrentAction != Action.GroundPounding && player.CurrentAction != Action.WallClimbing)
-                player.Location += new Point((int)HorisontalSpeed, 0);
+                player.Location += new Point((int)HorizontalSpeed, 0);
             else 
-                HorisontalSpeed = 0;
+                HorizontalSpeed = 0;
 
             if (canMoveY)
                 player.Location += new Point(0, (int)VerticalSpeed);
@@ -254,16 +254,16 @@ namespace ShadowsOfTomorrow
 
             if (x && player.CurrentAction == Action.WallClimbing && !game.mapManager.ActiveMap.IsNextToWall(player) && player.Facing == facingWall)
             {
-                HorisontalSpeed = speedBeforeWallClimb;
+                HorizontalSpeed = speedBeforeWallClimb;
                 VerticalSpeed = -4;
                 StandUp();
             }
             else if (x && player.OldAction == Action.WallClimbing && !game.mapManager.ActiveMap.IsNextToWall(player))
             {
                 StandUp();
-                HorisontalSpeed = -speedBeforeWallClimb;
+                HorizontalSpeed = -speedBeforeWallClimb;
             }
-            if (game.mapManager.ActiveMap.IsNextToWall(player) && (HorisontalSpeed < -PlayerMovement.walkingSpeed - 1 || HorisontalSpeed > PlayerMovement.walkingSpeed + 1) && 
+            if (game.mapManager.ActiveMap.IsNextToWall(player) && (HorizontalSpeed < -PlayerMovement.walkingSpeed - 1 || HorizontalSpeed > PlayerMovement.walkingSpeed + 1) && 
                 player.CurrentAction != Action.WallClimbing)
                 StartWallClimb();
 
@@ -273,9 +273,9 @@ namespace ShadowsOfTomorrow
                 player.CurrentAction = Action.Stunned;
                 VerticalSpeed = 5;
                 if (facingWall == Facing.Right)
-                    HorisontalSpeed = -walkingSpeed;
+                    HorizontalSpeed = -walkingSpeed;
                 else
-                    HorisontalSpeed = walkingSpeed;
+                    HorizontalSpeed = walkingSpeed;
             }
         }
 
@@ -283,8 +283,8 @@ namespace ShadowsOfTomorrow
         {
             player.CurrentAction = Action.WallClimbing;
             facingWall = player.Facing;
-            speedBeforeWallClimb = HorisontalSpeed;
-            wallClimbingSpeed = - Math.Abs(HorisontalSpeed);
+            speedBeforeWallClimb = HorizontalSpeed;
+            wallClimbingSpeed = - Math.Abs(HorizontalSpeed);
             ClimbWall();
         }
     }
