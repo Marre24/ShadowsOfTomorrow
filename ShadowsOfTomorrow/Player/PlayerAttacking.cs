@@ -11,7 +11,7 @@ namespace ShadowsOfTomorrow
 {
     public class PlayerAttacking : IUpdateAndDraw
     {
-        Texture2D texture;
+        readonly Texture2D boxTexture;
         
         private readonly Player player;
         private readonly Game1 game;
@@ -27,7 +27,7 @@ namespace ShadowsOfTomorrow
             this.player = player;
             this.game = game;
             _hitbox = new(player.Location + new Point(player.Size.X, 0), new(30,30));
-            texture = game.Content.Load<Texture2D>("Box");
+            boxTexture = game.Content.Load<Texture2D>("Box");
         }
 
         public void Attack()
@@ -82,7 +82,7 @@ namespace ShadowsOfTomorrow
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, Hitbox, Color.White);
+            spriteBatch.Draw(boxTexture, Hitbox, Color.White);
         }
     }
 }

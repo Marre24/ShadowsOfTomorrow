@@ -12,11 +12,11 @@ namespace ShadowsOfTomorrow
     public class MapManager : IUpdateAndDraw
     {
         public Map ActiveMap { get => Maps[ActiveMapIndex]; }
-        public List<Map> Maps => _maps;
+        public List<Map> Maps => _maps.Keys.ToList();
 
         public int ActiveMapIndex { get => _activeMapIndex; private set => _activeMapIndex = value; }
 
-        private readonly List<Map> _maps = new();
+        private readonly Dictionary<Map, List<BackgroundLayer>> _maps = new();
         private readonly Game1 game;
         private int _activeMapIndex;
 
@@ -25,9 +25,23 @@ namespace ShadowsOfTomorrow
             this.game = game;
         }
 
-        public void Add(Map map)
+        public void AddMaps()
         {
-            Maps.Add(map);
+            List<BackgroundLayer> layers = new()
+            {
+                new(game, 0.0f, 0.0f, new(0, -235), "Sky_x3"),
+                new(game, 0.1f, 1.2f, new(0, 17 * 48), "FarMontains_x3"),
+                new(game, 0.2f, 1.2f, new(0, 17 * 48 + 24), "CloseMountains_x3"),
+                new(game, 0.3f, 2.0f, new(0, 19 * 48), "Grass_x3"),
+                new(game, 0.4f, 1.2f, new(0, 400), "Clouds_x3", -30f)
+            };
+            _maps.Add(new(game, "LandingSite", this), layers.ToList());
+            _maps.Add(new(game, "LearnControllsMap", this), layers.ToList());
+            _maps.Add(new(game, "CrashSite", this), layers.ToList());
+            _maps.Add(new(game, "LearnMelee", this), layers.ToList());
+            _maps.Add(new(game, "RunFromBranches", this), layers.ToList());
+            _maps.Add(new(game, "PlantCity", this), layers.ToList());
+            _maps.Add(new(game, "BossRoom", this), layers.ToList());
         }
 
         public void SetActiveMapTo(int i, TmxObject spawnPoint)
@@ -45,11 +59,15 @@ namespace ShadowsOfTomorrow
         public void Update(GameTime gameTime)
         {
             ActiveMap.Update(gameTime);
+            foreach (var backgroundLayer in _maps[ActiveMap].ToList())
+                backgroundLayer.Update(gameTime);
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
             ActiveMap.Draw(spriteBatch);
+            foreach (var backgroundLayer in _maps[ActiveMap].ToList())
+                backgroundLayer.Draw(spriteBatch);
         }
 
         public void GoToSpawnPoint(string spawnpoint)

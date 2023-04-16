@@ -34,14 +34,8 @@ namespace ShadowsOfTomorrow
             mapManager = new(this);
 
 
-            mapManager.Add(new(this, "LandingSite", mapManager));
-            mapManager.Add(new(this, "LearnControllsMap", mapManager));
-            mapManager.Add(new(this, "CrashSite", mapManager));
-            mapManager.Add(new(this, "LearnMelee", mapManager));
-            mapManager.Add(new(this, "RunFromBranches", mapManager));
-            mapManager.Add(new(this, "PlantCity", mapManager));
-            mapManager.Add(new(this, "BossRoom", mapManager));
-            mapManager.GoToSpawnPoint("13");
+            mapManager.AddMaps();
+            mapManager.GoToSpawnPoint("4");
 
             base.Initialize();
         }
@@ -72,7 +66,7 @@ namespace ShadowsOfTomorrow
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            _spriteBatch.Begin(transformMatrix: player.camera.Transform);
+            _spriteBatch.Begin(transformMatrix: player.camera.Transform, sortMode: SpriteSortMode.FrontToBack);
 
             if (player.CurrentAction == Action.Ended)
             {
@@ -82,6 +76,7 @@ namespace ShadowsOfTomorrow
             }
 
             mapManager.Draw(_spriteBatch);
+            
             player.Draw(_spriteBatch);
             if (player.CurrentAction == Action.Talking)
                 windowManager.Draw(_spriteBatch);

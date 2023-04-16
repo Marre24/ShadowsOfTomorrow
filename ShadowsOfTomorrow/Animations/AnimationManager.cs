@@ -47,9 +47,11 @@ namespace ShadowsOfTomorrow
                 return;
 
             if (facing == Facing.Left)
-                spriteBatch.Draw(_animation.LeftTexture, position, new(_animation.CurrentFrame * _animation.FrameWidth, 0, _animation.FrameWidth, _animation.FrameHeight), Color.White);
+                spriteBatch.Draw(_animation.LeftTexture, position, new Rectangle(_animation.CurrentFrame * _animation.FrameWidth, 0, _animation.FrameWidth, _animation.FrameHeight), 
+                    Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 1.0f);
             if (facing == Facing.Right)
-                spriteBatch.Draw(_animation.RightTexture, position, new(_animation.CurrentFrame * _animation.FrameWidth, 0, _animation.FrameWidth, _animation.FrameHeight), Color.White);
+                spriteBatch.Draw(_animation.RightTexture, position, new(_animation.CurrentFrame * _animation.FrameWidth, 0, _animation.FrameWidth, _animation.FrameHeight), 
+                    Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 1.0f);
         }
 
         public void Update(GameTime gameTime)

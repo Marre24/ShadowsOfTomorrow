@@ -16,8 +16,5 @@ namespace ShadowsOfTomorrow
             dialogue = new(name);
         }
 
-        public virtual void Answer(int choice) { }
-        
-        
     }
 }
