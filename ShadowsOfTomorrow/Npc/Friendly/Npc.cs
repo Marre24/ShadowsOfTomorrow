@@ -41,9 +41,9 @@ namespace ShadowsOfTomorrow
         public void Draw(SpriteBatch spriteBatch)
         {
             if (big)
-                spriteBatch.Draw(bigTexture, position, Color.White);
+                spriteBatch.Draw(bigTexture, position, null, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.9f);
             else
-                spriteBatch.Draw(smallTexture, position, Color.White);
+                spriteBatch.Draw(smallTexture, position, null, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.9f);
         }
 
         public void Update(GameTime gameTime)

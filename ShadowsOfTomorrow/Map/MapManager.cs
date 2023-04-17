@@ -30,10 +30,10 @@ namespace ShadowsOfTomorrow
             List<BackgroundLayer> layers = new()
             {
                 new(game, 0.0f, 0.0f, new(0, -235), "Sky_x3"),
-                new(game, 0.1f, 1.2f, new(0, 17 * 48), "FarMontains_x3"),
-                new(game, 0.2f, 1.2f, new(0, 17 * 48 + 24), "CloseMountains_x3"),
-                new(game, 0.3f, 2.0f, new(0, 19 * 48), "Grass_x3"),
-                new(game, 0.4f, 1.2f, new(0, 400), "Clouds_x3", -30f)
+                new(game, 0.1f, 2.5f, new(0, 17 * 48), "FarMontains_x3"),
+                new(game, 0.2f, 3.5f, new(0, 17 * 48 + 24), "CloseMountains_x3"),
+                new(game, 0.3f, 5.0f, new(0, 19 * 48), "Grass_x3"),
+                new(game, 0.4f, 0f, new(0, 400), "Clouds_x3", -30f)
             };
             _maps.Add(new(game, "LandingSite", this), layers.ToList());
             _maps.Add(new(game, "LearnControllsMap", this), layers.ToList());

@@ -88,12 +88,12 @@ namespace ShadowsOfTomorrow
             animationManager.Draw(spriteBatch, Location.ToVector2(), Facing);
             playerAttacking.Draw(spriteBatch);
 
-            spriteBatch.DrawString(font, "Horizontal Speed: " + Math.Round(playerMovement.HorizontalSpeed, 2).ToString(), camera.Window.Location.ToVector2(), Color.White);
-            spriteBatch.DrawString(font, "Vertical Speed: " + Math.Round(playerMovement.VerticalSpeed, 2).ToString(), camera.Window.Location.ToVector2() + new Vector2(0, 25), Color.White);
-            spriteBatch.DrawString(font, ActiveMach.ToString(), camera.Window.Location.ToVector2() + new Vector2(0, 50), Color.White);
-            spriteBatch.DrawString(font, CurrentAction.ToString(), camera.Window.Location.ToVector2() + new Vector2(0, 75), Color.White);
-            spriteBatch.DrawString(font, isGrounded.ToString(), camera.Window.Location.ToVector2() + new Vector2(0, 100), Color.White);
-            spriteBatch.DrawString(font, game.mapManager.ActiveMap.IsNextToWall(this).ToString(), camera.Window.Location.ToVector2() + new Vector2(0, 125), Color.White);
+            spriteBatch.DrawString(font, "Horizontal Speed: " + Math.Round(playerMovement.HorizontalSpeed, 2).ToString(), camera.Window.Location.ToVector2(), Color.White, 0, Vector2.One, 1, SpriteEffects.None, 0.91f);
+            spriteBatch.DrawString(font, "Vertical Speed: " + Math.Round(playerMovement.VerticalSpeed, 2).ToString(), camera.Window.Location.ToVector2() + new Vector2(0, 25), Color.White, 0, Vector2.One, 1, SpriteEffects.None, 0.91f);
+            spriteBatch.DrawString(font, ActiveMach.ToString(), camera.Window.Location.ToVector2() + new Vector2(0, 50), Color.White, 0, Vector2.One, 1, SpriteEffects.None, 0.91f);
+            spriteBatch.DrawString(font, CurrentAction.ToString(), camera.Window.Location.ToVector2() + new Vector2(0, 75), Color.White, 0, Vector2.One, 1, SpriteEffects.None, 0.91f);
+            spriteBatch.DrawString(font, isGrounded.ToString(), camera.Window.Location.ToVector2() + new Vector2(0, 100), Color.White, 0, Vector2.One, 1, SpriteEffects.None, 0.91f);
+            spriteBatch.DrawString(font, game.mapManager.ActiveMap.IsNextToWall(this).ToString(), camera.Window.Location.ToVector2() + new Vector2(0, 125), Color.White, 0, Vector2.One, 1, SpriteEffects.None, 0.91f);
         }
 
         public void Update(GameTime gameTime)

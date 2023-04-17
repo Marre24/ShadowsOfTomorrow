@@ -38,10 +38,7 @@ namespace ShadowsOfTomorrow
             {
                 position.X += defaultMoveSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
                 position2.X += defaultMoveSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                if (position.X <= 0)
-                    position2.X = position.X + texture.Width;
-                if (position2.X <= 0)
-                    position.X = position2.X + texture.Width;
+                CheckPosition(game.player);
 
                 return;
             }

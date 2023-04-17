@@ -30,7 +30,7 @@ namespace ShadowsOfTomorrow
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, location.ToVector2(), Color.White);
+            spriteBatch.Draw(texture, location.ToVector2(), null, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.9f);
         }
 
         public void Update(GameTime gameTime)

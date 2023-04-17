@@ -105,9 +105,9 @@ namespace ShadowsOfTomorrow
                         Rectangle tilesetRec = new(size.X * column, size.Y * row, size.X, size.Y);
 
                         if (layer.Name != "DestroyableTiles" && !TileIsDestroyed(layer.Tiles[i]) && layer.Name.ToLower() != "background")
-                            spriteBatch.Draw(tileSet, new Rectangle((int)x, (int)y, size.X, size.Y), tilesetRec, Color.White, 0, Vector2.Zero, SpriteEffects.None, 0.9f);
+                            spriteBatch.Draw(tileSet, new Rectangle((int)x, (int)y, size.X, size.Y), tilesetRec, Color.White, 0, Vector2.Zero, SpriteEffects.None, 0.6f);
                         else if (layer.Name.ToLower() == "background")
-                            spriteBatch.Draw(tileSet, new Rectangle((int)x, (int)y, size.X, size.Y), tilesetRec, Color.White, 0, Vector2.Zero, SpriteEffects.None, 0.8f);
+                            spriteBatch.Draw(tileSet, new Rectangle((int)x, (int)y, size.X, size.Y), tilesetRec, Color.White, 0, Vector2.Zero, SpriteEffects.None, 0.5f);
                     }
             boss?.Draw(spriteBatch);
             foreach (Npc npc in npcs)

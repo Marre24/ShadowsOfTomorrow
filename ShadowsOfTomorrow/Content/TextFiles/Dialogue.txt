@@ -1,9 +1,9 @@
 ﻿Treevor
-First|[Hi;Hello][What is your name;Treevor][Googo gaga;mmmm monkey][Im bout;tocom]
-tocom|[Hi;Hello][What is your name;Treevor]
+First|[Hi;Hello][What is your name;Treevor][Googo gaga;mmmm monkey][Why are you so angry;Idk]
 Blossom
-First|[Waaaasup;Hello][What is your name;Treevor][Googo gaga;mmmm monkey][Im bout;tocom]
+First|[Waaaasup;Hello][What is your name;Blossom][Googo gaga;mmmm monkey][What is your occupation;I am a flourist]
+I am a flourist|[What do you do in a normal days of work;Take care of my fellow flowers]
 Marigold
-First|[Hi;Hello][What is your name;Treevor][Googo gaga;mmmm monkey][Im bout;tocom]
+First|[Hi;Hello][What is your name;Marigold][Googo gaga;mmmm monkey]
 Violet
-First|[Hi;Hello][What is your name;Treevor][Googo gaga;mmmm monkey][Im bout;tocom]
+First|[Hi;Hello][What is your name;Violet][Googo gaga;mmmm monkey]
