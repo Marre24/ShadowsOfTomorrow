@@ -32,8 +32,8 @@ namespace ShadowsOfTomorrow
 
     public enum Facing
     {
-        Right,
-        Left,
+        Right = 1,
+        Left = -1,
     }
 
     public class Player : IUpdateAndDraw
@@ -68,6 +68,8 @@ namespace ShadowsOfTomorrow
         private Mach _activeMach;
 
         public bool isGrounded;
+
+        private int health = 5;
 
         public Player(Game1 game)
         {
@@ -125,8 +127,6 @@ namespace ShadowsOfTomorrow
                 Location += new Point(0, yDiff);
             if (Size.Y > OldSize.Y)
                 Location -= new Point(0, yDiff);
-            if (OldSize.X < Size.X && Facing == Facing.Right)
-                Location -= new Point(xDiff, 0);
 
             hitBox = new Rectangle(hitBox.Location, Size);
         }
@@ -209,6 +209,15 @@ namespace ShadowsOfTomorrow
                 Facing = Facing.Right;
             if (Keyboard.GetState().IsKeyDown(Keys.A))
                 Facing = Facing.Left;
+        }
+
+        public void OnHit()
+        {
+            health--;
+            CurrentAction = Action.Stunned;
+            playerMovement.HorizontalSpeed = ((int)Facing) * -7;
+            playerMovement.VerticalSpeed = -10;
+
         }
     }
 }

@@ -10,6 +10,16 @@ using System.Text;
 
 namespace ShadowsOfTomorrow
 {
+    enum Phase
+    {
+        Talking,
+        LeafFalling,
+        LeafWind,
+        BranchingUp,
+        BranchingSide,
+    }
+
+
     public class Boss : Speech, IUpdateAndDraw
     {
         public Rectangle HitBox { get => new(location, new(texture.Width, texture.Height)); }
@@ -19,7 +29,8 @@ namespace ShadowsOfTomorrow
         readonly Texture2D texture;
 
         private int health = 10;
-        internal bool wasKilled;
+        public bool wasKilled;
+        private bool isBlowing = false;
 
         public Boss(Game1 game, string name, Point location) : base(name)
         {
