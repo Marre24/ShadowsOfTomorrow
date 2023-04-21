@@ -17,6 +17,7 @@ namespace ShadowsOfTomorrow
         public bool IsLooping { get; set; }
         public Texture2D RightTexture { get; private set; }
         public Texture2D LeftTexture { get; private set; }
+        public Texture2D NormalTexture { get; private set; }
 
         public Animation(Texture2D left, Texture2D right, int frameCount)
         {

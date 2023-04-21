@@ -39,7 +39,7 @@ namespace ShadowsOfTomorrow
     public class Player : IUpdateAndDraw
     {
         public readonly AnimationManager animationManager;
-        
+
 
         private readonly Animation idle;
         private readonly Animation walking;
@@ -57,6 +57,16 @@ namespace ShadowsOfTomorrow
         public Rectangle NextVerticalHitBox { get => new(new(Location.X, Location.Y + (int)Math.Round(playerMovement.VerticalSpeed)), Size); }
         public Rectangle NextHorizontalHitBox { get => new(new(Location.X + (int)Math.Round(playerMovement.HorizontalSpeed), Location.Y), Size); }
         public Facing Facing { get; set; }
+
+        public Color[] TextureData
+        {
+            get
+            {
+                Color[] color = new Color[animationManager.Animation.FrameWidth * animationManager.Animation.FrameHeight];
+                animationManager.CurrentCropTexture.GetData(color);
+                return color;
+            }
+        }
 
         private readonly Game1 game;
         public readonly Camera camera = new();
@@ -79,7 +89,7 @@ namespace ShadowsOfTomorrow
 
             this.game = game;
 
-            animationManager = new(idle);
+            animationManager = new(idle, game);
             playerMovement = new(this, game);
             playerAttacking = new(this, game);
             input = new(this);
@@ -141,7 +151,7 @@ namespace ShadowsOfTomorrow
                         case Action.Standing:
                             animationManager.Play(idle);
                             break;
-                        case Action.Talking: 
+                        case Action.Talking:
                             animationManager.Play(idle);
                             break;
                         case Action.Crouching:
@@ -189,12 +199,12 @@ namespace ShadowsOfTomorrow
                 ActiveMach = Mach.Standing;
             if ((playerMovement.HorizontalSpeed <= -PlayerMovement.walkingSpeed || playerMovement.HorizontalSpeed <= PlayerMovement.walkingSpeed) && playerMovement.HorizontalSpeed != 0)
                 ActiveMach = Mach.Walking;
-            if ((playerMovement.HorizontalSpeed < -PlayerMovement.walkingSpeed || playerMovement.HorizontalSpeed > PlayerMovement.walkingSpeed) && 
-                (keyboardState.IsKeyDown(Keys.LeftShift) || playerMovement.HorizontalSpeed < -PlayerMovement.walkingSpeed - 1 || playerMovement.HorizontalSpeed > PlayerMovement.walkingSpeed + 1) 
+            if ((playerMovement.HorizontalSpeed < -PlayerMovement.walkingSpeed || playerMovement.HorizontalSpeed > PlayerMovement.walkingSpeed) &&
+                (keyboardState.IsKeyDown(Keys.LeftShift) || playerMovement.HorizontalSpeed < -PlayerMovement.walkingSpeed - 1 || playerMovement.HorizontalSpeed > PlayerMovement.walkingSpeed + 1)
                 && CurrentAction != Action.Crouching)
                 ActiveMach = Mach.Running;
-            if ((playerMovement.HorizontalSpeed < -PlayerMovement.runningSpeed || playerMovement.HorizontalSpeed > PlayerMovement.runningSpeed) && 
-                (keyboardState.IsKeyDown(Keys.LeftShift) || playerMovement.HorizontalSpeed < -PlayerMovement.runningSpeed - 1 || playerMovement.HorizontalSpeed > PlayerMovement.runningSpeed + 1) 
+            if ((playerMovement.HorizontalSpeed < -PlayerMovement.runningSpeed || playerMovement.HorizontalSpeed > PlayerMovement.runningSpeed) &&
+                (keyboardState.IsKeyDown(Keys.LeftShift) || playerMovement.HorizontalSpeed < -PlayerMovement.runningSpeed - 1 || playerMovement.HorizontalSpeed > PlayerMovement.runningSpeed + 1)
                 && CurrentAction != Action.Crouching)
                 ActiveMach = Mach.Sprinting;
 
@@ -217,7 +227,7 @@ namespace ShadowsOfTomorrow
             CurrentAction = Action.Stunned;
             playerMovement.HorizontalSpeed = ((int)Facing) * -7;
             playerMovement.VerticalSpeed = -10;
-
+            isGrounded = false;
         }
     }
 }
