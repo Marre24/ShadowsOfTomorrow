@@ -12,7 +12,7 @@ namespace ShadowsOfTomorrow
     {
         private readonly Vector2 constantSpeed;
 
-        public Leaf(Game1 game, string path, Point size, Point location, Vector2 constantSpeed) : base(game, path, size, location)
+        public Leaf(Game1 game, string path, Vector2 location, Vector2 constantSpeed) : base(game, path, location)
         {
             this.constantSpeed = constantSpeed;
         }
@@ -26,7 +26,7 @@ namespace ShadowsOfTomorrow
         {
             base.Update(gameTime);
 
-            Location += constantSpeed.ToPoint();
+            Location += constantSpeed;
         }
     }
 }

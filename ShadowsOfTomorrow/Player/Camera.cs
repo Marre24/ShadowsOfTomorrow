@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
 
 namespace ShadowsOfTomorrow
 {
@@ -12,7 +14,22 @@ namespace ShadowsOfTomorrow
         public Matrix Transform { get => _transform; private set => _transform = value; }
         private Matrix _transform;
 
+        readonly Random rand = new();
+
         public Camera() { }
+
+        public void Follow(Rectangle target, Map map, bool shaking)
+        {
+            if (!shaking)
+                return;
+
+            float shakeRadius = 3.0f;
+            int shakeStartAngle = (150 + rand.Next(60));
+            Vector2 offset = new ((float)(Math.Sin(shakeStartAngle) * shakeRadius), (float)(Math.Cos(shakeStartAngle) * shakeRadius));
+            target.Location += offset.ToPoint();
+
+            Follow(target, map);
+        }
 
         public void Follow(Rectangle target, Map map)
         {
@@ -29,8 +46,8 @@ namespace ShadowsOfTomorrow
                 goto SetMatrix;
             }
 
-            if (playerCenter.Y - screenCenter.Y <= map.Top)
-                cameraCenter.Y = screenCenter.Y + (int)map.Top;
+            if (playerCenter.Y - screenCenter.Y <= map.Top + 2 * 48)
+                cameraCenter.Y = screenCenter.Y + (int)map.Top + 2 * 48;
             if (playerCenter.Y + screenCenter.Y >= map.Bottom)
                 cameraCenter.Y = (int)map.Bottom - screenCenter.Y;
 

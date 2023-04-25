@@ -19,7 +19,6 @@ namespace ShadowsOfTomorrow
         BranchingSide,
     }
 
-
     public class Boss : Speech, IUpdateAndDraw
     {
         public Rectangle HitBox { get => new(location, new(texture.Width, texture.Height)); }
@@ -36,7 +35,7 @@ namespace ShadowsOfTomorrow
         private readonly Game1 game;
         private Point location;
         readonly Texture2D texture;
-        private Phase activePhase = Phase.Talking;
+        private readonly Phase activePhase = Phase.Talking;
 
         private int health = 10;
         public bool wasKilled;

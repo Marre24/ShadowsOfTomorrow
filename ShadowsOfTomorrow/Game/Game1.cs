@@ -35,7 +35,7 @@ namespace ShadowsOfTomorrow
 
 
             mapManager.AddMaps();
-            mapManager.GoToSpawnPoint("13");
+            mapManager.GoToSpawnPoint("9");
 
             base.Initialize();
         }
@@ -47,7 +47,7 @@ namespace ShadowsOfTomorrow
 
         protected override void Update(GameTime gameTime)
         {
-            if (player.CurrentAction == Action.Ended)
+            if (player.CurrentAction == Action.Ended || player.CurrentAction == Action.Dead)
             {
                 windowManager.Update(gameTime);
                 return;
@@ -68,7 +68,7 @@ namespace ShadowsOfTomorrow
 
             _spriteBatch.Begin(transformMatrix: player.camera.Transform, sortMode: SpriteSortMode.FrontToBack);
 
-            if (player.CurrentAction == Action.Ended)
+            if (player.CurrentAction == Action.Ended || player.CurrentAction == Action.Dead)
             {
                 windowManager.Draw(_spriteBatch);
                 _spriteBatch.End();

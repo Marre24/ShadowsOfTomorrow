@@ -10,21 +10,24 @@ namespace ShadowsOfTomorrow
 {
     public class Weapon : IUpdateAndDraw
     {
-        public Point Location { get => hitbox.Location; set => hitbox.Location = value; }
+        public Vector2 Location { get => hitbox.Location.ToVector2(); set => hitbox.Location = value.ToPoint(); }
+        public Point Size => texture.Bounds.Size;
+
         protected readonly Texture2D texture;
         protected Rectangle hitbox;
         protected readonly Game1 game;
 
-        public Weapon(Game1 game, string path, Point size, Point location)
+        public Weapon(Game1 game, string path, Vector2 location)
         {
-            hitbox = new(location, size);
             texture = game.Content.Load<Texture2D>(path);
+            hitbox = new(location.ToPoint(), texture.Bounds.Size);
             this.game = game;
+            Location = location;
         }
 
         public virtual void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, hitbox.Location.ToVector2(), null, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.9f);
+            spriteBatch.Draw(texture, Location, null, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.9f);
         }
 
         public virtual void Update(GameTime gameTime)

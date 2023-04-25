@@ -13,10 +13,12 @@ namespace ShadowsOfTomorrow
         private readonly Game1 game;
         private DialogueWindow dialogueWindow;
         private EndingScreen endingScreen;
+        private readonly DeadScreen deadScreen;
 
         public WindowManager(Game1 game) 
         {
             this.game = game;
+            deadScreen = new(game, game.player);
         }
 
         public void SetDialogue(Dialogue dialogue)
@@ -32,6 +34,8 @@ namespace ShadowsOfTomorrow
             if (game.player.CurrentAction == Action.Ended)
                 endingScreen.Draw(spriteBatch);
 
+            if (game.player.CurrentAction == Action.Dead)
+                deadScreen.Draw(spriteBatch);
         }
 
         public void Update(GameTime gameTime)
@@ -40,6 +44,8 @@ namespace ShadowsOfTomorrow
                 dialogueWindow.Update(gameTime);
             if (game.player.CurrentAction == Action.Ended)
                 endingScreen.Update(gameTime);
+            if (game.player.CurrentAction == Action.Dead)
+                deadScreen.Update(gameTime);
         }
 
         public void SetEnd(Boss boss)

@@ -27,7 +27,9 @@ namespace ShadowsOfTomorrow
         Talking,
         WallClimbing,
         Stunned,
-        Ended
+        Ended,
+        WachingCutScene,
+        Dead
     }
 
     public enum Facing
@@ -67,6 +69,8 @@ namespace ShadowsOfTomorrow
                 return color;
             }
         }
+
+        public string LastSpawnPoint { get; internal set; }
 
         private readonly Game1 game;
         public readonly Camera camera = new();
@@ -115,7 +119,9 @@ namespace ShadowsOfTomorrow
             SetPlayerMach();
             SetPlayerDirection();
 
-            camera.Follow(new(new(hitBox.Left, hitBox.Bottom - 32), new(32, 32)), game.mapManager.ActiveMap);
+            if (CurrentAction != Action.WachingCutScene)
+                camera.Follow(new(new(hitBox.Left, hitBox.Bottom - 32), new(32, 32)), game.mapManager.ActiveMap);
+
 
             input.CheckPlayerInput();
             playerMovement.Update();
@@ -130,8 +136,6 @@ namespace ShadowsOfTomorrow
         private void UpdateHitBox()
         {
             int yDiff = Math.Abs(OldSize.Y - Size.Y);
-            int xDiff = Math.Abs(OldSize.X - Size.X);
-
 
             if (Size.Y < OldSize.Y)
                 Location += new Point(0, yDiff);
@@ -154,6 +158,9 @@ namespace ShadowsOfTomorrow
                         case Action.Talking:
                             animationManager.Play(idle);
                             break;
+                        case Action.WachingCutScene:
+                            animationManager.Play(idle);
+                            break;
                         case Action.Crouching:
                             break;
                         case Action.GroundPounding:
@@ -161,7 +168,6 @@ namespace ShadowsOfTomorrow
                         case Action.Attacking:
                             break;
                     }
-
                     break;
                 case Mach.Walking:
                     switch (CurrentAction)
@@ -212,7 +218,7 @@ namespace ShadowsOfTomorrow
 
         private void SetPlayerDirection()
         {
-            if (CurrentAction == Action.Talking)
+            if (CurrentAction == Action.Talking || CurrentAction == Action.WachingCutScene)
                 return;
 
             if (Keyboard.GetState().IsKeyDown(Keys.D))
@@ -228,6 +234,11 @@ namespace ShadowsOfTomorrow
             playerMovement.HorizontalSpeed = ((int)Facing) * -7;
             playerMovement.VerticalSpeed = -10;
             isGrounded = false;
+        }
+
+        internal void Die()
+        {
+            CurrentAction = Action.Dead;
         }
     }
 }

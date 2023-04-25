@@ -21,7 +21,7 @@ namespace ShadowsOfTomorrow
         public void CheckPlayerInput()
         {
             KeyboardState keyboardState = Keyboard.GetState();
-            if (player.CurrentAction == Action.Talking)
+            if (player.CurrentAction == Action.Talking || player.CurrentAction == Action.WachingCutScene)
                 return;
 
             switch (player.ActiveMach)

@@ -160,7 +160,7 @@ namespace ShadowsOfTomorrow
 
         private void UpdateSpeed(KeyboardState state)
         {
-            if (player.CurrentAction == Action.Talking)
+            if (player.CurrentAction == Action.Talking || player.CurrentAction == Action.WachingCutScene)
                 goto SlowDown;
             if (player.CurrentAction == Action.Turning || game.mapManager.ActiveMap.IsNextToWall(player) || player.CurrentAction == Action.Stunned)
                 return;
@@ -211,7 +211,7 @@ namespace ShadowsOfTomorrow
 
         private void WillSlowDown()
         {
-            if (Keyboard.GetState().IsKeyUp(Keys.A) && Keyboard.GetState().IsKeyUp(Keys.D) || player.CurrentAction == Action.Talking)
+            if (Keyboard.GetState().IsKeyUp(Keys.A) && Keyboard.GetState().IsKeyUp(Keys.D) || player.CurrentAction == Action.Talking || player.CurrentAction == Action.WachingCutScene)
             {
                 if (HorizontalSpeed < 0)
                     HorizontalSpeed += brakeSpeed;

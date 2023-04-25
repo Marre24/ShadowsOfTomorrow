@@ -29,11 +29,11 @@ namespace ShadowsOfTomorrow
         {
             List<BackgroundLayer> layers = new()
             {
-                new(game, 0.0f, 0.0f, new(0, -235), "Sky_x3"),
-                new(game, 0.1f, 2.5f, new(0, 17 * 48), "FarMontains_x3"),
-                new(game, 0.15f, 3.5f, new(0, 17 * 48 + 24), "CloseMountains_x3"),
-                new(game, 0.25f, 5.0f, new(0, 19 * 48), "Grass_x3"),
-                new(game, 0.4f, 0f, new(0, 400), "Clouds_x3", -30f)
+                new(game, 0.0f, 0.0f, new(0, - 4 * 48), "Sky_x3"),
+                new(game, 0.1f, 2.5f, new(0, 18 * 48), "FarMontains_x3"),
+                new(game, 0.15f, 3.5f, new(0, 18 * 48 + 24), "CloseMountains_x3"),
+                new(game, 0.25f, 5.0f, new(0, 20 * 48), "Grass_x3"),
+                new(game, 0.4f, 0f, new(0, 9 * 48), "Clouds_x3", -30f)
             };
             _maps.Add(new(game, "LandingSite", this), layers.ToList());
             _maps.Add(new(game, "LearnControllsMap", this), layers.ToList());
@@ -72,13 +72,17 @@ namespace ShadowsOfTomorrow
 
         public void GoToSpawnPoint(string spawnpoint)
         {
+            game.player.LastSpawnPoint = spawnpoint;
             foreach (Map map in Maps)
             {
                 TmxObjectGroup spawnpoints = map.TmxMap.ObjectGroups.First(group => group.Name.ToLower() == "spawnpoints");
 
                 foreach (TmxObject obj in spawnpoints.Objects)
                     if (obj.Name == spawnpoint)
+                    {
                         SetActiveMapTo(map.MapName, obj);
+                        map.Reset();
+                    }
             }
         }
     }

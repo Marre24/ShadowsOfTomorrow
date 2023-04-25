@@ -22,6 +22,8 @@ namespace ShadowsOfTomorrow
 
         public TmxMap TmxMap => map;
         public Boss boss;
+        private BranchHuntStart branchCutScene = new();
+        public BranchWall branchWall;
         private readonly List<Npc> npcs = new();
         private readonly Dictionary<string, bool> npcNames = new()
         {
@@ -65,8 +67,16 @@ namespace ShadowsOfTomorrow
             this.game = game;
             this.mapManager = mapManager;
 
+            LoadBranchWall();
             LoadBoss();
             LoadNpcs();
+        }
+
+        private void LoadBranchWall()
+        {
+            if (!MapName.Equals("RunFromBranches"))
+                return;
+            branchWall = new(game, "Sprites/Bosses/TreevorLeaf_x3", new(0,0), new(1000, 3000));
         }
 
         private void LoadBoss()
@@ -110,6 +120,7 @@ namespace ShadowsOfTomorrow
                             spriteBatch.Draw(tileSet, new Rectangle((int)x, (int)y, size.X, size.Y), tilesetRec, Color.White, 0, Vector2.Zero, SpriteEffects.None, 0.5f);
                     }
             boss?.Draw(spriteBatch);
+            branchWall?.Draw(spriteBatch);
             foreach (Npc npc in npcs)
                 npc.Draw(spriteBatch);
         }
@@ -117,9 +128,22 @@ namespace ShadowsOfTomorrow
         public void Update(GameTime gameTime)
         {
             CheckIfCollidesWithDoor();
+
             boss?.Update(gameTime);
+            if (branchCutScene.HasEnded)
+                branchWall?.Update(gameTime);
             foreach (Npc npc in npcs)
                 npc.Update(gameTime);
+
+            if (branchWall == null)
+                return;
+            if (MapName.Equals("RunFromBranches") && game.player.Location.X > 35 * 48 && !branchCutScene.HasBeenTriggered)
+                branchCutScene.Start(game.player);
+            if (branchCutScene.HasBeenTriggered && !branchCutScene.HasEnded)
+                branchCutScene.Play(this, game.player.camera, game.player);
+            else if (branchCutScene.HasBeenTriggered && branchCutScene.HasEnded)
+                branchWall.Update(gameTime);
+
         }
 
         private bool TileIsDestroyed(TmxLayerTile tile)
@@ -249,6 +273,18 @@ namespace ShadowsOfTomorrow
                     }
 
             return false;
+        }
+
+        public void Reset()
+        {
+            destroyedTiles = new();
+            if (branchWall != null)
+            {
+                LoadBranchWall();
+                branchCutScene = new();
+            }
+            if (boss != null)
+                LoadBoss();
         }
     }
 }
