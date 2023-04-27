@@ -11,6 +11,7 @@ namespace ShadowsOfTomorrow
     public class Weapon : IUpdateAndDraw
     {
         public Vector2 Location { get => hitbox.Location.ToVector2(); set => hitbox.Location = value.ToPoint(); }
+        public Rectangle HitBox => hitbox;
         public Point Size => texture.Bounds.Size;
 
         protected readonly Texture2D texture;

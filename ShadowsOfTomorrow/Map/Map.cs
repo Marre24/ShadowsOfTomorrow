@@ -76,7 +76,7 @@ namespace ShadowsOfTomorrow
         {
             if (!MapName.Equals("RunFromBranches"))
                 return;
-            branchWall = new(game, "Sprites/Bosses/TreevorLeaf_x3", new(0,0), new(1000, 3000));
+            branchWall = new(game, "Box", new(0,0), new(1000, 3000));
         }
 
         private void LoadBoss()
@@ -140,7 +140,7 @@ namespace ShadowsOfTomorrow
             if (MapName.Equals("RunFromBranches") && game.player.Location.X > 35 * 48 && !branchCutScene.HasBeenTriggered)
                 branchCutScene.Start(game.player);
             if (branchCutScene.HasBeenTriggered && !branchCutScene.HasEnded)
-                branchCutScene.Play(this, game.player.camera, game.player);
+                branchCutScene.Play(this, game.player.camera, game.player, gameTime);
             else if (branchCutScene.HasBeenTriggered && branchCutScene.HasEnded)
                 branchWall.Update(gameTime);
 
@@ -259,20 +259,26 @@ namespace ShadowsOfTomorrow
             return platformLayer;
         }
 
-        internal bool IsNextToWall(Player player)
+        internal void IsNextToWall(Player player)
         {
             foreach (var layer in GetCollisionLayers())
                 foreach (var tile in layer.Tiles)
                     if (!destroyedTiles.Contains(new(tile.X * size.X, tile.Y * size.Y)) && tile.Gid != 0)
                     {
                         Rectangle rec = new(new(tile.X * size.X, tile.Y * size.Y), size);
-                        if (player.Facing == Facing.Right && rec.Intersects(new(player.Location + new Point(1, 0), player.Size)))
-                            return true;
-                        if (player.Facing == Facing.Left && rec.Intersects(new(player.Location + new Point(-1, 0), player.Size)))
-                            return true;
+                        if (player.Facing == Facing.Right && rec.Intersects(new(player.Location + new Point(5, 0), player.Size)))
+                        {
+                            player.isNextToWall = true;
+                            return;
+                        }
+                        if (player.Facing == Facing.Left && rec.Intersects(new(player.Location + new Point(-5, 0), player.Size)))
+                        {
+                            player.isNextToWall = true;
+                            return;
+                        }
                     }
 
-            return false;
+            player.isNextToWall = false;
         }
 
         public void Reset()

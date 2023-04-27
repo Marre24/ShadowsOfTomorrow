@@ -34,7 +34,7 @@ namespace ShadowsOfTomorrow
             if (Location.X >= 80 * 48)
                 speed = 2.4f;
             if (Location.X >= 150 * 48)
-                speed = 3;
+                speed = 2.8f;
             if (Location.X >= 200 * 48)
                 speed = 2.2f;
 

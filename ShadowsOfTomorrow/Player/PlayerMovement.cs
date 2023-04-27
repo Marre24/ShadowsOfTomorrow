@@ -162,7 +162,7 @@ namespace ShadowsOfTomorrow
         {
             if (player.CurrentAction == Action.Talking || player.CurrentAction == Action.WachingCutScene)
                 goto SlowDown;
-            if (player.CurrentAction == Action.Turning || game.mapManager.ActiveMap.IsNextToWall(player) || player.CurrentAction == Action.Stunned)
+            if (player.CurrentAction == Action.Turning || player.isNextToWall || player.CurrentAction == Action.Stunned)
                 return;
             switch (player.ActiveMach)
             {
@@ -229,7 +229,7 @@ namespace ShadowsOfTomorrow
             else if (VerticalSpeed < maxYSpeed)
                 VerticalSpeed += gravitation;
 
-            if (game.mapManager.ActiveMap.IsNextToWall(player))
+            if (player.isNextToWall && player.ActiveMach == Mach.Walking)
                 HorizontalSpeed = 0;
 
             (bool canMoveX, bool canMoveY) = game.mapManager.ActiveMap.WillCollide(player);
@@ -238,8 +238,6 @@ namespace ShadowsOfTomorrow
 
             if (canMoveX && player.CurrentAction != Action.GroundPounding && player.CurrentAction != Action.WallClimbing)
                 player.Location += new Point((int)HorizontalSpeed, 0);
-            else 
-                HorizontalSpeed = 0;
 
             if (canMoveY)
                 player.Location += new Point(0, (int)VerticalSpeed);
@@ -249,24 +247,24 @@ namespace ShadowsOfTomorrow
 
         private void CheckForWallClimb(bool x, bool y)
         {
-            if (player.CurrentAction == Action.Turning)
+            if (player.CurrentAction == Action.Turning && player.OldAction != Action.WallClimbing)
                 return;
 
-            if (x && player.CurrentAction == Action.WallClimbing && !game.mapManager.ActiveMap.IsNextToWall(player) && player.Facing == facingWall)
+            if (x && player.CurrentAction == Action.WallClimbing && !player.isNextToWall && player.Facing == facingWall)
             {
                 HorizontalSpeed = speedBeforeWallClimb;
                 VerticalSpeed = -4;
                 StandUp();
             }
-            else if (x && player.OldAction == Action.WallClimbing && !game.mapManager.ActiveMap.IsNextToWall(player))
+            else if (x && player.OldAction == Action.WallClimbing && HorizontalSpeed != 0)
             {
                 StandUp();
                 HorizontalSpeed = -speedBeforeWallClimb;
             }
-            if (game.mapManager.ActiveMap.IsNextToWall(player) && (HorizontalSpeed < -PlayerMovement.walkingSpeed - 1 || HorizontalSpeed > PlayerMovement.walkingSpeed + 1) && 
-                player.CurrentAction != Action.WallClimbing)
-                StartWallClimb();
 
+
+            if (player.isNextToWall && (player.ActiveMach == Mach.Running || player.ActiveMach == Mach.Sprinting) && player.CurrentAction != Action.WallClimbing) 
+                StartWallClimb();
 
             if (!y && player.CurrentAction == Action.WallClimbing && !player.isGrounded)
             {
@@ -286,6 +284,7 @@ namespace ShadowsOfTomorrow
             speedBeforeWallClimb = HorizontalSpeed;
             wallClimbingSpeed = - Math.Abs(HorizontalSpeed);
             ClimbWall();
+            HorizontalSpeed = 0;
         }
     }
 }
