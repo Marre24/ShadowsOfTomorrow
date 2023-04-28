@@ -42,7 +42,7 @@ namespace ShadowsOfTomorrow
 
             if (map.MapName.ToLower() == "bossroom")
             {
-                cameraCenter = new Point(1000, 800);
+                cameraCenter = new Point(1100, 800);
                 goto SetMatrix;
             }
 

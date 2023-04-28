@@ -70,7 +70,7 @@ namespace ShadowsOfTomorrow
             }
         }
 
-        public string LastSpawnPoint { get; internal set; }
+        public int LastSpawnPoint { get; internal set; }
 
         private readonly Game1 game;
         public readonly Camera camera = new();

@@ -9,7 +9,7 @@ namespace ShadowsOfTomorrow
 {
     public class Dialogue
     {
-        public List<string> bossDialogue = new();
+        public List<List<string>> bossDialogue = new();
         public Dictionary<string, Dictionary<string, string>> dialogue = new();
 
         public bool IsBoss { get; set; }

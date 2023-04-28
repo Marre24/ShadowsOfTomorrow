@@ -171,7 +171,7 @@ namespace ShadowsOfTomorrow
                         game.player.CurrentAction = Action.Ended;
                         break;
                     }
-                    mapManager.GoToSpawnPoint(pair.Value.Name.Split('-')[1]);
+                    mapManager.GoToSpawnPoint(int.Parse(pair.Value.Name.Split('-')[1]));
                 }
         }
         bool oldX = true;

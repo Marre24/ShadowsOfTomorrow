@@ -58,7 +58,7 @@ namespace ShadowsOfTomorrow
             buttonHitBox = new(window.Center - new Point(120, -206), new(46 * 6, 13 * 6));
             if (mouseState.LeftButton == ButtonState.Pressed)
             {
-                game.mapManager.GoToSpawnPoint((int.Parse(player.LastSpawnPoint) - 1).ToString());
+                game.mapManager.GoToSpawnPoint(player.LastSpawnPoint - 1);
                 player.Reset();
             }
         }

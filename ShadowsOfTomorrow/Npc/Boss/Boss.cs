@@ -38,21 +38,27 @@ namespace ShadowsOfTomorrow
         private readonly PhaseManager phaseManager;
         private Point location;
         readonly Texture2D texture;
-        private readonly Phase activePhase = Phase.StartDialogue;
+        private readonly SpriteFont font;
+        private Phase activePhase = Phase.StartDialogue;
 
         private int health = 10;
         public bool wasKilled;
+        public int talkingIndex = 0;
 
         public Boss(Game1 game, string name, Point location) : base(name, true)
         {
             texture = game.Content.Load<Texture2D>("Sprites/Bosses/TreevorLeaf_x3");
-            phaseManager = new(this);
+            font = game.Content.Load<SpriteFont>("Fonts/DefaultFont");
+            phaseManager = new(this, game);
             this.game = game;
             this.location = location;
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            if (wasKilled)
+                return;
+            spriteBatch.DrawString(font, health.ToString(), game.player.camera.Window.Location.ToVector2() + new Vector2(500, 50), Color.White, 0, Vector2.One, 1, SpriteEffects.None, 0.91f);
             phaseManager.Draw(spriteBatch);
             spriteBatch.Draw(texture, location.ToVector2(), null, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.9f);
         }
@@ -67,22 +73,27 @@ namespace ShadowsOfTomorrow
 
             if (activePhase == Phase.StartDialogue && Keyboard.GetState().IsKeyDown(Keys.K)) // gör om
             {
-                game.windowManager.SetDialogue(Dialogue);
+                game.windowManager.SetDialogue(Dialogue, this);
                 game.player.CurrentAction = Action.Talking;
             }
+
+            phaseManager.Update(gameTime);
 
             if (game.player.animationManager.CurrentCropTexture == null)
                 return;
             game.player.animationManager.CurrentCropTexture.GetData(game.player.TextureData);
             texture.GetData(TextureData);
 
-            //if (HasIntersectingPixels(game.player.HitBox, game.player.TextureData, HitBox, TextureData))
-            //    game.player.OnHit();
+            if (HasIntersectingPixels(game.player.HitBox, game.player.TextureData, HitBox, TextureData))
+                game.player.OnHit();
         }
 
         internal void OnHit()
         {
             health--;
+            talkingIndex++;
+            game.player.CurrentAction = Action.Talking;
+            activePhase = Phase.StartDialogue;
         }
 
         public static bool HasIntersectingPixels(Rectangle rectangleA, Color[] dataA, Rectangle rectangleB, Color[] dataB)

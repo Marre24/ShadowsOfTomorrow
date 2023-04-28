@@ -11,10 +11,12 @@ namespace ShadowsOfTomorrow
     public class PhaseManager : IUpdateAndDraw
     {
         private readonly Boss boss;
+        private readonly Game1 game;
 
-        public PhaseManager(Boss boss)
+        public PhaseManager(Boss boss, Game1 game)
         {
             this.boss = boss;
+            this.game = game;
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -22,6 +24,7 @@ namespace ShadowsOfTomorrow
             switch (boss.ActivePhase)
             {
                 case Phase.StartDialogue:
+                    game.windowManager.Draw(spriteBatch);
                     break;
                 case Phase.Stunned:
                     break;
@@ -42,6 +45,7 @@ namespace ShadowsOfTomorrow
             switch (boss.ActivePhase)
             {
                 case Phase.StartDialogue:
+                    game.windowManager.Update(gameTime);
                     break;
                 case Phase.Stunned:
                     break;

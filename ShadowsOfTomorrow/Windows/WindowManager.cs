@@ -21,9 +21,9 @@ namespace ShadowsOfTomorrow
             deadScreen = new(game, game.player);
         }
 
-        public void SetDialogue(Dialogue dialogue)
+        public void SetDialogue(Dialogue dialogue, Boss boss)
         {
-            dialogueWindow = new(game, dialogue);
+            dialogueWindow = new(game, boss, dialogue);
         }
 
         public void Draw(SpriteBatch spriteBatch)

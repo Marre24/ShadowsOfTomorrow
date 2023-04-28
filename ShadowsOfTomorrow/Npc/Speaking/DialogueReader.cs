@@ -36,13 +36,17 @@ namespace ShadowsOfTomorrow
             return dialogue;
         }
 
-        public static List<string> GetDialogueFor(string npcName, bool isBoss)
+        public static List<List<string>> GetDialogueFor(string npcName, bool isBoss)
         {
-            List<string> value = new();
+            List<List<string>> value = new();
             TextReader reader = new StreamReader("Content/TextFiles/Dialogue.txt");
             List<string> textFromFile = reader.ReadToEnd().Replace("\n", string.Empty).Split("\r").ToList();
-            value = textFromFile[textFromFile.IndexOf(npcName) + 1].Split(';').ToList();
-            value.Remove("");
+            for (int i = textFromFile.IndexOf(npcName); i < textFromFile.Count; i++)
+            {
+                if (!textFromFile[i + 1].Contains(';'))
+                    break;
+                value.Add(textFromFile[i + 1].Split(';').ToList());
+            }
             return value;
         }
     }

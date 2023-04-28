@@ -70,15 +70,21 @@ namespace ShadowsOfTomorrow
                 backgroundLayer.Draw(spriteBatch);
         }
 
-        public void GoToSpawnPoint(string spawnpoint)
+        public void GoToSpawnPoint(int spawnpoint)
         {
+            if (spawnpoint == 13)
+            {
+                game.windowManager.SetDialogue(Maps.First(map => map.MapName == "BossRoom").boss.Dialogue, Maps.First(map => map.MapName == "BossRoom").boss);
+                game.player.CurrentAction = Action.Talking;
+            }
+
             game.player.LastSpawnPoint = spawnpoint;
             foreach (Map map in Maps)
             {
                 TmxObjectGroup spawnpoints = map.TmxMap.ObjectGroups.First(group => group.Name.ToLower() == "spawnpoints");
 
                 foreach (TmxObject obj in spawnpoints.Objects)
-                    if (obj.Name == spawnpoint)
+                    if (obj.Name == spawnpoint.ToString())
                     {
                         SetActiveMapTo(map.MapName, obj);
                         map.Reset();

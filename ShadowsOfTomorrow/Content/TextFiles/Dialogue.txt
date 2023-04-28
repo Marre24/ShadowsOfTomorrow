@@ -1,5 +1,8 @@
 ﻿Treevor
 Hello;My name is Treevor;Why are you so angry;Idk
+Why are you so angry;Idk
+My name is Treevor;Why are you so angry;Idk
+Idk;Goodbye
 Blossom
 First|[Waaaasup;Hello][What is your name;Blossom][Googo gaga;mmmm monkey][What is your occupation;I am a flourist]
 I am a flourist|[What do you do in a normal days of work;I take care of my fellow flowers]
