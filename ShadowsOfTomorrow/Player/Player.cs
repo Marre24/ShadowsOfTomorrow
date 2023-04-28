@@ -246,5 +246,12 @@ namespace ShadowsOfTomorrow
         {
             CurrentAction = Action.Dead;
         }
+
+        internal void Reset()
+        {
+            health = 5;
+            CurrentAction = Action.Standing;
+            playerMovement.Speed = Vector2.Zero;
+        }
     }
 }

@@ -10,9 +10,10 @@ using System.Text;
 
 namespace ShadowsOfTomorrow
 {
-    enum Phase
+    public enum Phase
     {
-        Talking,
+        StartDialogue,
+        Stunned,
         LeafFalling,
         LeafWind,
         BranchingUp,
@@ -22,6 +23,7 @@ namespace ShadowsOfTomorrow
     public class Boss : Speech, IUpdateAndDraw
     {
         public Rectangle HitBox { get => new(location, new(texture.Width, texture.Height)); }
+        public Phase ActivePhase => activePhase;
         public Color[] TextureData
         {
             get
@@ -33,22 +35,25 @@ namespace ShadowsOfTomorrow
         }
 
         private readonly Game1 game;
+        private readonly PhaseManager phaseManager;
         private Point location;
         readonly Texture2D texture;
-        private readonly Phase activePhase = Phase.Talking;
+        private readonly Phase activePhase = Phase.StartDialogue;
 
         private int health = 10;
         public bool wasKilled;
 
-        public Boss(Game1 game, string name, Point location) : base(name)
+        public Boss(Game1 game, string name, Point location) : base(name, true)
         {
             texture = game.Content.Load<Texture2D>("Sprites/Bosses/TreevorLeaf_x3");
+            phaseManager = new(this);
             this.game = game;
             this.location = location;
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            phaseManager.Draw(spriteBatch);
             spriteBatch.Draw(texture, location.ToVector2(), null, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.9f);
         }
 
@@ -60,7 +65,7 @@ namespace ShadowsOfTomorrow
                 return;
             }
 
-            if (activePhase == Phase.Talking && Keyboard.GetState().IsKeyDown(Keys.K))
+            if (activePhase == Phase.StartDialogue && Keyboard.GetState().IsKeyDown(Keys.K)) // gör om
             {
                 game.windowManager.SetDialogue(Dialogue);
                 game.player.CurrentAction = Action.Talking;
@@ -71,8 +76,8 @@ namespace ShadowsOfTomorrow
             game.player.animationManager.CurrentCropTexture.GetData(game.player.TextureData);
             texture.GetData(TextureData);
 
-            if (HasIntersectingPixels(game.player.HitBox, game.player.TextureData, HitBox, TextureData))
-                game.player.OnHit();
+            //if (HasIntersectingPixels(game.player.HitBox, game.player.TextureData, HitBox, TextureData))
+            //    game.player.OnHit();
         }
 
         internal void OnHit()

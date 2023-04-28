@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace ShadowsOfTomorrow
 {
@@ -35,5 +36,14 @@ namespace ShadowsOfTomorrow
             return dialogue;
         }
 
+        public static List<string> GetDialogueFor(string npcName, bool isBoss)
+        {
+            List<string> value = new();
+            TextReader reader = new StreamReader("Content/TextFiles/Dialogue.txt");
+            List<string> textFromFile = reader.ReadToEnd().Replace("\n", string.Empty).Split("\r").ToList();
+            value = textFromFile[textFromFile.IndexOf(npcName) + 1].Split(';').ToList();
+            value.Remove("");
+            return value;
+        }
     }
 }

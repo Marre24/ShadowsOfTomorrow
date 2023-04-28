@@ -20,7 +20,7 @@ namespace ShadowsOfTomorrow
         private readonly Dialogue dialogue;
         private string goTo = "First";
         private string displayAnswer = "";
-        private int questionIndex = 0;
+        private int index = 0;
         private bool showingQuestions = true;
         private KeyboardState oldState = Keyboard.GetState();
 
@@ -39,19 +39,34 @@ namespace ShadowsOfTomorrow
             if (state.IsKeyDown(Keys.Escape))
                 game.player.CurrentAction = Action.Standing;
 
+            
+
             if (state.IsKeyDown(Keys.Enter) && oldState.IsKeyUp(Keys.Enter))
             {
+                if (dialogue.IsBoss)
+                {
+                    if (dialogue.bossDialogue.Count <= ++index)
+                    {
+                        game.player.CurrentAction = Action.Standing;
+                        return;
+                    }
+                    oldState = state;
+                    return;
+                }
+
                 if (showingQuestions)
                 {
-                    displayAnswer = dialogue.GetAnswer(goTo, questionIndex);
+                    displayAnswer = dialogue.GetAnswer(goTo, index);
                     goTo = dialogue.GoTo(displayAnswer);
                 }
                 showingQuestions = !showingQuestions;
             }
-            
 
-            UpdateIndex(state);
-            
+            if (!dialogue.IsBoss)
+                UpdateIndex(state);
+            else
+                window = new(game.player.camera.Window.Center + new Point(-200, 500 - size.Y), size);
+
             oldState = state;
         }
 
@@ -60,15 +75,15 @@ namespace ShadowsOfTomorrow
             if (!showingQuestions)
                 return;
             if (state.IsKeyDown(Keys.Down) && oldState.IsKeyUp(Keys.Down))
-                questionIndex++;
+                index++;
 
             else if (state.IsKeyDown(Keys.Up) && oldState.IsKeyUp(Keys.Up))
-                questionIndex--;
+                index--;
 
-            if (questionIndex > dialogue.GetQuestions(goTo).Count - 1)
-                questionIndex = 0;
-            if (questionIndex < 0)
-                questionIndex = dialogue.GetQuestions(goTo).Count - 1;
+            if (index > dialogue.GetQuestions(goTo).Count - 1)
+                index = 0;
+            if (index < 0)
+                index = dialogue.GetQuestions(goTo).Count - 1;
 
             window = new(game.player.HitBox.Center + new Point(-size.X / 2, 500 - size.Y), size);
         }
@@ -76,12 +91,19 @@ namespace ShadowsOfTomorrow
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(texture, window, null, Color.White, 0, Vector2.Zero, SpriteEffects.None, 0.91f);
+
+            if (dialogue.IsBoss)
+            {
+                spriteBatch.DrawString(font, dialogue.bossDialogue[index], window.Location.ToVector2() + new Vector2(50, 200), Color.White, 0, Vector2.One, 1, SpriteEffects.None, 0.91f);
+                return;
+            }
+
             if (showingQuestions)
                 ShowQuestions(spriteBatch);
             else
                 ShowAnswer(spriteBatch);
             
-            spriteBatch.DrawString(font, questionIndex.ToString(), window.Location.ToVector2() + new Vector2(50, 300), Color.White, 0, Vector2.One, 1, SpriteEffects.None, 0.91f);
+            spriteBatch.DrawString(font, index.ToString(), window.Location.ToVector2() + new Vector2(50, 300), Color.White, 0, Vector2.One, 1, SpriteEffects.None, 0.91f);
         }
 
         private void ShowAnswer(SpriteBatch spriteBatch)
@@ -95,7 +117,7 @@ namespace ShadowsOfTomorrow
 
             for (int i = 0; i < questions.Count; i++)
             {
-                if (i == questionIndex)
+                if (i == index)
                     spriteBatch.DrawString(font, questions[i], window.Location.ToVector2() + new Vector2(52, 100 + i * 40), Color.Red, 0, Vector2.One, 1, SpriteEffects.None, 0.91f);
                 else
                     spriteBatch.DrawString(font, questions[i], window.Location.ToVector2() + new Vector2(50, 100 + i * 40), Color.White, 0, Vector2.One, 1, SpriteEffects.None, 0.91f);

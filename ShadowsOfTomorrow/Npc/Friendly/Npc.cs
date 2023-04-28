@@ -28,7 +28,7 @@ namespace ShadowsOfTomorrow
         private readonly Player player;
         private readonly bool big;
 
-        public Npc(Game1 game, Vector2 position, Player player, string name, bool big) : base(name)
+        public Npc(Game1 game, Vector2 position, Player player, string name, bool big) : base(name, false)
         {
             bigTexture = game.Content.Load<Texture2D>("Sprites/Npc/PlantPerson_x3");
             smallTexture = game.Content.Load<Texture2D>("Sprites/Npc/PlantBaby_x3");

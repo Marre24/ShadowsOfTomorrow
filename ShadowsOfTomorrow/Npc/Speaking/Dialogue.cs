@@ -9,10 +9,19 @@ namespace ShadowsOfTomorrow
 {
     public class Dialogue
     {
+        public List<string> bossDialogue = new();
         public Dictionary<string, Dictionary<string, string>> dialogue = new();
 
-        public Dialogue(string name) 
+        public bool IsBoss { get; set; }
+
+        public Dialogue(string name, bool isBoss) 
         {
+            IsBoss = isBoss;
+            if (isBoss)
+            {
+                bossDialogue = DialogueReader.GetDialogueFor(name, isBoss);
+                return;
+            }
             dialogue = DialogueReader.GetDialogueFor(name);
         }
 

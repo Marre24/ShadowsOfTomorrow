@@ -11,9 +11,9 @@ namespace ShadowsOfTomorrow
         public Dialogue Dialogue => dialogue;
         protected Dialogue dialogue;
 
-        public Speech(string name) 
+        public Speech(string name, bool isBoss) 
         {
-            dialogue = new(name);
+            dialogue = new(name, isBoss);
         }
 
     }
