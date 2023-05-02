@@ -12,7 +12,7 @@ namespace ShadowsOfTomorrow
 {
     public enum Phase
     {
-        StartDialogue,
+        Dialogue,
         Stunned,
         LeafFalling,
         LeafWind,
@@ -39,7 +39,8 @@ namespace ShadowsOfTomorrow
         private Point location;
         readonly Texture2D texture;
         private readonly SpriteFont font;
-        private Phase activePhase = Phase.StartDialogue;
+        private Phase activePhase = Phase.Dialogue;
+        private Phase oldPhase = Phase.Dialogue;
 
         private int health = 4;
         public bool wasKilled;
@@ -71,10 +72,23 @@ namespace ShadowsOfTomorrow
                 return;
             }
 
-            if (activePhase == Phase.StartDialogue && Keyboard.GetState().IsKeyDown(Keys.K)) // gör om
+            if (oldPhase == Phase.Dialogue && game.player.CurrentAction != Action.Talking)
             {
-                game.windowManager.SetDialogue(Dialogue);
-                game.player.CurrentAction = Action.Talking;
+                switch (health)
+                {
+                    case 1:
+                        activePhase = Phase.BranchingSide;
+                        break;
+                    case 2:
+                        activePhase = Phase.BranchingUp;
+                        break;
+                    case 3:
+                        activePhase = Phase.LeafWind;
+                        break;
+                    case 4:
+                        activePhase = Phase.LeafFalling;
+                        break;
+                }
             }
 
             phaseManager.Update(gameTime);
@@ -86,6 +100,8 @@ namespace ShadowsOfTomorrow
 
             if (HasIntersectingPixels(game.player.HitBox, game.player.TextureData, HitBox, TextureData))
                 game.player.OnHit();
+
+            oldPhase = activePhase;
         }
 
         internal void OnHit()
@@ -93,7 +109,8 @@ namespace ShadowsOfTomorrow
             health--;
             talkingIndex++;
             game.player.CurrentAction = Action.Talking;
-            activePhase = Phase.StartDialogue;
+            game.windowManager.SetDialogue(Dialogue);
+            activePhase = Phase.Dialogue;
         }
 
         public static bool HasIntersectingPixels(Rectangle rectangleA, Color[] dataA, Rectangle rectangleB, Color[] dataB)

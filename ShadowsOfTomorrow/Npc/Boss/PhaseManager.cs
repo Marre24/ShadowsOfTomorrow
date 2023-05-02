@@ -12,23 +12,26 @@ namespace ShadowsOfTomorrow
     {
         private readonly Boss boss;
         private readonly Game1 game;
+        private readonly LeafFalling leafFalling;
 
         public PhaseManager(Boss boss, Game1 game)
         {
             this.boss = boss;
             this.game = game;
+            leafFalling = new(game, 1);
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
             switch (boss.ActivePhase)
             {
-                case Phase.StartDialogue:
+                case Phase.Dialogue:
                     game.windowManager.Draw(spriteBatch);
                     break;
                 case Phase.Stunned:
                     break;
                 case Phase.LeafFalling:
+                    leafFalling.Draw(spriteBatch);
                     break;
                 case Phase.LeafWind:
                     break;
@@ -44,12 +47,13 @@ namespace ShadowsOfTomorrow
         {
             switch (boss.ActivePhase)
             {
-                case Phase.StartDialogue:
+                case Phase.Dialogue:
                     game.windowManager.Update(gameTime);
                     break;
                 case Phase.Stunned:
                     break;
                 case Phase.LeafFalling:
+                    leafFalling.Update(gameTime);
                     break;
                 case Phase.LeafWind:
                     break;
