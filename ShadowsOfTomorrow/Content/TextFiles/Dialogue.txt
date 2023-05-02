@@ -1,8 +1,9 @@
 ﻿Treevor
-Hello;My name is Treevor;Why are you so angry;Idk
-Why are you so angry;Idk
-My name is Treevor;Why are you so angry;Idk
-Idk;Goodbye
+Hello;My name is Treevor;Time to fight
+Ok you are pretty strong; But you have no chanse for my leaf attack
+Omg how did you last!?!?1?;I know something that you can not take;Something that is long, brown and sticky;That is right a Stick attck
+WoW i am impressed with your stamina;But can you take thiiiiiiissssssssss???!!!?!??!?!?!
+Oh no I feel like i am going to die;Bye cruel world
 Blossom
 First|[Waaaasup;Hello][What is your name;Blossom][Googo gaga;mmmm monkey][What is your occupation;I am a flourist]
 I am a flourist|[What do you do in a normal days of work;I take care of my fellow flowers]

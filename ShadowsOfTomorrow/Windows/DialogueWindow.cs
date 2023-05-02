@@ -17,7 +17,7 @@ namespace ShadowsOfTomorrow
         private readonly SpriteFont font;
         private readonly Texture2D texture;
         private readonly Game1 game;
-        private readonly Boss boss;
+        private Boss boss;
         private readonly Dialogue dialogue;
         private string goTo = "First";
         private string displayAnswer = "";
@@ -25,10 +25,10 @@ namespace ShadowsOfTomorrow
         private bool showingQuestions = true;
         private KeyboardState oldState = Keyboard.GetState();
 
-        public DialogueWindow(Game1 game, Boss boss, Dialogue dialogue) 
+        public DialogueWindow(Game1 game, Dialogue dialogue) 
         {
             this.game = game;
-            this.boss = boss;
+            this.boss = game.mapManager.Maps.First(map => map.MapName.ToLower() == "bossroom").boss;
             this.dialogue = dialogue;
 
             font = game.Content.Load<SpriteFont>("Fonts/DefaultFont");
@@ -47,7 +47,7 @@ namespace ShadowsOfTomorrow
             {
                 if (dialogue.IsBoss)
                 {
-                    if (dialogue.bossDialogue.Count <= ++index)
+                    if (boss.Dialogue.bossDialogue[boss.talkingIndex].Count <= ++index)
                     {
                         game.player.CurrentAction = Action.Standing;
                         index = 0;
@@ -97,6 +97,7 @@ namespace ShadowsOfTomorrow
 
             if (dialogue.IsBoss)
             {
+                boss = game.mapManager.Maps.First(map => map.MapName.ToLower() == "bossroom").boss;
                 spriteBatch.DrawString(font, dialogue.bossDialogue[boss.talkingIndex][index], window.Location.ToVector2() + new Vector2(50, 200), Color.White, 0, Vector2.One, 1, SpriteEffects.None, 0.91f);
                 return;
             }

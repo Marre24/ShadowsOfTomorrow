@@ -41,7 +41,7 @@ namespace ShadowsOfTomorrow
         private readonly SpriteFont font;
         private Phase activePhase = Phase.StartDialogue;
 
-        private int health = 10;
+        private int health = 4;
         public bool wasKilled;
         public int talkingIndex = 0;
 
@@ -73,7 +73,7 @@ namespace ShadowsOfTomorrow
 
             if (activePhase == Phase.StartDialogue && Keyboard.GetState().IsKeyDown(Keys.K)) // gör om
             {
-                game.windowManager.SetDialogue(Dialogue, this);
+                game.windowManager.SetDialogue(Dialogue);
                 game.player.CurrentAction = Action.Talking;
             }
 
