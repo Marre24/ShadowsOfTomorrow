@@ -8,18 +8,20 @@ using System.Threading.Tasks;
 
 namespace ShadowsOfTomorrow
 {
-    public class LeafFalling : BaseClassPhase
+    public class LeafBlowing : BaseClassPhase
     {
         readonly List<Leaf> leaves = new();
         readonly Random random = new();
         private readonly Game1 game;
         private readonly double leafSpawnInterval;
+        private readonly Player player;
         private double time = 0;
 
-        public LeafFalling(Game1 game, double leafSpawnInterval)
+        public LeafBlowing(Game1 game, double leafSpawnInterval, Player player)
         {
-            this.game = game;
             this.leafSpawnInterval = leafSpawnInterval;
+            this.player = player;
+            this.game = game;
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -32,6 +34,8 @@ namespace ShadowsOfTomorrow
         {
             foreach (var leaf in leaves)
                 leaf.Update(gameTime);
+
+            player.Location += new Point(-1, 0);
 
             if (gameTime.TotalGameTime.TotalSeconds < time + leafSpawnInterval)
                 return;

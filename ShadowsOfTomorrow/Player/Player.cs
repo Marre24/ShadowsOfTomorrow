@@ -48,7 +48,7 @@ namespace ShadowsOfTomorrow
 
         private readonly SpriteFont font;
 
-        public Point Location { get => hitBox.Location; set => hitBox.Location = value; }
+        public Point Location { get => hitBox.Location; set => hitBox.Location = value;  }
         public Mach ActiveMach { get => _activeMach; set => _activeMach = value; }
         public Mach OldMach { get; private set; }
         public Action CurrentAction { get; set; } = Action.Standing;
@@ -237,7 +237,10 @@ namespace ShadowsOfTomorrow
         {
             health--;
             CurrentAction = Action.Stunned;
-            playerMovement.HorizontalSpeed = ((int)Facing) * -7;
+            if (playerMovement.HorizontalSpeed < 0)
+                playerMovement.HorizontalSpeed = 7;
+            else
+                playerMovement.HorizontalSpeed = -7;
             playerMovement.VerticalSpeed = -10;
             isGrounded = false;
         }
@@ -250,7 +253,8 @@ namespace ShadowsOfTomorrow
         internal void Reset()
         {
             health = 5;
-            CurrentAction = Action.Standing;
+            if (CurrentAction != Action.Talking)
+                CurrentAction = Action.Standing;
             playerMovement.Speed = Vector2.Zero;
         }
     }

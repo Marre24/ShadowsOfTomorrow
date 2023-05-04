@@ -42,7 +42,8 @@ namespace ShadowsOfTomorrow
         private Phase activePhase = Phase.Dialogue;
         private Phase oldPhase = Phase.Dialogue;
 
-        private int health = 4;
+        private const int startingHealth = 4;
+        private int health = startingHealth;
         public bool wasKilled;
         public int talkingIndex = 0;
 
@@ -136,6 +137,14 @@ namespace ShadowsOfTomorrow
             }
 
             return false;
+        }
+
+        internal void Reset()
+        {
+            activePhase = Phase.Dialogue;
+            talkingIndex = 0;
+            health = startingHealth;
+            phaseManager.Reset();
         }
     }
 }
