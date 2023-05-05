@@ -11,12 +11,11 @@ namespace ShadowsOfTomorrow
     public class Leaf : Weapon
     {
         private readonly Vector2 constantSpeed;
-        private readonly List<Leaf> leaves;
+        public Rectangle Hitbox => hitbox;
 
-        public Leaf(Game1 game, string path, Vector2 location, Vector2 constantSpeed, List<Leaf> leaves) : base(game, path, location)
+        public Leaf(Game1 game, string path, Vector2 location, Vector2 constantSpeed) : base(game, path, location)
         {
             this.constantSpeed = constantSpeed;
-            this.leaves = leaves;
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -27,10 +26,6 @@ namespace ShadowsOfTomorrow
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-
-            if (hitbox.Intersects(game.player.HitBox))
-                leaves.Remove(this);
-
             Location += constantSpeed;
         }
     }

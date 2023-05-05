@@ -43,7 +43,7 @@ namespace ShadowsOfTomorrow
         private Phase oldPhase = Phase.Dialogue;
 
         private const int startingHealth = 4;
-        private int health = startingHealth;
+        public int health = startingHealth;
         public bool wasKilled;
         public int talkingIndex = 0;
 

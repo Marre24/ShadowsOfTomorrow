@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace ShadowsOfTomorrow
 {
@@ -32,14 +33,21 @@ namespace ShadowsOfTomorrow
 
         public override void Update(GameTime gameTime)
         {
+            List<Leaf> removeLeaves = new();
             foreach (var leaf in leaves)
+            {
                 leaf.Update(gameTime);
+                //if (leaf.Hitbox.Intersects(player.HitBox))
+                //    removeLeaves.Add(leaf);
+            }
+
+            //foreach (var leaf in removeLeaves)
+            //    leaves.Remove(leaf);
 
             player.Location += new Point(-1, 0);
-
+            
             if (gameTime.TotalGameTime.TotalSeconds < time + leafSpawnInterval)
                 return;
-
             time = gameTime.TotalGameTime.TotalSeconds;
 
             int leafAmount = 4;
@@ -55,7 +63,7 @@ namespace ShadowsOfTomorrow
                     x = max;
                 if (x <= -max)
                     x = -max;
-                leaves.Add(new(game, "Sprites/Bosses/Leaf", location, new(x * 5, 5), leaves));
+                leaves.Add(new(game, "Sprites/Bosses/Leaf", location, new(x * 5, 5)));
             }
         }
 
