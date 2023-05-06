@@ -21,12 +21,13 @@ namespace ShadowsOfTomorrow
         public const int runningSpeed = 10;
         public const int sprintingSpeed = 13;
         private const int maxYSpeed = 10;
-        private const int jumpForce = -10;
+        private const int jumpForce = -12;
         private const float brakeSpeed = 0.2f;
         private const float acceleration = 0.25f;
         private const float gravitation = 0.5f;
-        private const float groundPoundSpeed = 12.0f;
+        private const float groundPoundSpeed = 14.0f;
         private const float groundPoundAcceleration = 1.0f;
+        private const float crouchingSpeed = 3.0f;
 
         Facing facingWall;
         float wallClimbingSpeed;
@@ -137,8 +138,11 @@ namespace ShadowsOfTomorrow
 
         private void Crouch()
         {
-            if (player.OldAction == Action.Crouching || player.OldAction == Action.Rolling)
-                return;
+            if (HorizontalSpeed > crouchingSpeed)
+                HorizontalSpeed = crouchingSpeed;
+            
+            if (HorizontalSpeed < -crouchingSpeed)
+                HorizontalSpeed = -crouchingSpeed;
         }
 
         private void StandUp()
@@ -150,7 +154,8 @@ namespace ShadowsOfTomorrow
 
         public void Jump()
         {
-            VerticalSpeed = jumpForce;
+            if (player.isGrounded)
+                VerticalSpeed = jumpForce;
         }
 
         private void ClimbWall()

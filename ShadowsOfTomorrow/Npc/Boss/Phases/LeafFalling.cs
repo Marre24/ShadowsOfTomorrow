@@ -30,16 +30,9 @@ namespace ShadowsOfTomorrow
 
         public override void Update(GameTime gameTime)
         {
-            List<Leaf> removeLeaves = new();
             foreach (var leaf in leaves)
-            {
-                leaf.Update(gameTime);
-                if (leaf.Hitbox.Intersects(game.player.HitBox))
-                    removeLeaves.Add(leaf);
-            }
-
-            foreach (var leaf in removeLeaves)
-                leaves.Remove(leaf);
+                if (!leaf.hasHit)
+                    leaf.Update(gameTime);
 
             if (gameTime.TotalGameTime.TotalSeconds < time + leafSpawnInterval)
                 return;
@@ -59,7 +52,7 @@ namespace ShadowsOfTomorrow
                     x = max;
                 if (x <= -max)
                     x = -max;
-                leaves.Add(new(game, "Sprites/Bosses/Leaf", location, new(x * 5, 5)));
+                leaves.Add(new(game, "Sprites/Bosses/Leaf_x3", location, new(x * 5, 5)));
             }
         }
 

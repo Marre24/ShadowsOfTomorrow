@@ -20,11 +20,16 @@ namespace ShadowsOfTomorrow
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            if (hasHit)
+                return;
             base.Draw(spriteBatch);
         }
 
         public override void Update(GameTime gameTime)
         {
+            if (hasHit)
+                return;
+
             base.Update(gameTime);
             Location += constantSpeed;
         }

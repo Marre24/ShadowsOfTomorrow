@@ -17,6 +17,7 @@ namespace ShadowsOfTomorrow
         protected readonly Texture2D texture;
         protected Rectangle hitbox;
         protected readonly Game1 game;
+        public bool hasHit = false;
 
         public Weapon(Game1 game, string path, Vector2 location)
         {
@@ -34,7 +35,10 @@ namespace ShadowsOfTomorrow
         public virtual void Update(GameTime gameTime)
         {
             if (hitbox.Intersects(game.player.HitBox))
+            {
+                hasHit = true;
                 game.player.OnHit();
+            }
         }
     }
 }

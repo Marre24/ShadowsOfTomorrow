@@ -45,6 +45,11 @@ namespace ShadowsOfTomorrow
 
         private readonly Animation idle;
         private readonly Animation walking;
+        private readonly Animation crawling;
+        private readonly Animation crouching;
+        private readonly Animation rolling;
+        private readonly Animation running;
+
 
         private readonly SpriteFont font;
 
@@ -88,8 +93,13 @@ namespace ShadowsOfTomorrow
 
         public Player(Game1 game)
         {
-            idle = new(game.Content.Load<Texture2D>("Sprites/Player/IdleLeft"), game.Content.Load<Texture2D>("Sprites/Player/IdleRight"), 18);
-            walking = new(game.Content.Load<Texture2D>("Sprites/Player/WalkingLeft"), game.Content.Load<Texture2D>("Sprites/Player/WalkingRight"), 8);
+            idle = new(game.Content.Load<Texture2D>("Sprites/Player/IdleLeft_x3"), game.Content.Load<Texture2D>("Sprites/Player/IdleRight_x3"), 15);
+            walking = new(game.Content.Load<Texture2D>("Sprites/Player/WalkingLeft_x3"), game.Content.Load<Texture2D>("Sprites/Player/WalkingRight_x3"), 13);
+            crawling = new(game.Content.Load<Texture2D>("Sprites/Player/CrawlingLeft_x3"), game.Content.Load<Texture2D>("Sprites/Player/CrawlingRight_x3"), 6);
+            crouching = new(game.Content.Load<Texture2D>("Sprites/Player/CrochingLeft_x3"), game.Content.Load<Texture2D>("Sprites/Player/CrochingRight_x3"), 1);
+            rolling = new(game.Content.Load<Texture2D>("Sprites/Player/RollLeft_x3"), game.Content.Load<Texture2D>("Sprites/Player/RollRight_x3"), 1);
+            running = new(game.Content.Load<Texture2D>("Sprites/Player/RunningLeft_x3"), game.Content.Load<Texture2D>("Sprites/Player/RunningRight_x3"), 10);
+
             font = game.Content.Load<SpriteFont>("Fonts/DefaultFont");
 
             this.game = game;
@@ -142,11 +152,14 @@ namespace ShadowsOfTomorrow
         private void UpdateHitBox()
         {
             int yDiff = Math.Abs(OldSize.Y - Size.Y);
+            int xDiff = Math.Abs(OldSize.X - Size.X);
 
             if (Size.Y < OldSize.Y)
                 Location += new Point(0, yDiff);
             if (Size.Y > OldSize.Y)
                 Location -= new Point(0, yDiff);
+            if (Facing == Facing.Right && xDiff > 0)
+                Location += new Point(xDiff, 0);
 
             hitBox = new Rectangle(hitBox.Location, Size);
         }
@@ -168,6 +181,7 @@ namespace ShadowsOfTomorrow
                             animationManager.Play(idle);
                             break;
                         case Action.Crouching:
+                            animationManager.Play(crouching);
                             break;
                         case Action.GroundPounding:
                             break;
@@ -182,6 +196,7 @@ namespace ShadowsOfTomorrow
                             animationManager.Play(walking);
                             break;
                         case Action.Crouching:
+                            animationManager.Play(crawling);
                             break;
                         case Action.GroundPounding:
                             break;
@@ -194,8 +209,28 @@ namespace ShadowsOfTomorrow
                     }
                     break;
                 case Mach.Running:
+                    switch (CurrentAction)
+                    {
+                        case Action.Standing:
+                            animationManager.Play(running);
+                            break;
+                        case Action.Rolling:
+                            animationManager.Play(rolling);
+                            break;
+
+                    }
                     break;
                 case Mach.Sprinting:
+                    switch (CurrentAction)
+                    {
+                        case Action.Standing:
+                            animationManager.Play(running);
+                            break;
+                        case Action.Rolling:
+                            animationManager.Play(rolling);
+                            break;
+
+                    }
                     break;
                 default:
                     break;
