@@ -13,7 +13,7 @@ namespace ShadowsOfTomorrow
     public class DialogueWindow : IUpdateAndDraw
     {
         private Rectangle window;
-        private readonly Point size = new(1000, 400);
+        private readonly Point size = new(900, 420);
         private readonly SpriteFont font;
         private readonly Texture2D texture;
         private readonly Game1 game;
@@ -32,18 +32,21 @@ namespace ShadowsOfTomorrow
             this.dialogue = dialogue;
 
             font = game.Content.Load<SpriteFont>("Fonts/DefaultFont");
-            texture = game.Content.Load<Texture2D>("Box");
+            texture = game.Content.Load<Texture2D>("UI/DialogueBox_x3");
         }
 
         public void Update(GameTime gameTime)
         {
             KeyboardState state = Keyboard.GetState();
             if (state.IsKeyDown(Keys.Escape))
+            {
                 game.player.CurrentAction = Action.Standing;
+                return;
+            }
 
             
 
-            if (state.IsKeyDown(Keys.Enter) && oldState.IsKeyUp(Keys.Enter))
+            if (state.IsKeyDown(Keys.Space) && oldState.IsKeyUp(Keys.Space))
             {
                 if (dialogue.IsBoss)
                 {
@@ -68,7 +71,7 @@ namespace ShadowsOfTomorrow
             if (!dialogue.IsBoss)
                 UpdateIndex(state);
             else
-                window = new(game.player.camera.Window.Center + new Point(-200, 500 - size.Y), size);
+                window = new(game.player.camera.Window.Center + new Point(-200, - 200 - size.Y), size);
 
             oldState = state;
         }
@@ -77,10 +80,10 @@ namespace ShadowsOfTomorrow
         {
             if (!showingQuestions)
                 return;
-            if (state.IsKeyDown(Keys.Down) && oldState.IsKeyUp(Keys.Down))
+            if (state.IsKeyDown(Keys.S) && oldState.IsKeyUp(Keys.S))
                 index++;
 
-            else if (state.IsKeyDown(Keys.Up) && oldState.IsKeyUp(Keys.Up))
+            else if (state.IsKeyDown(Keys.W) && oldState.IsKeyUp(Keys.W))
                 index--;
 
             if (index > dialogue.GetQuestions(goTo).Count - 1)
@@ -88,12 +91,12 @@ namespace ShadowsOfTomorrow
             if (index < 0)
                 index = dialogue.GetQuestions(goTo).Count - 1;
 
-            window = new(game.player.HitBox.Center + new Point(-size.X / 2, 500 - size.Y), size);
+            window = new(game.player.HitBox.Center + new Point(-size.X / 2, - 200 - size.Y), size);
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, window, null, Color.White, 0, Vector2.Zero, SpriteEffects.None, 0.91f);
+            spriteBatch.Draw(texture, window, null, Color.White, 0, Vector2.Zero, SpriteEffects.None, 0.9f);
 
             boss = game.mapManager.Maps.First(map => map.MapName.ToLower() == "bossroom").boss;
             if (dialogue.IsBoss && boss.health > 0)

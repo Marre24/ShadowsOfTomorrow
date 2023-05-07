@@ -49,6 +49,7 @@ namespace ShadowsOfTomorrow
         private readonly Animation crouching;
         private readonly Animation rolling;
         private readonly Animation running;
+        private readonly Animation climbing;
 
 
         private readonly SpriteFont font;
@@ -99,6 +100,7 @@ namespace ShadowsOfTomorrow
             crouching = new(game.Content.Load<Texture2D>("Sprites/Player/CrochingLeft_x3"), game.Content.Load<Texture2D>("Sprites/Player/CrochingRight_x3"), 1);
             rolling = new(game.Content.Load<Texture2D>("Sprites/Player/RollLeft_x3"), game.Content.Load<Texture2D>("Sprites/Player/RollRight_x3"), 1);
             running = new(game.Content.Load<Texture2D>("Sprites/Player/RunningLeft_x3"), game.Content.Load<Texture2D>("Sprites/Player/RunningRight_x3"), 10);
+            climbing = new(game.Content.Load<Texture2D>("Sprites/Player/ClimbLeft_x3"), game.Content.Load<Texture2D>("Sprites/Player/ClimbRight_x3"), 12);
 
             font = game.Content.Load<SpriteFont>("Fonts/DefaultFont");
 
@@ -158,7 +160,7 @@ namespace ShadowsOfTomorrow
                 Location += new Point(0, yDiff);
             if (Size.Y > OldSize.Y)
                 Location -= new Point(0, yDiff);
-            if (Facing == Facing.Right && xDiff > 0)
+            if (Facing == Facing.Right && xDiff > 0 && xDiff < 20)
                 Location += new Point(xDiff, 0);
 
             hitBox = new Rectangle(hitBox.Location, Size);
@@ -184,6 +186,7 @@ namespace ShadowsOfTomorrow
                             animationManager.Play(crouching);
                             break;
                         case Action.GroundPounding:
+                            animationManager.Play(rolling);
                             break;
                         case Action.Attacking:
                             break;
@@ -217,7 +220,9 @@ namespace ShadowsOfTomorrow
                         case Action.Rolling:
                             animationManager.Play(rolling);
                             break;
-
+                        case Action.WallClimbing:
+                            animationManager.Play(climbing);
+                            break;
                     }
                     break;
                 case Mach.Sprinting:
@@ -229,7 +234,9 @@ namespace ShadowsOfTomorrow
                         case Action.Rolling:
                             animationManager.Play(rolling);
                             break;
-
+                        case Action.WallClimbing:
+                            animationManager.Play(climbing);
+                            break;
                     }
                     break;
                 default:

@@ -24,7 +24,7 @@ namespace ShadowsOfTomorrow
         private const int jumpForce = -12;
         private const float brakeSpeed = 0.2f;
         private const float acceleration = 0.25f;
-        private const float gravitation = 0.5f;
+        private const float gravitation = 0.6f;
         private const float groundPoundSpeed = 14.0f;
         private const float groundPoundAcceleration = 1.0f;
         private const float crouchingSpeed = 3.0f;

@@ -1,10 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SharpDX.Direct3D9;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using TiledSharp;
 
 namespace ShadowsOfTomorrow
@@ -27,7 +29,7 @@ namespace ShadowsOfTomorrow
             this.player = player;
             this.game = game;
             _hitbox = new(player.Location + new Point(player.Size.X, 0), new(30,30));
-            boxTexture = game.Content.Load<Texture2D>("Box");
+            boxTexture = game.Content.Load<Texture2D>("UI/DialogueBox_x3");
         }
 
         public void Attack()
@@ -74,15 +76,15 @@ namespace ShadowsOfTomorrow
 
             if (player.Facing == Facing.Right)
             {
-                _hitbox = new(player.Location + new Point(player.Size.X, 10), new(30, 30));
+                _hitbox = new(player.Location + new Point(player.Size.X, 20), new(30, 30));
                 return;
             }
-            _hitbox = new(player.Location + new Point(-30, 10), new(30, 30));
+            _hitbox = new(player.Location + new Point(-30, 20), new(30, 30));
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(boxTexture, Hitbox, Color.White);
+            spriteBatch.Draw(boxTexture, Hitbox, null, Color.White, 0, Vector2.Zero, SpriteEffects.None, 0.91f);
         }
     }
 }

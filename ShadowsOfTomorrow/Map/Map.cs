@@ -76,7 +76,7 @@ namespace ShadowsOfTomorrow
         {
             if (!MapName.Equals("RunFromBranches"))
                 return;
-            branchWall = new(game, "Box", new(0,0), new(1000, 3000));
+            branchWall = new(game, "UI/DialogueBox_x3", new(0,0), new(1000, 3000));
         }
 
         private void LoadBoss()
