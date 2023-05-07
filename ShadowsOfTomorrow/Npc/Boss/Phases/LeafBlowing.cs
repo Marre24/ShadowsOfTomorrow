@@ -16,13 +16,16 @@ namespace ShadowsOfTomorrow
         private readonly Game1 game;
         private readonly double leafSpawnInterval;
         private readonly Player player;
+        private readonly Boss boss;
         private double time = 0;
 
-        public LeafBlowing(Game1 game, double leafSpawnInterval, Player player)
+        public LeafBlowing(Game1 game, double leafSpawnInterval, Player player, Boss boss)
         {
             this.leafSpawnInterval = leafSpawnInterval;
             this.player = player;
+            this.boss = boss;
             this.game = game;
+            maxStunOMeter = 2;
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -34,8 +37,11 @@ namespace ShadowsOfTomorrow
         public override void Update(GameTime gameTime)
         {
             foreach (var leaf in leaves)
-                if (!leaf.hasHit)
+                if (!leaf.hasHitSomeone)
                     leaf.Update(gameTime);
+
+            if (boss.isStunned)
+                return;
 
             player.Location += new Point(-1, 0);
             
@@ -56,7 +62,7 @@ namespace ShadowsOfTomorrow
                     x = max;
                 if (x <= -max)
                     x = -max;
-                leaves.Add(new(game, "Sprites/Bosses/Leaf_x3", location, new(x * 5, 5)));
+                leaves.Add(new(game, "Sprites/Bosses/Leaf_x3", location, new(x * 5, 5), boss));
             }
         }
 

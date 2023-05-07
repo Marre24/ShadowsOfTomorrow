@@ -13,11 +13,20 @@ namespace ShadowsOfTomorrow
         public Vector2 Location { get => hitbox.Location.ToVector2(); set => hitbox.Location = value.ToPoint(); }
         public Rectangle HitBox => hitbox;
         public Point Size => texture.Bounds.Size;
+        public Color[] TextureData
+        {
+            get
+            {
+                Color[] color = new Color[texture.Width * texture.Height];
+                texture.GetData(color);
+                return color;
+            }
+        }
 
         protected readonly Texture2D texture;
         protected Rectangle hitbox;
         protected readonly Game1 game;
-        public bool hasHit = false;
+        public bool hasHitSomeone = false;
 
         public Weapon(Game1 game, string path, Vector2 location)
         {
@@ -34,11 +43,41 @@ namespace ShadowsOfTomorrow
 
         public virtual void Update(GameTime gameTime)
         {
-            if (hitbox.Intersects(game.player.HitBox))
+            if (game.player.animationManager.CurrentCropTexture == null || !game.player.HitBox.Intersects(hitbox))
+                return;
+            game.player.animationManager.CurrentCropTexture.GetData(game.player.TextureData);
+            texture.GetData(TextureData);
+
+            if (HasIntersectingPixels(game.player.HitBox, game.player.TextureData, HitBox, TextureData))
             {
-                hasHit = true;
+                hasHitSomeone = true;
                 game.player.OnHit();
             }
+        }
+
+        public static bool HasIntersectingPixels(Rectangle rectangleA, Color[] dataA, Rectangle rectangleB, Color[] dataB)
+        {
+            // GET BOUNDS
+            int top = Math.Max(rectangleA.Top, rectangleB.Top);
+            int bottom = Math.Min(rectangleA.Bottom, rectangleB.Bottom);
+            int left = Math.Max(rectangleA.Left, rectangleB.Left);
+            int right = Math.Min(rectangleA.Right, rectangleB.Right);
+
+            for (int y = top; y < bottom; y++)
+            {
+                for (int x = left; x < right; x++)
+                {
+                    // GET COLORS FROM CURRENT POINT
+                    Color colorA = dataA[(x - rectangleA.Left) + (y - rectangleA.Top) * rectangleA.Width];
+                    Color colorB = dataB[(x - rectangleB.Left) + (y - rectangleB.Top) * rectangleB.Width];
+
+                    // IF BOTH NOT TRANSPARENT, INTERSECTION = true
+                    if (colorA.A != 0 && colorB.A != 0)
+                        return true;
+                }
+            }
+
+            return false;
         }
     }
 }

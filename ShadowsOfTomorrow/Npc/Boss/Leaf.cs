@@ -10,25 +10,48 @@ namespace ShadowsOfTomorrow
 {
     public class Leaf : Weapon
     {
-        private readonly Vector2 constantSpeed;
+        private Vector2 constantSpeed;
+        private readonly Boss boss;
+
         public Rectangle Hitbox => hitbox;
 
-        public Leaf(Game1 game, string path, Vector2 location, Vector2 constantSpeed) : base(game, path, location)
+        public Leaf(Game1 game, string path, Vector2 location, Vector2 constantSpeed, Boss boss) : base(game, path, location)
         {
             this.constantSpeed = constantSpeed;
+            this.boss = boss;
+        }
+
+        public void HitLeaf(Vector2 newSpeed)
+        {
+            constantSpeed = newSpeed;   
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            if (hasHit)
+            if (hasHitSomeone)
                 return;
             base.Draw(spriteBatch);
         }
 
         public override void Update(GameTime gameTime)
         {
-            if (hasHit)
+            if (hasHitSomeone)
                 return;
+
+            if (game.player.playerAttacking.Hitbox.Intersects(hitbox) && game.player.CurrentAction == Action.Attacking)
+            {
+                if (game.player.Facing == Facing.Right)
+                    HitLeaf(new(5, 0));
+                else
+                    HitLeaf(new(-5, 0));
+            }
+
+            if (boss.HitBox.Intersects(HitBox))
+                if (HasIntersectingPixels(hitbox, TextureData, boss.HitBox, boss.TextureData))
+                {
+                    hasHitSomeone = true;
+                    boss.GetHitByLeaf();
+                }
 
             base.Update(gameTime);
             Location += constantSpeed;

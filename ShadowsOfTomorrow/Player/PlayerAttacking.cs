@@ -11,9 +11,9 @@ using TiledSharp;
 
 namespace ShadowsOfTomorrow
 {
-    public class PlayerAttacking : IUpdateAndDraw
+    public class PlayerAttacking
     {
-        readonly Texture2D boxTexture;
+        //readonly Texture2D boxTexture;
         
         private readonly Player player;
         private readonly Game1 game;
@@ -29,7 +29,7 @@ namespace ShadowsOfTomorrow
             this.player = player;
             this.game = game;
             _hitbox = new(player.Location + new Point(player.Size.X, 0), new(30,30));
-            boxTexture = game.Content.Load<Texture2D>("UI/DialogueBox_x3");
+            //boxTexture = game.Content.Load<Texture2D>("UI/DialogueBox_x3");
         }
 
         public void Attack()
@@ -80,11 +80,6 @@ namespace ShadowsOfTomorrow
                 return;
             }
             _hitbox = new(player.Location + new Point(-30, 20), new(30, 30));
-        }
-
-        public void Draw(SpriteBatch spriteBatch)
-        {
-            spriteBatch.Draw(boxTexture, Hitbox, null, Color.White, 0, Vector2.Zero, SpriteEffects.None, 0.91f);
         }
     }
 }

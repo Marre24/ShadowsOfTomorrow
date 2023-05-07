@@ -10,6 +10,8 @@ namespace ShadowsOfTomorrow
 {
     public abstract class BaseClassPhase : IUpdateAndDraw
     {
+        public int maxStunOMeter;
+
         public abstract void Draw(SpriteBatch spriteBatch);
 
         public abstract void Update(GameTime gameTime);

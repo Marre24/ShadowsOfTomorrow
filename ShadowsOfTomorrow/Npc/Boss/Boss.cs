@@ -7,13 +7,13 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
 
 namespace ShadowsOfTomorrow
 {
     public enum Phase
     {
         Dialogue,
-        Stunned,
         LeafFalling,
         LeafWind,
         BranchingUp,
@@ -24,6 +24,26 @@ namespace ShadowsOfTomorrow
     {
         public Rectangle HitBox { get => new(location, new(texture.Width, texture.Height)); }
         public Phase ActivePhase => activePhase;
+        public BaseClassPhase ActivePhaseClass 
+        { 
+            get 
+            {
+                switch (health)
+                {
+                    //case 1:
+                    //    return phaseManager.;
+                    //case 2:
+                    //    return Phase.BranchingUp;
+                    case 3:
+                        return phaseManager.leafBlowing;
+                    case 4:
+                        return phaseManager.leafFalling;
+                    default:
+                        return phaseManager.leafFalling;
+                }
+            } 
+        }
+
         public Color[] TextureData
         {
             get
@@ -41,11 +61,17 @@ namespace ShadowsOfTomorrow
         private readonly SpriteFont font;
         private Phase activePhase = Phase.Dialogue;
         private Phase oldPhase = Phase.Dialogue;
+        public bool isStunned = false;
+
+        private int stunOMeter = 0;
 
         private const int startingHealth = 4;
         public int health = startingHealth;
         public bool wasKilled;
         public int talkingIndex = 0;
+
+        private const double timeStunned = 3;
+        private double timeScinceStun = 0;
 
         public Boss(Game1 game, string name, Point location) : base(name, true)
         {
@@ -61,8 +87,9 @@ namespace ShadowsOfTomorrow
             if (wasKilled)
                 return;
             spriteBatch.DrawString(font, health.ToString(), game.player.camera.Window.Location.ToVector2() + new Vector2(500, 50), Color.White, 0, Vector2.One, 1, SpriteEffects.None, 0.91f);
-            phaseManager.Draw(spriteBatch);
             spriteBatch.Draw(texture, location.ToVector2(), null, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.9f);
+
+            phaseManager.Draw(spriteBatch);
         }
 
         public void Update(GameTime gameTime)
@@ -92,10 +119,45 @@ namespace ShadowsOfTomorrow
                 }
             }
 
-            phaseManager.Update(gameTime);
 
-            if (game.player.animationManager.CurrentCropTexture == null)
+            if (stunOMeter >= ActivePhaseClass.maxStunOMeter)
+            {
+                isStunned = true;
+
+                if (timeScinceStun == 0)
+                {
+                    timeScinceStun = gameTime.TotalGameTime.TotalSeconds;
+                    return;
+                }
+
+                if (timeScinceStun + timeStunned < gameTime.TotalGameTime.TotalSeconds)
+                {
+                    switch (health)
+                    {
+                        case 1:
+                            activePhase = Phase.BranchingSide;
+                            break;
+                        case 2:
+                            activePhase = Phase.BranchingUp;
+                            break;
+                        case 3:
+                            activePhase = Phase.LeafWind;
+                            break;
+                        case 4:
+                            activePhase = Phase.LeafFalling;
+                            break;
+                    }
+                    timeScinceStun = 0;
+                    stunOMeter = 0;
+                    isStunned = false;
+                }
+            }
+            if (ActivePhase != Phase.Dialogue)
+                phaseManager.Update(gameTime);
+
+            if (game.player.animationManager.CurrentCropTexture == null || isStunned || activePhase == Phase.Dialogue|| !game.player.HitBox.Intersects(HitBox))
                 return;
+
             game.player.animationManager.CurrentCropTexture.GetData(game.player.TextureData);
             texture.GetData(TextureData);
 
@@ -109,6 +171,15 @@ namespace ShadowsOfTomorrow
         {
             health--;
             talkingIndex++;
+
+            timeScinceStun = 0;
+            stunOMeter = 0;
+            isStunned = false;
+
+            game.player.playerMovement.HorizontalSpeed = -10;
+            game.player.playerMovement.VerticalSpeed = -10;
+            game.player.isGrounded = false;
+
             game.player.CurrentAction = Action.Talking;
             game.windowManager.SetDialogue(Dialogue);
             activePhase = Phase.Dialogue;
@@ -145,6 +216,11 @@ namespace ShadowsOfTomorrow
             talkingIndex = 0;
             health = startingHealth;
             phaseManager.Reset();
+        }
+
+        internal void GetHitByLeaf()
+        {
+            stunOMeter++;
         }
     }
 }

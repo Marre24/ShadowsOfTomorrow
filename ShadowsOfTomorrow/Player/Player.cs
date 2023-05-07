@@ -115,7 +115,6 @@ namespace ShadowsOfTomorrow
         public void Draw(SpriteBatch spriteBatch)
         {
             animationManager.Draw(spriteBatch, Location.ToVector2(), Facing);
-            playerAttacking.Draw(spriteBatch);
 
             spriteBatch.DrawString(font, "Horizontal Speed: " + Math.Round(playerMovement.HorizontalSpeed, 2).ToString(), camera.Window.Location.ToVector2(), Color.White, 0, Vector2.One, 1, SpriteEffects.None, 0.91f);
             spriteBatch.DrawString(font, "Vertical Speed: " + Math.Round(playerMovement.VerticalSpeed, 2).ToString(), camera.Window.Location.ToVector2() + new Vector2(0, 25), Color.White, 0, Vector2.One, 1, SpriteEffects.None, 0.91f);
