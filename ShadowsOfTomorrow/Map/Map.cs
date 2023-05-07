@@ -292,5 +292,15 @@ namespace ShadowsOfTomorrow
             if (boss != null)
                 LoadBoss();
         }
+
+        internal bool IsInsideWall(Rectangle rectangle)
+        {
+            foreach (TmxLayer layer in GetCollisionLayers())
+                foreach (var tile in layer.Tiles)
+                    if (!destroyedTiles.Contains(new(tile.X * size.X, tile.Y * size.Y)))
+                        if (rectangle.Intersects(new(new(tile.X * size.X, tile.Y * size.Y), size)) && tile.Gid != 0)
+                            return true;
+            return false;
+        }
     }
 }

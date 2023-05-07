@@ -299,5 +299,10 @@ namespace ShadowsOfTomorrow
                 CurrentAction = Action.Standing;
             playerMovement.Speed = Vector2.Zero;
         }
+
+        internal bool HaveBlockOverHead(Rectangle rec)
+        {
+            return game.mapManager.ActiveMap.IsInsideWall(new Rectangle(new(rec.Left, rec.Bottom - 95), new(57, 95)));
+        }
     }
 }

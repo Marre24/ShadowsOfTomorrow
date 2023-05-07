@@ -29,22 +29,24 @@ namespace ShadowsOfTomorrow
                 case Mach.Running or Mach.Sprinting:
                     if (keyboardState.IsKeyDown(Keys.S) && player.isGrounded)
                         player.CurrentAction = Action.Rolling;
-                    else if (player.OldAction == Action.Rolling && keyboardState.IsKeyUp(Keys.S))
+                    else if (player.OldAction == Action.Rolling && keyboardState.IsKeyUp(Keys.S) && !player.HaveBlockOverHead(player.HitBox))
                         StandUp();
                     if (keyboardState.IsKeyDown(Keys.Space) && oldState.IsKeyUp(Keys.Space))
                         player.playerMovement.Jump();
+                    if (keyboardState.IsKeyUp(Keys.S) && player.isGrounded && player.OldAction == Action.Rolling && player.HaveBlockOverHead(player.HitBox))
+                        player.CurrentAction = Action.Crouching;
                     break;
                 case Mach.Standing or Mach.Walking:
                     if (keyboardState.IsKeyDown(Keys.S) && player.isGrounded && player.OldAction == Action.Standing)
                         player.CurrentAction = Action.Crouching;
-                    else if (player.OldAction == Action.Crouching && keyboardState.IsKeyUp(Keys.S))
+                    else if (player.OldAction == Action.Crouching && keyboardState.IsKeyUp(Keys.S) && !player.HaveBlockOverHead(player.HitBox))
                         StandUp();
                     if (keyboardState.IsKeyDown(Keys.Space) && oldState.IsKeyUp(Keys.Space))
                         player.playerMovement.Jump();
                     if (keyboardState.IsKeyDown(Keys.S) && !player.isGrounded && player.CurrentAction != Action.Crouching)
                         player.playerMovement.GroundPound();
                     else if (player.isGrounded && player.CurrentAction == Action.GroundPounding)
-                        player.CurrentAction = Action.Standing;
+                        StandUp();
                     break;
             }
 
@@ -56,7 +58,7 @@ namespace ShadowsOfTomorrow
 
         private void StandUp()
         {
-            if (player.OldAction != Action.Rolling && player.OldAction != Action.Crouching)
+            if (player.OldAction != Action.Rolling && player.OldAction != Action.Crouching && player.OldAction != Action.GroundPounding)
                 return;
             player.CurrentAction = Action.Standing;
         }
