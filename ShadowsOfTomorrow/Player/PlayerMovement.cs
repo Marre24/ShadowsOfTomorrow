@@ -42,11 +42,11 @@ namespace ShadowsOfTomorrow
             this.game = game;
         }
 
-        public void Update()
+        public void Update(GameTime gameTime)
         {
             UpdateSpeed(Keyboard.GetState());
             CheckPlayerAction();
-            MovePlayer();
+            MovePlayer(gameTime);
         }
 
         private void CheckPlayerAction()
@@ -227,7 +227,7 @@ namespace ShadowsOfTomorrow
             }
         }
 
-        private void MovePlayer()
+        private void MovePlayer(GameTime gameTime)
         {
             if (player.CurrentAction == Action.GroundPounding && VerticalSpeed < groundPoundSpeed)
                 VerticalSpeed += groundPoundAcceleration;
@@ -237,7 +237,7 @@ namespace ShadowsOfTomorrow
             if (player.isNextToWall && player.ActiveMach == Mach.Walking)
                 HorizontalSpeed = 0;
 
-            (bool canMoveX, bool canMoveY) = game.mapManager.ActiveMap.WillCollide(player);
+            (bool canMoveX, bool canMoveY) = game.mapManager.ActiveMap.WillCollide(player, gameTime);
 
             CheckForWallClimb(canMoveX, canMoveY);
 

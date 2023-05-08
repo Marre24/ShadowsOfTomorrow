@@ -32,11 +32,11 @@ namespace ShadowsOfTomorrow
             //boxTexture = game.Content.Load<Texture2D>("UI/DialogueBox_x3");
         }
 
-        public void Attack()
+        public void Attack(GameTime gameTime)
         {
             player.CurrentAction = Action.Attacking;
 
-            CheckIfHittingTiles();
+            CheckIfHittingTiles(gameTime);
             CheckIfHittingBoss();
         }
 
@@ -50,7 +50,7 @@ namespace ShadowsOfTomorrow
 
         }
 
-        private void CheckIfHittingTiles()
+        private void CheckIfHittingTiles(GameTime gameTime)
         {
             Map map = game.mapManager.ActiveMap;
             if (!map.TmxMap.Layers.Contains("DestroyableTiles"))
@@ -61,7 +61,11 @@ namespace ShadowsOfTomorrow
             {
                 if (!map.destroyedTiles.Contains(new(tile.X * map.Size.X, tile.Y * map.Size.Y)))
                     if (Hitbox.Intersects(new(new(tile.X * map.Size.X, tile.Y * map.Size.Y), map.Size)) && tile.Gid != 0)
+                    {
+                        game.player.hasDestroyedBlock = true;
+                        game.player.destroyBlockTime = gameTime.TotalGameTime.TotalSeconds;
                         map.destroyedTiles.Add(new(tile.X * map.Size.X, tile.Y * map.Size.Y));
+                    }
             }
         }
 

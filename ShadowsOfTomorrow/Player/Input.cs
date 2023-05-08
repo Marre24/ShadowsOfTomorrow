@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace ShadowsOfTomorrow
             this.player = player;
         }
 
-        public void CheckPlayerInput()
+        public void CheckPlayerInput(GameTime gameTime)
         {
             KeyboardState keyboardState = Keyboard.GetState();
             if (player.CurrentAction == Action.Talking || player.CurrentAction == Action.WachingCutScene)
@@ -35,7 +36,7 @@ namespace ShadowsOfTomorrow
                         player.playerMovement.Jump();
                     if (keyboardState.IsKeyUp(Keys.S) && player.isGrounded && player.OldAction == Action.Rolling && player.HaveBlockOverHead(player.HitBox))
                         player.CurrentAction = Action.Crouching;
-                    if (keyboardState.IsKeyDown(Keys.S) && !player.isGrounded && player.CurrentAction != Action.Stunned)
+                    if (keyboardState.IsKeyDown(Keys.S) && !player.isGrounded && player.CurrentAction != Action.Stunned && player.CurrentAction != Action.Rolling)
                         player.playerMovement.GroundPound();
                     else if (player.isGrounded && player.CurrentAction == Action.GroundPounding)
                         StandUp();
@@ -55,7 +56,7 @@ namespace ShadowsOfTomorrow
             }
 
             if (keyboardState.IsKeyDown(Keys.J) && oldState.IsKeyUp(Keys.J) && player.CurrentAction != Action.GroundPounding && player.CurrentAction != Action.Turning)
-                player.playerAttacking.Attack();
+                player.playerAttacking.Attack(gameTime);
             
             oldState = keyboardState;
         }

@@ -92,6 +92,9 @@ namespace ShadowsOfTomorrow
 
         private int health = 5;
 
+        public bool hasDestroyedBlock = false;
+        public double destroyBlockTime = 0;
+
         public Player(Game1 game)
         {
             idle = new(game.Content.Load<Texture2D>("Sprites/Player/IdleLeft_x3"), game.Content.Load<Texture2D>("Sprites/Player/IdleRight_x3"), 15);
@@ -135,12 +138,21 @@ namespace ShadowsOfTomorrow
             SetPlayerDirection();
 
             if (CurrentAction != Action.WachingCutScene)
-                camera.Follow(new(new(hitBox.Left, hitBox.Bottom - 32), new(32, 32)), game.mapManager.ActiveMap);
+            {
+                if (hasDestroyedBlock && destroyBlockTime + 0.6 > gameTime.TotalGameTime.TotalSeconds)
+                    camera.Follow(new(new(hitBox.Left, hitBox.Bottom - 32), new(32, 32)), game.mapManager.ActiveMap, true);
+                else
+                {
+                    destroyBlockTime = 0;
+                    hasDestroyedBlock = false;
+                    camera.Follow(new(new(hitBox.Left, hitBox.Bottom - 32), new(32, 32)), game.mapManager.ActiveMap);
+                }
+            }
 
 
-            input.CheckPlayerInput();
+            input.CheckPlayerInput(gameTime);
             game.mapManager.ActiveMap.IsNextToWall(this);
-            playerMovement.Update();
+            playerMovement.Update(gameTime);
             animationManager.Update(gameTime);
             playerAttacking.Update(gameTime);
 

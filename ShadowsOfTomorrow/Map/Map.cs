@@ -114,8 +114,10 @@ namespace ShadowsOfTomorrow
 
                         Rectangle tilesetRec = new(size.X * column, size.Y * row, size.X, size.Y);
 
-                        if (layer.Name != "DestroyableTiles" && !TileIsDestroyed(layer.Tiles[i]) && layer.Name.ToLower() != "background")
+                        if (layer.Name == "platforms")
                             spriteBatch.Draw(tileSet, new Rectangle((int)x, (int)y, size.X, size.Y), tilesetRec, Color.White, 0, Vector2.Zero, SpriteEffects.None, 0.6f);
+                        else if (layer.Name == "DestroyableTiles" && !TileIsDestroyed(layer.Tiles[i]))
+                            spriteBatch.Draw(tileSet, new Rectangle((int)x, (int)y, size.X, size.Y), tilesetRec, Color.White, 0, Vector2.Zero, SpriteEffects.None, 0.55f);
                         else if (layer.Name.ToLower() == "background")
                             spriteBatch.Draw(tileSet, new Rectangle((int)x, (int)y, size.X, size.Y), tilesetRec, Color.White, 0, Vector2.Zero, SpriteEffects.None, 0.5f);
                     }
@@ -175,7 +177,7 @@ namespace ShadowsOfTomorrow
                 }
         }
         bool oldX = true;
-        public (bool, bool) WillCollide(Player player)
+        public (bool, bool) WillCollide(Player player, GameTime gameTime)
         {
             bool canMoveX = true, canMoveY = true;
             List<TmxLayer> collisionLayers = GetCollisionLayers();
@@ -189,16 +191,21 @@ namespace ShadowsOfTomorrow
 
                         if (player.NextHorizontalHitBox.Intersects(rec) && tile.Gid != 0)
                         {
-                            canMoveX = false;
-                            if (player.Facing == Facing.Right && player.playerMovement.HorizontalSpeed > 0 && oldX)
-                                player.Location += new Point(tile.X * size.X - player.HitBox.Right, 0);
-                            else if (player.playerMovement.HorizontalSpeed < 0 && oldX)
-                                player.Location += new Point(rec.Right - player.HitBox.Left, 0);
+                            if ((player.ActiveMach == Mach.Running || player.ActiveMach == Mach.Sprinting) && IsTouchingDestroyableBlock(player.NextHorizontalHitBox))
+                                RemoveTiles(player.NextHorizontalHitBox, gameTime);
+                            else
+                            {
+                                canMoveX = false;
+                                if (player.Facing == Facing.Right && player.playerMovement.HorizontalSpeed > 0 && oldX)
+                                    player.Location += new Point(tile.X * size.X - player.HitBox.Right, 0);
+                                else if (player.playerMovement.HorizontalSpeed < 0 && oldX)
+                                    player.Location += new Point(rec.Right - player.HitBox.Left, 0);
+                            }
                         }
                         if (player.NextVerticalHitBox.Intersects(rec) && tile.Gid != 0)
                         {
-                            if (IsGroundPoundingBlock(player.NextVerticalHitBox) && player.CurrentAction == Action.GroundPounding)
-                                RemoveTiles(player.NextVerticalHitBox);
+                            if (IsTouchingDestroyableBlock(player.NextVerticalHitBox) && player.CurrentAction == Action.GroundPounding)
+                                RemoveTiles(player.NextVerticalHitBox, gameTime);
                             else
                             {
                                 canMoveY = false;
@@ -227,15 +234,20 @@ namespace ShadowsOfTomorrow
 
         }
 
-        private void RemoveTiles(Rectangle rectangle)
+        private void RemoveTiles(Rectangle rectangle, GameTime gameTime)
         {
             foreach (TmxLayerTile tile in map.Layers["DestroyableTiles"].Tiles)
                 if (!destroyedTiles.Contains(new(tile.X * Size.X, tile.Y * Size.Y)))
                     if (rectangle.Intersects(new(new(tile.X * Size.X, tile.Y * Size.Y), Size)) && tile.Gid != 0)
+                    {
+                        game.player.hasDestroyedBlock = true;
+                        game.player.destroyBlockTime = gameTime.TotalGameTime.TotalSeconds;
+
                         destroyedTiles.Add(new(tile.X * Size.X, tile.Y * Size.Y));
+                    }
         }
 
-        private bool IsGroundPoundingBlock(Rectangle rectangle)
+        private bool IsTouchingDestroyableBlock(Rectangle rectangle)
         {
             if (!map.Layers.Contains("DestroyableTiles"))
                 return false;
@@ -263,7 +275,7 @@ namespace ShadowsOfTomorrow
         {
             foreach (var layer in GetCollisionLayers())
                 foreach (var tile in layer.Tiles)
-                    if (!destroyedTiles.Contains(new(tile.X * size.X, tile.Y * size.Y)) && tile.Gid != 0)
+                    if (layer.Name.ToLower() != "destroyabletiles" && tile.Gid != 0)
                     {
                         Rectangle rec = new(new(tile.X * size.X, tile.Y * size.Y), size);
                         if (player.Facing == Facing.Right && rec.Intersects(new(player.Location + new Point(5, 0), player.Size)))
