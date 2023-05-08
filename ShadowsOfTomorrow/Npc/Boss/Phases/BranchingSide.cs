@@ -2,12 +2,14 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace ShadowsOfTomorrow
 {
-    public class BranchingUp : BaseClassPhase
+    public class BranchingSide : BaseClassPhase
     {
-
         readonly List<Branch> branches = new();
         readonly List<Leaf> leaves = new();
         readonly Random random = new();
@@ -17,11 +19,11 @@ namespace ShadowsOfTomorrow
         private const double leafSpawnInterval = 2;
         private int amountOfBranchesSpawned = 0;
 
-        public BranchingUp(Game1 game, Boss boss)
+        public BranchingSide(Game1 game, Boss boss) 
         {
             this.game = game;
-            maxStunOMeter = 2;
             this.boss = boss;
+            maxStunOMeter = 1;
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -45,43 +47,26 @@ namespace ShadowsOfTomorrow
                     leaves.Remove(leaves[i]);
 
             for (int i = 0; i < branches.Count; i++)
-                if (branches[i].HitBox.Top > 30 * 48)
+                if (branches[i].HitBox.Left > 45 * 48)
                     branches.Remove(branches[i]);
 
             if (gameTime.TotalGameTime.TotalSeconds < time + leafSpawnInterval)
                 return;
+
             time = gameTime.TotalGameTime.TotalSeconds;
 
-            int branchAmount = 5;
+            if (random.Next(0, 2) == 0)
+                branches.Add(new(game, "UI/DialogueBox_x3", new(48 * 4, 21 * 48), true));
+            else
+                branches.Add(new(game, "UI/DialogueBox_x3", new(48 * 4, 20 * 48), true));
 
-            for (int i = 1; i <= branchAmount; i++)
+            if (++amountOfBranchesSpawned % 4 == 0)
             {
-                if (i == 1)
-                {
-                    int min = 48 * 4;
-                    int max = 48 * 30 / branchAmount;
-                    Vector2 location = new(random.Next(min, max), 30 * 48);
-                    branches.Add(new(game, "UI/DialogueBox_x3", location, false));
-                    
-                }
-                else
-                {
-                    int min = ((i - 1) * 48 * 30 / branchAmount);
-                    int max = i * 48 * 30 / branchAmount;
-                    Vector2 location = new(random.Next(min, max), 30 * 48);
-                    branches.Add(new(game, "UI/DialogueBox_x3", location, false));
-                }
-            }
-
-            if (++amountOfBranchesSpawned % 5 == 0)
-            {
-                int leafAmount = 4;
+                int leafAmount = 3;
 
                 for (int i = 1; i <= leafAmount; i++)
                 {
-                    int min = game.player.camera.Window.Left + ((i - 1) * game.player.camera.Window.Right / leafAmount);
-                    int max = i * game.player.camera.Window.Right / leafAmount;
-                    Vector2 location = new(random.Next(min, max), game.player.camera.Window.Top);
+                    Vector2 location = new(random.Next(game.player.camera.Window.Left + ((i - 1) * game.player.camera.Window.Right / leafAmount), i * game.player.camera.Window.Right / leafAmount), game.player.camera.Window.Top - 200);
                     leaves.Add(new(game, "Sprites/Bosses/Leaf_x3", location, new(0, 5), boss));
                 }
             }

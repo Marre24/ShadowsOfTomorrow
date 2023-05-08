@@ -35,6 +35,10 @@ namespace ShadowsOfTomorrow
                         player.playerMovement.Jump();
                     if (keyboardState.IsKeyUp(Keys.S) && player.isGrounded && player.OldAction == Action.Rolling && player.HaveBlockOverHead(player.HitBox))
                         player.CurrentAction = Action.Crouching;
+                    if (keyboardState.IsKeyDown(Keys.S) && !player.isGrounded && player.CurrentAction != Action.Stunned)
+                        player.playerMovement.GroundPound();
+                    else if (player.isGrounded && player.CurrentAction == Action.GroundPounding)
+                        StandUp();
                     break;
                 case Mach.Standing or Mach.Walking:
                     if (keyboardState.IsKeyDown(Keys.S) && player.isGrounded && player.OldAction == Action.Standing)
@@ -43,7 +47,7 @@ namespace ShadowsOfTomorrow
                         StandUp();
                     if (keyboardState.IsKeyDown(Keys.Space) && oldState.IsKeyUp(Keys.Space))
                         player.playerMovement.Jump();
-                    if (keyboardState.IsKeyDown(Keys.S) && !player.isGrounded && player.CurrentAction != Action.Crouching)
+                    if (keyboardState.IsKeyDown(Keys.S) && !player.isGrounded && player.CurrentAction != Action.Stunned)
                         player.playerMovement.GroundPound();
                     else if (player.isGrounded && player.CurrentAction == Action.GroundPounding)
                         StandUp();

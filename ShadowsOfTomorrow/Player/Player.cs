@@ -274,11 +274,14 @@ namespace ShadowsOfTomorrow
                 Facing = Facing.Left;
         }
 
-        public void OnHit()
+        public void OnHit(Facing facing)
         {
+            if (CurrentAction == Action.Stunned)
+                return;
+            playerMovement.StandUp();
             health--;
             CurrentAction = Action.Stunned;
-            if (playerMovement.HorizontalSpeed < 0)
+            if (facing == Facing.Left)
                 playerMovement.HorizontalSpeed = 7;
             else
                 playerMovement.HorizontalSpeed = -7;

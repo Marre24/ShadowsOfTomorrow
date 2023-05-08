@@ -23,24 +23,19 @@ namespace ShadowsOfTomorrow
     public class Boss : Speech, IUpdateAndDraw
     {
         public Rectangle HitBox { get => new(location, new(texture.Width, texture.Height)); }
-        public Phase ActivePhase => activePhase;
+        public Phase ActivePhase => _activePhase;
         public BaseClassPhase ActivePhaseClass 
         { 
             get 
             {
-                switch (health)
+                return health switch
                 {
-                    //case 1:
-                    //    return phaseManager.;
-                    //case 2:
-                    //    return Phase.BranchingUp;
-                    case 3:
-                        return phaseManager.leafBlowing;
-                    case 4:
-                        return phaseManager.leafFalling;
-                    default:
-                        return phaseManager.leafFalling;
-                }
+                    1 => phaseManager.branchingUp,
+                    2 => phaseManager.branchingSide,
+                    3 => phaseManager.leafBlowing,
+                    4 => phaseManager.leafFalling,
+                    _ => phaseManager.leafFalling,
+                };
             } 
         }
 
@@ -59,7 +54,7 @@ namespace ShadowsOfTomorrow
         private Point location;
         readonly Texture2D texture;
         private readonly SpriteFont font;
-        private Phase activePhase = Phase.Dialogue;
+        private Phase _activePhase = Phase.Dialogue;
         private Phase oldPhase = Phase.Dialogue;
         public bool isStunned = false;
 
@@ -101,70 +96,63 @@ namespace ShadowsOfTomorrow
             }
 
             if (oldPhase == Phase.Dialogue && game.player.CurrentAction != Action.Talking)
-            {
-                switch (health)
-                {
-                    case 1:
-                        activePhase = Phase.BranchingSide;
-                        break;
-                    case 2:
-                        activePhase = Phase.BranchingUp;
-                        break;
-                    case 3:
-                        activePhase = Phase.LeafWind;
-                        break;
-                    case 4:
-                        activePhase = Phase.LeafFalling;
-                        break;
-                }
-            }
-
+                SetNewPhase();
 
             if (stunOMeter >= ActivePhaseClass.maxStunOMeter)
-            {
-                isStunned = true;
-
-                if (timeScinceStun == 0)
-                {
-                    timeScinceStun = gameTime.TotalGameTime.TotalSeconds;
-                    return;
-                }
-
-                if (timeScinceStun + timeStunned < gameTime.TotalGameTime.TotalSeconds)
-                {
-                    switch (health)
-                    {
-                        case 1:
-                            activePhase = Phase.BranchingSide;
-                            break;
-                        case 2:
-                            activePhase = Phase.BranchingUp;
-                            break;
-                        case 3:
-                            activePhase = Phase.LeafWind;
-                            break;
-                        case 4:
-                            activePhase = Phase.LeafFalling;
-                            break;
-                    }
-                    timeScinceStun = 0;
-                    stunOMeter = 0;
-                    isStunned = false;
-                }
-            }
+                StunPhase(gameTime);
+            
             if (ActivePhase != Phase.Dialogue)
                 phaseManager.Update(gameTime);
 
-            if (game.player.animationManager.CurrentCropTexture == null || isStunned || activePhase == Phase.Dialogue|| !game.player.HitBox.Intersects(HitBox))
+
+            if (game.player.animationManager.CurrentCropTexture != null && !isStunned && _activePhase != Phase.Dialogue && game.player.HitBox.Intersects(HitBox))
+            {
+                game.player.animationManager.CurrentCropTexture.GetData(game.player.TextureData);
+                texture.GetData(TextureData);
+
+                if (HasIntersectingPixels(game.player.HitBox, game.player.TextureData, HitBox, TextureData))
+                    game.player.OnHit(Facing.Right);
+            }
+
+            oldPhase = _activePhase;
+        }
+
+        private void StunPhase(GameTime gameTime)
+        {
+            isStunned = true;
+
+            if (timeScinceStun == 0)
+            {
+                timeScinceStun = gameTime.TotalGameTime.TotalSeconds;
                 return;
+            }
 
-            game.player.animationManager.CurrentCropTexture.GetData(game.player.TextureData);
-            texture.GetData(TextureData);
+            if (timeScinceStun + timeStunned < gameTime.TotalGameTime.TotalSeconds)     //Break out of stun
+            {
+                SetNewPhase();
+                timeScinceStun = 0;
+                stunOMeter = 0;
+                isStunned = false;
+            }
+        }
 
-            if (HasIntersectingPixels(game.player.HitBox, game.player.TextureData, HitBox, TextureData))
-                game.player.OnHit();
-
-            oldPhase = activePhase;
+        private void SetNewPhase()
+        {
+            switch (health)
+            {
+                case 1:
+                    _activePhase = Phase.BranchingUp;
+                    break;
+                case 2:
+                    _activePhase = Phase.BranchingSide;
+                    break;
+                case 3:
+                    _activePhase = Phase.LeafWind;
+                    break;
+                case 4:
+                    _activePhase = Phase.LeafFalling;
+                    break;
+            }
         }
 
         internal void OnHit()
@@ -176,13 +164,13 @@ namespace ShadowsOfTomorrow
             stunOMeter = 0;
             isStunned = false;
 
-            game.player.playerMovement.HorizontalSpeed = -10;
-            game.player.playerMovement.VerticalSpeed = -10;
+            game.player.playerMovement.HorizontalSpeed = -20;
+            game.player.playerMovement.VerticalSpeed = -15;
             game.player.isGrounded = false;
 
             game.player.CurrentAction = Action.Talking;
             game.windowManager.SetDialogue(Dialogue);
-            activePhase = Phase.Dialogue;
+            _activePhase = Phase.Dialogue;
         }
 
         public static bool HasIntersectingPixels(Rectangle rectangleA, Color[] dataA, Rectangle rectangleB, Color[] dataB)
@@ -212,7 +200,7 @@ namespace ShadowsOfTomorrow
 
         internal void Reset()
         {
-            activePhase = Phase.Dialogue;
+            _activePhase = Phase.Dialogue;
             talkingIndex = 0;
             health = startingHealth;
             phaseManager.Reset();

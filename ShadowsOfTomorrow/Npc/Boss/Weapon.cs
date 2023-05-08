@@ -51,7 +51,10 @@ namespace ShadowsOfTomorrow
             if (HasIntersectingPixels(game.player.HitBox, game.player.TextureData, HitBox, TextureData))
             {
                 hasHitSomeone = true;
-                game.player.OnHit();
+                if (game.player.playerMovement.HorizontalSpeed >= 0)
+                    game.player.OnHit(Facing.Right);
+                else
+                    game.player.OnHit(Facing.Left);
             }
         }
 

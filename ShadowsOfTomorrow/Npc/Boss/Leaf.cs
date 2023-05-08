@@ -28,16 +28,11 @@ namespace ShadowsOfTomorrow
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            if (hasHitSomeone)
-                return;
             base.Draw(spriteBatch);
         }
 
         public override void Update(GameTime gameTime)
         {
-            if (hasHitSomeone)
-                return;
-
             if (game.player.playerAttacking.Hitbox.Intersects(hitbox) && game.player.CurrentAction == Action.Attacking)
             {
                 if (game.player.Facing == Facing.Right)

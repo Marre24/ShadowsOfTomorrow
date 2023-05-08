@@ -145,7 +145,7 @@ namespace ShadowsOfTomorrow
                 HorizontalSpeed = -crouchingSpeed;
         }
 
-        private void StandUp()
+        public void StandUp()
         {
             if (player.OldAction != Action.Rolling && player.OldAction != Action.Crouching && player.CurrentAction != Action.WallClimbing && player.CurrentAction != Action.Stunned)
                 return;

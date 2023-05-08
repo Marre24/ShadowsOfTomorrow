@@ -71,7 +71,7 @@ namespace ShadowsOfTomorrow
             if (!dialogue.IsBoss)
                 UpdateIndex(state);
             else
-                window = new(game.player.camera.Window.Center + new Point(-200, - 200 - size.Y), size);
+                window = new(game.player.camera.Window.Center + new Point(-200, - 100 - size.Y), size);
 
             oldState = state;
         }
@@ -111,8 +111,6 @@ namespace ShadowsOfTomorrow
                 ShowQuestions(spriteBatch);
             else
                 ShowAnswer(spriteBatch);
-            
-            spriteBatch.DrawString(font, index.ToString(), window.Location.ToVector2() + new Vector2(50, 300), Color.White, 0, Vector2.One, 1, SpriteEffects.None, 0.91f);
         }
 
         private void ShowAnswer(SpriteBatch spriteBatch)
