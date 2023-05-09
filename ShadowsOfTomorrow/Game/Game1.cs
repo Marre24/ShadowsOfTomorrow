@@ -47,7 +47,7 @@ namespace ShadowsOfTomorrow
 
         protected override void Update(GameTime gameTime)
         {
-            if (player.CurrentAction == Action.Ended || player.CurrentAction == Action.Dead || player.CurrentAction == Action.InMainMenu)
+            if (player.CurrentAction == Action.Ended || player.CurrentAction == Action.Dead || player.CurrentAction == Action.InMainMenu || player.CurrentAction == Action.ChangingKeybinds)
             {
                 windowManager.Update(gameTime);
                 return;
@@ -68,9 +68,9 @@ namespace ShadowsOfTomorrow
 
             _spriteBatch.Begin(transformMatrix: player.camera.Transform, sortMode: SpriteSortMode.FrontToBack);
 
-            if (player.CurrentAction == Action.Ended || player.CurrentAction == Action.Dead || player.CurrentAction == Action.InMainMenu)
+            if (player.CurrentAction == Action.Ended || player.CurrentAction == Action.Dead || player.CurrentAction == Action.InMainMenu || player.CurrentAction == Action.ChangingKeybinds)
             {
-                if (player.CurrentAction == Action.InMainMenu)
+                if (player.LastSpawnPoint == 0)
                     GraphicsDevice.Clear(Color.Black);
 
                 windowManager.Draw(_spriteBatch);

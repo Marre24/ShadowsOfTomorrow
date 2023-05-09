@@ -30,7 +30,8 @@ namespace ShadowsOfTomorrow
         Ended,
         WachingCutScene,
         Dead,
-        InMainMenu
+        InMainMenu,
+        ChangingKeybinds
     }
 
     public enum Facing
@@ -41,8 +42,9 @@ namespace ShadowsOfTomorrow
 
     public class Player : IUpdateAndDraw
     {
+        public Keybinds Keybinds { get; } = new();
+        
         public readonly AnimationManager animationManager;
-
 
         private readonly Animation idle;
         private readonly Animation walking;
@@ -51,7 +53,6 @@ namespace ShadowsOfTomorrow
         private readonly Animation rolling;
         private readonly Animation running;
         private readonly Animation climbing;
-
 
         private readonly SpriteFont font;
 
@@ -77,7 +78,7 @@ namespace ShadowsOfTomorrow
             }
         }
 
-        public int LastSpawnPoint { get; internal set; }
+        public int LastSpawnPoint { get; internal set; } = 0;
 
         private readonly Game1 game;
         public readonly Camera camera = new();

@@ -37,7 +37,7 @@ namespace ShadowsOfTomorrow
         {
             KeyboardState state = Keyboard.GetState();
 
-            game.player.camera.Follow(window.Location);
+            game.player.camera.Follow(Point.Zero);
 
             if (state.IsKeyDown(Keys.Space) && oldState.IsKeyUp(Keys.Space))
             {
@@ -48,6 +48,7 @@ namespace ShadowsOfTomorrow
                         game.player.CurrentAction = Action.Standing;
                         break;
                     case 1:
+                        game.player.CurrentAction = Action.ChangingKeybinds;
                         break;
                     case 2:
                         break;
@@ -84,6 +85,12 @@ namespace ShadowsOfTomorrow
                 else
                     spriteBatch.DrawString(font, menuOptions[i], window.Location.ToVector2() + new Vector2(-100, i * 40), Color.White);
             }
+        }
+
+        internal void SetOldState(KeyboardState state)
+        {
+            index = 0;
+            oldState = state;
         }
     }
 }
