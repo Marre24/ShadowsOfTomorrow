@@ -50,7 +50,7 @@ namespace ShadowsOfTomorrow
                 spriteBatch.Draw(buttonUpTexture, buttonHitBox, Color.White);
             else
                 spriteBatch.Draw(buttonDownTexture, buttonHitBox, Color.White);
-            spriteBatch.DrawString(font, "Exit", buttonHitBox.Location.ToVector2() + new Point(70, 20).ToVector2(), Color.White);
+            spriteBatch.DrawString(font, "Exit", buttonHitBox.Location.ToVector2() + new Point(70, 20).ToVector2(), Color.White, 0, Vector2.One, 1, SpriteEffects.None, 0.91f);
 
         }
 

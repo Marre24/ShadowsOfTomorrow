@@ -57,6 +57,7 @@ namespace ShadowsOfTomorrow
             if (!player.camera.Window.Intersects(Rec1) && !player.camera.Window.Intersects(Rec2))
             {
                 position.X = player.camera.Window.Left;
+                position2.X = Rec1.Right;
                 return;
             }
 

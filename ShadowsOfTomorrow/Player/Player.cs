@@ -29,7 +29,8 @@ namespace ShadowsOfTomorrow
         Stunned,
         Ended,
         WachingCutScene,
-        Dead
+        Dead,
+        InMainMenu
     }
 
     public enum Facing

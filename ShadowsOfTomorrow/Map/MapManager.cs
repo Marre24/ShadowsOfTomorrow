@@ -79,6 +79,12 @@ namespace ShadowsOfTomorrow
                 game.player.CurrentAction = Action.Talking;
             }
 
+            if (spawnpoint == 0)
+            {
+                game.player.CurrentAction = Action.InMainMenu;
+                return;
+            }
+
             game.player.LastSpawnPoint = spawnpoint;
             foreach (Map map in Maps)
             {
