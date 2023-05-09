@@ -77,13 +77,13 @@ namespace ShadowsOfTomorrow
         private void Turn()
         {
             KeyboardState state = Keyboard.GetState();
-            if (state.IsKeyDown(Keys.D) && state.IsKeyDown(Keys.A))
+            if (state.IsKeyDown(player.Keybinds.RightKey) && state.IsKeyDown(player.Keybinds.LeftKey))
             {
                 player.CurrentAction = Action.Standing;
                 return;
             }
 
-            if (speedBeforeTurn < 0 && state.IsKeyDown(Keys.D) && state.IsKeyUp(Keys.A))
+            if (speedBeforeTurn < 0 && state.IsKeyDown(player.Keybinds.RightKey) && state.IsKeyUp(player.Keybinds.LeftKey))
             {
                 HorizontalSpeed += brakeSpeed;
                 if (HorizontalSpeed >= 0 && player.isGrounded)
@@ -103,7 +103,7 @@ namespace ShadowsOfTomorrow
                 return;
             }
 
-            if (speedBeforeTurn > 0 && state.IsKeyDown(Keys.A) && state.IsKeyUp(Keys.D))
+            if (speedBeforeTurn > 0 && state.IsKeyDown(player.Keybinds.LeftKey) && state.IsKeyUp(player.Keybinds.RightKey))
             {
                 HorizontalSpeed -= brakeSpeed;
                 if (HorizontalSpeed <= 0 && player.isGrounded)
@@ -122,9 +122,9 @@ namespace ShadowsOfTomorrow
                     HorizontalSpeed = 0;
             }
 
-            if (speedBeforeTurn < 0 && state.IsKeyUp(Keys.D))
+            if (speedBeforeTurn < 0 && state.IsKeyUp(player.Keybinds.RightKey))
                 player.CurrentAction = Action.Standing;
-            if (speedBeforeTurn > 0 && state.IsKeyUp(Keys.A))
+            if (speedBeforeTurn > 0 && state.IsKeyUp(player.Keybinds.LeftKey))
                 player.CurrentAction = Action.Standing;
         }
 
@@ -172,41 +172,41 @@ namespace ShadowsOfTomorrow
             switch (player.ActiveMach)
             {
                 case Mach.Running:
-                    if (state.IsKeyDown(Keys.A) && HorizontalSpeed > 0 && player.CurrentAction != Action.Turning)
+                    if (state.IsKeyDown(player.Keybinds.LeftKey) && HorizontalSpeed > 0 && player.CurrentAction != Action.Turning)
                     {
                         player.CurrentAction = Action.Turning;
                         speedBeforeTurn = HorizontalSpeed;
                     }
-                    else if (state.IsKeyDown(Keys.A) && HorizontalSpeed >= -runningSpeed)
+                    else if (state.IsKeyDown(player.Keybinds.LeftKey) && HorizontalSpeed >= -runningSpeed)
                         HorizontalSpeed -= acceleration / 4;
-                    if (state.IsKeyDown(Keys.D) && HorizontalSpeed < 0 && player.CurrentAction != Action.Turning)
+                    if (state.IsKeyDown(player.Keybinds.RightKey) && HorizontalSpeed < 0 && player.CurrentAction != Action.Turning)
                     {
                         player.CurrentAction = Action.Turning;
                         speedBeforeTurn = HorizontalSpeed;
                     }
-                    else if (state.IsKeyDown(Keys.D) && HorizontalSpeed <= runningSpeed)
+                    else if (state.IsKeyDown(player.Keybinds.RightKey) && HorizontalSpeed <= runningSpeed)
                         HorizontalSpeed += acceleration / 4;
                     break;
                 case Mach.Sprinting:
-                    if (state.IsKeyDown(Keys.A) && HorizontalSpeed > 0 && player.CurrentAction != Action.Turning)
+                    if (state.IsKeyDown(player.Keybinds.LeftKey) && HorizontalSpeed > 0 && player.CurrentAction != Action.Turning)
                     {
                         player.CurrentAction = Action.Turning;
                         speedBeforeTurn = HorizontalSpeed;
                     }
-                    else if (state.IsKeyDown(Keys.A) && HorizontalSpeed >= -sprintingSpeed)
+                    else if (state.IsKeyDown(player.Keybinds.LeftKey) && HorizontalSpeed >= -sprintingSpeed)
                         HorizontalSpeed -= acceleration / 8;
-                    if (state.IsKeyDown(Keys.D) && HorizontalSpeed < 0 && player.CurrentAction != Action.Turning)
+                    if (state.IsKeyDown(player.Keybinds.RightKey) && HorizontalSpeed < 0 && player.CurrentAction != Action.Turning)
                     {
                         player.CurrentAction = Action.Turning;
                         speedBeforeTurn = HorizontalSpeed;
                     }
-                    else if (state.IsKeyDown(Keys.D) && HorizontalSpeed <= sprintingSpeed)
+                    else if (state.IsKeyDown(player.Keybinds.RightKey) && HorizontalSpeed <= sprintingSpeed)
                         HorizontalSpeed += acceleration / 8;
                     break;
                 case Mach.Standing or Mach.Walking:
-                    if (state.IsKeyDown(Keys.A) && HorizontalSpeed >= -walkingSpeed)
+                    if (state.IsKeyDown(player.Keybinds.LeftKey) && HorizontalSpeed >= -walkingSpeed)
                         HorizontalSpeed -= acceleration;
-                    if (state.IsKeyDown(Keys.D) && HorizontalSpeed <= walkingSpeed)
+                    if (state.IsKeyDown(player.Keybinds.RightKey) && HorizontalSpeed <= walkingSpeed)
                         HorizontalSpeed += acceleration;
                     break;
             }
@@ -216,7 +216,7 @@ namespace ShadowsOfTomorrow
 
         private void WillSlowDown()
         {
-            if (Keyboard.GetState().IsKeyUp(Keys.A) && Keyboard.GetState().IsKeyUp(Keys.D) || player.CurrentAction == Action.Talking || player.CurrentAction == Action.WachingCutScene)
+            if (Keyboard.GetState().IsKeyUp(player.Keybinds.LeftKey) && Keyboard.GetState().IsKeyUp(player.Keybinds.RightKey) || player.CurrentAction == Action.Talking || player.CurrentAction == Action.WachingCutScene)
             {
                 if (HorizontalSpeed < 0)
                     HorizontalSpeed += brakeSpeed;

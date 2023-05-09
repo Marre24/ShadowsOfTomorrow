@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using Screen = System.Windows.Forms.Screen;
 using TiledSharp;
 using System.Windows.Forms.Design;
@@ -47,7 +46,7 @@ namespace ShadowsOfTomorrow
 
         protected override void Update(GameTime gameTime)
         {
-            if (player.CurrentAction == Action.Ended || player.CurrentAction == Action.Dead || player.CurrentAction == Action.InMainMenu || player.CurrentAction == Action.ChangingKeybinds)
+            if (player.CurrentAction == Action.Ended || player.CurrentAction == Action.Dead || player.CurrentAction == Action.InMainMenu || player.CurrentAction == Action.ChangingKeybinds || player.CurrentAction == Action.Paused)
             {
                 windowManager.Update(gameTime);
                 return;
@@ -68,21 +67,27 @@ namespace ShadowsOfTomorrow
 
             _spriteBatch.Begin(transformMatrix: player.camera.Transform, sortMode: SpriteSortMode.FrontToBack);
 
-            if (player.CurrentAction == Action.Ended || player.CurrentAction == Action.Dead || player.CurrentAction == Action.InMainMenu || player.CurrentAction == Action.ChangingKeybinds)
+            if (player.CurrentAction == Action.Ended || player.CurrentAction == Action.Dead || player.CurrentAction == Action.InMainMenu || player.CurrentAction == Action.ChangingKeybinds || player.CurrentAction == Action.Paused)
             {
-                if (player.LastSpawnPoint == 0)
-                    GraphicsDevice.Clear(Color.Black);
+                if ((player.CurrentAction == Action.Paused || player.CurrentAction == Action.ChangingKeybinds) && player.LastSpawnPoint != 0)
+                {
+                    windowManager.Draw(_spriteBatch);
+                    mapManager.Draw(_spriteBatch);
+                    player.Draw(_spriteBatch);
+                    _spriteBatch.End();
+                    return;
+                }
 
+                GraphicsDevice.Clear(Color.Black);
                 windowManager.Draw(_spriteBatch);
                 _spriteBatch.End();
                 return;
             }
 
-
-
             mapManager.Draw(_spriteBatch);
             
             player.Draw(_spriteBatch);
+
             if (player.CurrentAction == Action.Talking)
                 windowManager.Draw(_spriteBatch);
 

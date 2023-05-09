@@ -48,7 +48,7 @@ namespace ShadowsOfTomorrow
 
         public void Update(GameTime gameTime)
         {
-            if (player.HitBox.Intersects(HitBox) && Keyboard.GetState().IsKeyDown(Keys.K)) 
+            if (player.HitBox.Intersects(HitBox) && Keyboard.GetState().IsKeyDown(player.Keybinds.TalkKey)) 
             {
                 game.windowManager.SetDialogue(dialogue);
                 game.player.CurrentAction = Action.Talking;

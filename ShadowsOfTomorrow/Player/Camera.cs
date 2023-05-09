@@ -1,8 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
 
 namespace ShadowsOfTomorrow
 {
@@ -80,7 +78,7 @@ namespace ShadowsOfTomorrow
         private void UpdateWindow(Point target)
         {
             Window = new(target.X - Screen.PrimaryScreen.Bounds.Width / 2, target.Y - Screen.PrimaryScreen.Bounds.Height / 2, 
-                Screen.PrimaryScreen.Bounds.Height, Screen.PrimaryScreen.Bounds.Height);
+                Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
         }
     }
 }

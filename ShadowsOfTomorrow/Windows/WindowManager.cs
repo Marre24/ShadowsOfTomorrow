@@ -16,13 +16,15 @@ namespace ShadowsOfTomorrow
         private readonly DeadScreen deadScreen;
         private readonly StartScreen startScreen;
         private readonly ChangeKeybindWindow changeKeybindWindow;
+        private readonly PausScreen pausScreen;
 
         public WindowManager(Game1 game) 
         {
             this.game = game;
             deadScreen = new(game, game.player);
             startScreen = new(game);
-            changeKeybindWindow = new(game, game.player.Keybinds, startScreen);
+            pausScreen = new(game.GraphicsDevice, game.player.camera, game);
+            changeKeybindWindow = new(game, game.player.Keybinds, startScreen, pausScreen);
         }
 
         public void SetDialogue(Dialogue dialogue)
@@ -46,8 +48,9 @@ namespace ShadowsOfTomorrow
 
             if (game.player.CurrentAction == Action.ChangingKeybinds)
                 changeKeybindWindow.Draw(spriteBatch);
-                
 
+            if (game.player.CurrentAction == Action.Paused)
+                pausScreen.Draw(spriteBatch);
         }
 
         public void Update(GameTime gameTime)
@@ -62,6 +65,8 @@ namespace ShadowsOfTomorrow
                 startScreen.Update();
             if (game.player.CurrentAction == Action.ChangingKeybinds)
                 changeKeybindWindow.Update();
+            if (game.player.CurrentAction == Action.Paused)
+                pausScreen.Update(gameTime);
         }
 
         public void SetEnd(Boss boss)

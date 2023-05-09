@@ -1,50 +1,68 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Screen = System.Windows.Forms.Screen;
-using Microsoft.Xna.Framework.Input;
 
 namespace ShadowsOfTomorrow
 {
-    public class StartScreen
+    public class PausScreen : IUpdateAndDraw
     {
-        private Rectangle window;
+        readonly Texture2D pixel;
+        readonly Texture2D texture;
+        Rectangle textSquare;
         private readonly SpriteFont font;
         readonly List<string> menuOptions = new()
         {
-            "Start Game",
+            "Resume",
             "Keybinds",
             "Volyme",
-            "Exit",
+            "Exit Game",
         };
         private readonly Game1 game;
+        private readonly Camera camera;
         private int index = 0;
         private KeyboardState oldState = Keyboard.GetState();
+        Point size = new(201, 300);
 
-        public StartScreen(Game1 game)
+        public PausScreen(GraphicsDevice graphicsDevice, Camera camera, Game1 game)
         {
-            Point size = new(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
-            window = new(Point.Zero, size);
+            pixel = new Texture2D(graphicsDevice, 1, 1);
+            pixel.SetData<Color>(new Color[] { Color.Black });
             font = game.Content.Load<SpriteFont>("Fonts/DefaultFont");
+            texture = game.Content.Load<Texture2D>("UI/PausBox_x3");
+            textSquare = new(camera.Window.Center, size);
+            this.camera = camera;
             this.game = game;
         }
-
-        public void Update()
+        public void Draw(SpriteBatch spriteBatch)
         {
-            KeyboardState state = Keyboard.GetState();
+            spriteBatch.Draw(pixel, camera.Window, null, Color.White * 0.3f, 0, Vector2.Zero, SpriteEffects.None, 0.9f);
+            
+            spriteBatch.Draw(texture, textSquare, null, Color.White, 0, Vector2.Zero, SpriteEffects.None, 0.91f);
 
-            game.player.camera.Follow(Point.Zero);
+            for (int i = 0; i < menuOptions.Count; i++)
+            {
+                if (i == index)
+                    spriteBatch.DrawString(font, menuOptions[i], textSquare.Center.ToVector2() + new Vector2(-25, i * 40 - 75), Color.Red, 0, Vector2.One, 1, SpriteEffects.None, 0.92f);
+                else
+                    spriteBatch.DrawString(font, menuOptions[i], textSquare.Center.ToVector2() + new Vector2(-30, i * 40 - 75), Color.White, 0, Vector2.One, 1, SpriteEffects.None, 0.92f);
+            }
+        }
+
+        public void Update(GameTime gameTime)
+        {
+            textSquare = new(camera.Window.Center - new Point(size.X / 2, size.Y / 2), size);
+            KeyboardState state = Keyboard.GetState();
 
             if (state.IsKeyDown(game.player.Keybinds.SelectText) && oldState.IsKeyUp(game.player.Keybinds.SelectText))
             {
                 switch (index)
                 {
                     case 0:
-                        game.mapManager.GoToSpawnPoint(1);
                         game.player.CurrentAction = Action.Standing;
                         break;
                     case 1:
@@ -65,7 +83,7 @@ namespace ShadowsOfTomorrow
             if (state.IsKeyDown(game.player.Keybinds.DialogueDown) && oldState.IsKeyUp(game.player.Keybinds.DialogueDown))
                 index++;
 
-            else if (state.IsKeyDown(game.player.Keybinds.DialogueUp) && oldState.IsKeyUp(game.player.Keybinds.DialogueUp))
+            else if (state.IsKeyDown(game.player.Keybinds.SelectText) && oldState.IsKeyUp(game.player.Keybinds.SelectText))
                 index--;
 
             if (index > menuOptions.Count - 1)
@@ -74,17 +92,6 @@ namespace ShadowsOfTomorrow
                 index = menuOptions.Count - 1;
 
             oldState = state;
-        }
-
-        public void Draw(SpriteBatch spriteBatch)
-        {
-            for (int i = 0; i < menuOptions.Count; i++)
-            {
-                if (i == index)
-                    spriteBatch.DrawString(font, menuOptions[i], window.Location.ToVector2() + new Vector2(-98, i * 40), Color.Red);
-                else
-                    spriteBatch.DrawString(font, menuOptions[i], window.Location.ToVector2() + new Vector2(-100, i * 40), Color.White);
-            }
         }
 
         internal void SetOldState(KeyboardState state)

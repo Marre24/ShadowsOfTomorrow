@@ -25,37 +25,43 @@ namespace ShadowsOfTomorrow
             if (player.CurrentAction == Action.Talking || player.CurrentAction == Action.WachingCutScene)
                 return;
 
+            if (keyboardState.IsKeyDown(Keys.Escape))
+            {
+                player.CurrentAction = Action.Paused;
+                return;
+            }
+
             switch (player.ActiveMach)
             {
                 case Mach.Running or Mach.Sprinting:
-                    if (keyboardState.IsKeyDown(Keys.S) && player.isGrounded)
+                    if (keyboardState.IsKeyDown(player.Keybinds.CrouchKey) && player.isGrounded)
                         player.CurrentAction = Action.Rolling;
-                    else if (player.OldAction == Action.Rolling && keyboardState.IsKeyUp(Keys.S) && !player.HaveBlockOverHead(player.HitBox))
+                    else if (player.OldAction == Action.Rolling && keyboardState.IsKeyUp(player.Keybinds.CrouchKey) && !player.HaveBlockOverHead(player.HitBox))
                         StandUp();
-                    if (keyboardState.IsKeyDown(Keys.Space) && oldState.IsKeyUp(Keys.Space))
+                    if (keyboardState.IsKeyDown(player.Keybinds.JumpKey) && oldState.IsKeyUp(player.Keybinds.JumpKey))
                         player.playerMovement.Jump();
-                    if (keyboardState.IsKeyUp(Keys.S) && player.isGrounded && player.OldAction == Action.Rolling && player.HaveBlockOverHead(player.HitBox))
+                    if (keyboardState.IsKeyUp(player.Keybinds.CrouchKey) && player.isGrounded && player.OldAction == Action.Rolling && player.HaveBlockOverHead(player.HitBox))
                         player.CurrentAction = Action.Crouching;
-                    if (keyboardState.IsKeyDown(Keys.S) && !player.isGrounded && player.CurrentAction != Action.Stunned && player.CurrentAction != Action.Rolling)
+                    if (keyboardState.IsKeyDown(player.Keybinds.CrouchKey) && !player.isGrounded && player.CurrentAction != Action.Stunned && player.CurrentAction != Action.Rolling)
                         player.playerMovement.GroundPound();
                     else if (player.isGrounded && player.CurrentAction == Action.GroundPounding)
                         StandUp();
                     break;
                 case Mach.Standing or Mach.Walking:
-                    if (keyboardState.IsKeyDown(Keys.S) && player.isGrounded && player.OldAction == Action.Standing)
+                    if (keyboardState.IsKeyDown(player.Keybinds.CrouchKey) && player.isGrounded && player.OldAction == Action.Standing)
                         player.CurrentAction = Action.Crouching;
-                    else if (player.OldAction == Action.Crouching && keyboardState.IsKeyUp(Keys.S) && !player.HaveBlockOverHead(player.HitBox))
+                    else if (player.OldAction == Action.Crouching && keyboardState.IsKeyUp(player.Keybinds.CrouchKey) && !player.HaveBlockOverHead(player.HitBox))
                         StandUp();
-                    if (keyboardState.IsKeyDown(Keys.Space) && oldState.IsKeyUp(Keys.Space))
+                    if (keyboardState.IsKeyDown(player.Keybinds.JumpKey) && oldState.IsKeyUp(player.Keybinds.JumpKey))
                         player.playerMovement.Jump();
-                    if (keyboardState.IsKeyDown(Keys.S) && !player.isGrounded && player.CurrentAction != Action.Stunned)
+                    if (keyboardState.IsKeyDown(player.Keybinds.CrouchKey) && !player.isGrounded && player.CurrentAction != Action.Stunned)
                         player.playerMovement.GroundPound();
                     else if (player.isGrounded && player.CurrentAction == Action.GroundPounding)
                         StandUp();
                     break;
             }
 
-            if (keyboardState.IsKeyDown(Keys.J) && oldState.IsKeyUp(Keys.J) && player.CurrentAction != Action.GroundPounding && player.CurrentAction != Action.Turning)
+            if (keyboardState.IsKeyDown(player.Keybinds.AttackKey) && oldState.IsKeyUp(player.Keybinds.AttackKey) && player.CurrentAction != Action.GroundPounding && player.CurrentAction != Action.Turning)
                 player.playerAttacking.Attack(gameTime);
             
             oldState = keyboardState;

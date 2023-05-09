@@ -46,7 +46,7 @@ namespace ShadowsOfTomorrow
 
             
 
-            if (state.IsKeyDown(Keys.Space) && oldState.IsKeyUp(Keys.Space))
+            if (state.IsKeyDown(game.player.Keybinds.SelectText) && oldState.IsKeyUp(game.player.Keybinds.SelectText))
             {
                 if (dialogue.IsBoss)
                 {
@@ -80,10 +80,10 @@ namespace ShadowsOfTomorrow
         {
             if (!showingQuestions)
                 return;
-            if (state.IsKeyDown(Keys.S) && oldState.IsKeyUp(Keys.S))
+            if (state.IsKeyDown(game.player.Keybinds.DialogueDown) && oldState.IsKeyUp(game.player.Keybinds.DialogueDown))
                 index++;
 
-            else if (state.IsKeyDown(Keys.W) && oldState.IsKeyUp(Keys.W))
+            else if (state.IsKeyDown(game.player.Keybinds.DialogueUp) && oldState.IsKeyUp(game.player.Keybinds.DialogueUp))
                 index--;
 
             if (index > dialogue.GetQuestions(goTo).Count - 1)

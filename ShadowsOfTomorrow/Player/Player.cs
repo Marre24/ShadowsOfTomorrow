@@ -1,10 +1,10 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework.Input;
 
 namespace ShadowsOfTomorrow
 {
@@ -31,7 +31,8 @@ namespace ShadowsOfTomorrow
         WachingCutScene,
         Dead,
         InMainMenu,
-        ChangingKeybinds
+        ChangingKeybinds,
+        Paused,
     }
 
     public enum Facing
@@ -267,11 +268,11 @@ namespace ShadowsOfTomorrow
             if ((playerMovement.HorizontalSpeed <= -PlayerMovement.walkingSpeed || playerMovement.HorizontalSpeed <= PlayerMovement.walkingSpeed) && playerMovement.HorizontalSpeed != 0)
                 ActiveMach = Mach.Walking;
             if ((playerMovement.HorizontalSpeed < -PlayerMovement.walkingSpeed || playerMovement.HorizontalSpeed > PlayerMovement.walkingSpeed) &&
-                (keyboardState.IsKeyDown(Keys.LeftShift) || playerMovement.HorizontalSpeed < -PlayerMovement.walkingSpeed - 1 || playerMovement.HorizontalSpeed > PlayerMovement.walkingSpeed + 1)
+                (keyboardState.IsKeyDown(Keybinds.AccelerateKey) || playerMovement.HorizontalSpeed < -PlayerMovement.walkingSpeed - 1 || playerMovement.HorizontalSpeed > PlayerMovement.walkingSpeed + 1)
                 && CurrentAction != Action.Crouching)
                 ActiveMach = Mach.Running;
             if ((playerMovement.HorizontalSpeed < -PlayerMovement.runningSpeed || playerMovement.HorizontalSpeed > PlayerMovement.runningSpeed) &&
-                (keyboardState.IsKeyDown(Keys.LeftShift) || playerMovement.HorizontalSpeed < -PlayerMovement.runningSpeed - 1 || playerMovement.HorizontalSpeed > PlayerMovement.runningSpeed + 1)
+                (keyboardState.IsKeyDown(Keybinds.AccelerateKey) || playerMovement.HorizontalSpeed < -PlayerMovement.runningSpeed - 1 || playerMovement.HorizontalSpeed > PlayerMovement.runningSpeed + 1)
                 && CurrentAction != Action.Crouching)
                 ActiveMach = Mach.Sprinting;
 
@@ -282,9 +283,9 @@ namespace ShadowsOfTomorrow
             if (CurrentAction == Action.Talking || CurrentAction == Action.WachingCutScene)
                 return;
 
-            if (Keyboard.GetState().IsKeyDown(Keys.D))
+            if (Keyboard.GetState().IsKeyDown(Keybinds.RightKey))
                 Facing = Facing.Right;
-            if (Keyboard.GetState().IsKeyDown(Keys.A))
+            if (Keyboard.GetState().IsKeyDown(Keybinds.LeftKey))
                 Facing = Facing.Left;
         }
 

@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using SharpDX.Direct3D9;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,31 +18,38 @@ namespace ShadowsOfTomorrow
         private readonly Game1 game;
         private readonly Keybinds keybinds;
         private readonly StartScreen startScreen;
+        private readonly PausScreen pausScreen;
         private int index = 0;
         private KeyboardState oldState = Keyboard.GetState();
         private bool checkingForInput = false;
+        Point size = new(400, 500);
 
-        public ChangeKeybindWindow(Game1 game, Keybinds keybinds, StartScreen startScreen)
+        public ChangeKeybindWindow(Game1 game, Keybinds keybinds, StartScreen startScreen, PausScreen pausScreen)
         {
-            Point size = new(400, 500);
             window = new(game.player.camera.Window.Center + new Point(- size.X / 2, -100 - size.Y / 2), size);
             font = game.Content.Load<SpriteFont>("Fonts/DefaultFont");
             texture = game.Content.Load<Texture2D>("UI/DialogueBox_x3");
             this.game = game;
             this.keybinds = keybinds;
             this.startScreen = startScreen;
+            this.pausScreen = pausScreen;
         }
 
         public void Update()
         {
             KeyboardState state = Keyboard.GetState();
+            window = new(game.player.camera.Window.Center + new Point(-size.X / 2, -100 - size.Y / 2), size);
 
-            game.player.camera.Follow(Point.Zero);
+            if (game.player.LastSpawnPoint == 0)
+                game.player.camera.Follow(Point.Zero);
 
             if (state.IsKeyDown(keybinds.SelectText) && oldState.IsKeyUp(keybinds.SelectText) && index == keybinds.AllKeys.Count)
             {
                 game.player.CurrentAction = Action.InMainMenu;
+
                 startScreen.SetOldState(state);
+                pausScreen.SetOldState(state);
+
             }
 
             if (state.IsKeyDown(Keys.Enter) && oldState.IsKeyUp(Keys.Enter) || checkingForInput)
@@ -97,10 +103,10 @@ namespace ShadowsOfTomorrow
                 return;
             }
 
-            if (state.IsKeyDown(Keys.S) && oldState.IsKeyUp(Keys.S))
+            if (state.IsKeyDown(keybinds.DialogueDown) && oldState.IsKeyUp(keybinds.DialogueDown))
                 index++;
 
-            else if (state.IsKeyDown(Keys.W) && oldState.IsKeyUp(Keys.W))
+            else if (state.IsKeyDown(keybinds.DialogueUp) && oldState.IsKeyUp(keybinds.DialogueUp))
                 index--;
 
             if (index > keybinds.AllKeys.Count)
