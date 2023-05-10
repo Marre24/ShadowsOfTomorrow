@@ -40,16 +40,16 @@ namespace ShadowsOfTomorrow
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(pixel, camera.Window, null, Color.White * 0.3f, 0, Vector2.Zero, SpriteEffects.None, 0.9f);
+            spriteBatch.Draw(pixel, camera.Window, null, Color.White * 0.3f, 0, Vector2.Zero, SpriteEffects.None, 0.93f);
             
-            spriteBatch.Draw(texture, textSquare, null, Color.White, 0, Vector2.Zero, SpriteEffects.None, 0.91f);
+            spriteBatch.Draw(texture, textSquare, null, Color.White, 0, Vector2.Zero, SpriteEffects.None, 0.94f);
 
             for (int i = 0; i < menuOptions.Count; i++)
             {
                 if (i == index)
-                    spriteBatch.DrawString(font, menuOptions[i], textSquare.Center.ToVector2() + new Vector2(-55, i * 40 - 75), Color.Red, 0, Vector2.One, 1, SpriteEffects.None, 0.92f);
+                    spriteBatch.DrawString(font, menuOptions[i], textSquare.Center.ToVector2() + new Vector2(-55, i * 40 - 75), Color.Red, 0, Vector2.One, 1, SpriteEffects.None, 0.95f);
                 else
-                    spriteBatch.DrawString(font, menuOptions[i], textSquare.Center.ToVector2() + new Vector2(-60, i * 40 - 75), Color.White, 0, Vector2.One, 1, SpriteEffects.None, 0.92f);
+                    spriteBatch.DrawString(font, menuOptions[i], textSquare.Center.ToVector2() + new Vector2(-60, i * 40 - 75), Color.White, 0, Vector2.One, 1, SpriteEffects.None, 0.95f);
             }
         }
 

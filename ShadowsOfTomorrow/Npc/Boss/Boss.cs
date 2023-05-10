@@ -58,16 +58,29 @@ namespace ShadowsOfTomorrow
 
         private int stunOMeter = 0;
 
-        private const int startingHealth = 4;
+        private const int startingHealth = 1;
         public int health = startingHealth;
         public bool wasKilled;
         public int talkingIndex = 0;
 
         private const double timeStunned = 3;
         private double timeScinceStun = 0;
+        private Rectangle blackRectangle;
+        private Rectangle greenRectangle;
+
+        private readonly Texture2D blackPixel;
+        private readonly Texture2D greenPixel;
 
         public Boss(Game1 game, string name, Point location) : base(name, true)
         {
+            blackPixel = new Texture2D(game.GraphicsDevice, 1, 1);
+            blackPixel.SetData<Color>(new Color[] { Color.Black });
+
+            greenPixel = new Texture2D(game.GraphicsDevice, 1, 1);
+            greenPixel.SetData<Color>(new Color[] { Color.Green });
+
+            
+
             texture = game.Content.Load<Texture2D>("Sprites/Bosses/TreevorLeaf_x3");
             phaseManager = new(this, game);
             this.game = game;
@@ -80,6 +93,12 @@ namespace ShadowsOfTomorrow
                 return;
             spriteBatch.Draw(texture, location.ToVector2(), null, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.9f);
 
+            if (ActivePhase == Phase.Dialogue)
+                return;
+
+            spriteBatch.Draw(blackPixel, blackRectangle, null, Color.White, 0, Vector2.Zero, SpriteEffects.None, 0.94f);
+            spriteBatch.Draw(greenPixel, greenRectangle, null, Color.White, 0, Vector2.Zero, SpriteEffects.None, 0.95f);
+
             phaseManager.Draw(spriteBatch);
         }
 
@@ -90,6 +109,8 @@ namespace ShadowsOfTomorrow
                 wasKilled = true;
                 return;
             }
+            blackRectangle = new(HitBox.Center + new Point(-200, - (texture.Height / 2) -120), new(400, 100));
+            greenRectangle = new(blackRectangle.Location + new Point(5,5), new(50 + (stunOMeter * blackRectangle.Size.X - 90) / ActivePhaseClass.maxStunOMeter, blackRectangle.Size.Y - 10));
 
             if (oldPhase == Phase.Dialogue && game.player.CurrentAction != Action.Talking)
                 SetNewPhase();

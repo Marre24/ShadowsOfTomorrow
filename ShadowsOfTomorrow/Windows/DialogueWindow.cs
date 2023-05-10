@@ -44,8 +44,6 @@ namespace ShadowsOfTomorrow
                 return;
             }
 
-            
-
             if (state.IsKeyDown(game.player.Keybinds.SelectText) && oldState.IsKeyUp(game.player.Keybinds.SelectText))
             {
                 if (dialogue.IsBoss)
@@ -99,7 +97,7 @@ namespace ShadowsOfTomorrow
             spriteBatch.Draw(texture, window, null, Color.White, 0, Vector2.Zero, SpriteEffects.None, 0.9f);
 
             boss = game.mapManager.Maps.First(map => map.MapName.ToLower() == "bossroom").boss;
-            if (dialogue.IsBoss && boss.health > 0)
+            if (dialogue.IsBoss && boss.health >= 0)
             {
                 spriteBatch.DrawString(font, dialogue.bossDialogue[boss.talkingIndex][index], window.Location.ToVector2() + new Vector2(50, 200), Color.White, 0, Vector2.One, 1, SpriteEffects.None, 0.91f);
                 return;

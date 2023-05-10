@@ -35,7 +35,7 @@ namespace ShadowsOfTomorrow
 
 
             mapManager.AddMaps();
-            mapManager.GoToSpawnPoint(9);
+            mapManager.GoToSpawnPoint(13);
 
             base.Initialize();
         }
