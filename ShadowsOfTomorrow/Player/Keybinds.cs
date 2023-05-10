@@ -40,6 +40,5 @@ namespace ShadowsOfTomorrow
             AccelerateKey = Keys.LeftShift;
         }
 
-
     }
 }

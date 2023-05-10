@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SharpDX.Direct3D9;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TiledSharp;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace ShadowsOfTomorrow
 {
@@ -22,7 +24,7 @@ namespace ShadowsOfTomorrow
 
         public TmxMap TmxMap => map;
         public Boss boss;
-        private BranchHuntStart branchCutScene = new();
+        private readonly BranchHuntStart branchCutScene = new();
         public BranchWall branchWall;
         private readonly List<Npc> npcs = new();
         private readonly Dictionary<string, bool> npcNames = new()
@@ -44,13 +46,17 @@ namespace ShadowsOfTomorrow
         private readonly MapManager mapManager;
         private readonly Point size = Point.Zero;
         private readonly Point tileAmount = Point.Zero;
+        private readonly SpriteFont font;
+        private readonly Texture2D texture;
         public List<Point> destroyedTiles = new();
 
         public Map(Game1 game, string mapName, MapManager mapManager) 
         {
             map = new($"Content/TileSets/{mapName}.tmx");
             tileSet = game.Content.Load<Texture2D>("TileSets/" + map.Tilesets[0].Name.ToString());
-
+            
+            font = game.Content.Load<SpriteFont>("Fonts/DialogueFont");
+            texture = game.Content.Load<Texture2D>("UI/DialogueBox_x3");
 
             size.X = map.Tilesets[0].TileWidth;
             size.Y = map.Tilesets[0].TileHeight;
@@ -100,6 +106,8 @@ namespace ShadowsOfTomorrow
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            WriteHelpingText(game.player.Keybinds, spriteBatch);
+
             foreach (TmxLayer layer in map.Layers)
                 for (var i = 0; i < layer.Tiles.Count; i++)
                     if (layer.Tiles[i].Gid != 0 && layer.Name != "prototype")
@@ -295,6 +303,37 @@ namespace ShadowsOfTomorrow
                     }
 
             player.isNextToWall = false;
+        }
+
+        private void WriteHelpingText(Keybinds keybinds, SpriteBatch spriteBatch)
+        {
+            if (!TmxMap.ObjectGroups.Contains("TutorialTextPoints"))
+                return;
+
+            var layer = TmxMap.ObjectGroups.First(objGroup => objGroup.Name == "TutorialTextPoints");
+
+            List<string> text = new()
+            { 
+                $"You can move RIGHT and LEFT with the keys {keybinds.RightKey} and {keybinds.LeftKey}",
+                $"JUMP with {keybinds.JumpKey} and CROUCH with {keybinds.CrouchKey}",
+                $"You can ACCELARATE your speed by holding down {keybinds.AccelerateKey}",
+                $"Hold the other direction while running to preform a TURN",
+                $"Sprint into the wall to preform a WALL CLIMB",
+                $"Press {keybinds.CrouchKey} while in the air to preform a GROUND POUND",
+                $"While standing next to a BREAKABLE BLOCK press {keybinds.AttackKey} to DESTROY",
+                $"You can also RUN into BREAKABLE BLOCKS to destroy them",
+                $"Press {keybinds.TalkKey} to start a CONVERSATION with them",
+            };
+
+
+            foreach (var obj in layer.Objects)
+            {
+                string t = text[int.Parse(obj.Name) - 1];
+                Rectangle rec = new((int)obj.X, (int)obj.Y, (int)font.MeasureString(t).X + 50, 80);
+                spriteBatch.Draw(texture, rec, null, Color.White, 0, Vector2.Zero, SpriteEffects.None, 0.94f);
+                spriteBatch.DrawString(font, t, rec.Location.ToVector2() + new Vector2(20, 20), Color.White, 0, Vector2.One, 1, SpriteEffects.None, 0.95f);
+            }
+
         }
 
         public void Reset()

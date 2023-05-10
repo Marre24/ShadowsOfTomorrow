@@ -21,8 +21,9 @@ namespace ShadowsOfTomorrow
                     break;
 
                 List<string> keyValue = textFromFile[i].Split('|').ToList();
-                string key = keyValue[0];
-                List<string> value = keyValue[1].Replace("[", string.Empty).Split(']').ToList();
+                string key = keyValue[0].Replace("newline", "\n");
+
+                List<string> value = keyValue[1].Replace("[", string.Empty).Replace("newline", "\n").Split(']').ToList();
                 value.Remove("");
                 Dictionary<string, string> questionsAndAnswers = new();
                 foreach (string str in value)

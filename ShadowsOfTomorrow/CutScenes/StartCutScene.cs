@@ -186,7 +186,7 @@ namespace ShadowsOfTomorrow
         {
             camera.Follow(Point.Zero, true);
 
-            spriteBatch.DrawString(font, dialogueList2[dialogueList2.Count - 1], rec.Location.ToVector2() + new Vector2(52, 100), Color.White, 0, Vector2.One, 1, SpriteEffects.None, 0.91f);
+            spriteBatch.DrawString(font, dialogueList2[^1], rec.Location.ToVector2() + new Vector2(52, 100), Color.White, 0, Vector2.One, 1, SpriteEffects.None, 0.91f);
 
             spriteBatch.Draw(white, camera.Window, null, Color.White * whiteTransparency, 0, Vector2.Zero, SpriteEffects.None, 0.94f);
         }

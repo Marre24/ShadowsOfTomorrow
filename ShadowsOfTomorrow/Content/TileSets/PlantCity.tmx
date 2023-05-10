@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.0" orientation="orthogonal" renderorder="right-down" width="100" height="30" tilewidth="48" tileheight="48" infinite="0" nextlayerid="7" nextobjectid="9">
+<map version="1.10" tiledversion="1.10.0" orientation="orthogonal" renderorder="right-down" width="100" height="30" tilewidth="48" tileheight="48" infinite="0" nextlayerid="8" nextobjectid="10">
  <tileset firstgid="1" source="GrassTileSet.tsx"/>
  <layer id="1" name="prototype" width="100" height="30">
   <data encoding="csv">
@@ -51,6 +51,11 @@
    <point/>
   </object>
   <object id="8" x="2304" y="1104">
+   <point/>
+  </object>
+ </objectgroup>
+ <objectgroup id="7" name="TutorialTextPoints">
+  <object id="9" name="9" x="1440" y="1248">
    <point/>
   </object>
  </objectgroup>
