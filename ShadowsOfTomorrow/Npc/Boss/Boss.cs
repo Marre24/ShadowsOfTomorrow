@@ -52,7 +52,6 @@ namespace ShadowsOfTomorrow
         private readonly PhaseManager phaseManager;
         private Point location;
         readonly Texture2D texture;
-        private readonly SpriteFont font;
         private Phase _activePhase = Phase.Dialogue;
         private Phase oldPhase = Phase.Dialogue;
         public bool isStunned = false;
@@ -70,7 +69,6 @@ namespace ShadowsOfTomorrow
         public Boss(Game1 game, string name, Point location) : base(name, true)
         {
             texture = game.Content.Load<Texture2D>("Sprites/Bosses/TreevorLeaf_x3");
-            font = game.Content.Load<SpriteFont>("Fonts/DefaultFont");
             phaseManager = new(this, game);
             this.game = game;
             this.location = location;
@@ -80,7 +78,6 @@ namespace ShadowsOfTomorrow
         {
             if (wasKilled)
                 return;
-            spriteBatch.DrawString(font, health.ToString(), game.player.camera.Window.Location.ToVector2() + new Vector2(500, 50), Color.White, 0, Vector2.One, 1, SpriteEffects.None, 0.91f);
             spriteBatch.Draw(texture, location.ToVector2(), null, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.9f);
 
             phaseManager.Draw(spriteBatch);
@@ -156,6 +153,9 @@ namespace ShadowsOfTomorrow
 
         internal void OnHit()
         {
+            if (!isStunned)
+                return;
+
             health--;
             talkingIndex++;
 

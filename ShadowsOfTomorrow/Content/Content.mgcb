@@ -73,12 +73,12 @@
 /processorParam:TextureFormat=Color
 /build:Backgrounds/Sky_x3.png
 
-#begin Fonts/DefaultFont.spritefont
+#begin Fonts/DialogueFont.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
-/build:Fonts/DefaultFont.spritefont
+/build:Fonts/DialogueFont.spritefont
 
 #begin Sprites/Bosses/BoneTurtle.png
 /importer:TextureImporter

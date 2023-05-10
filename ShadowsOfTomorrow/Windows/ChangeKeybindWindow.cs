@@ -22,12 +22,12 @@ namespace ShadowsOfTomorrow
         private int index = 0;
         private KeyboardState oldState = Keyboard.GetState();
         private bool checkingForInput = false;
-        Point size = new(400, 500);
+        Point size = new(400, 600);
 
         public ChangeKeybindWindow(Game1 game, Keybinds keybinds, StartScreen startScreen, PausScreen pausScreen)
         {
             window = new(game.player.camera.Window.Center + new Point(- size.X / 2, -100 - size.Y / 2), size);
-            font = game.Content.Load<SpriteFont>("Fonts/DefaultFont");
+            font = game.Content.Load<SpriteFont>("Fonts/DialogueFont");
             texture = game.Content.Load<Texture2D>("UI/DialogueBox_x3");
             this.game = game;
             this.keybinds = keybinds;
@@ -45,7 +45,10 @@ namespace ShadowsOfTomorrow
 
             if (state.IsKeyDown(keybinds.SelectText) && oldState.IsKeyUp(keybinds.SelectText) && index == keybinds.AllKeys.Count)
             {
-                game.player.CurrentAction = Action.InMainMenu;
+                if (game.player.LastSpawnPoint == 0)
+                    game.player.CurrentAction = Action.InMainMenu;
+                else
+                    game.player.CurrentAction = Action.Paused;
 
                 startScreen.SetOldState(state);
                 pausScreen.SetOldState(state);
@@ -127,11 +130,11 @@ namespace ShadowsOfTomorrow
 
             for (int i = 0; i < keybinds.AllKeys.Count; i++)
             {
-                spriteBatch.DrawString(font, keybinds.AllKeys.ElementAt(i).Key, window.Location.ToVector2() + new Vector2(50, i * 40 + 50), Color.White, 0, Vector2.One, 1, SpriteEffects.None, 0.91f);
+                spriteBatch.DrawString(font, keybinds.AllKeys.ElementAt(i).Key, window.Location.ToVector2() + new Vector2(30, i * 40 + 50), Color.White, 0, Vector2.One, 1, SpriteEffects.None, 0.91f);
                 if (i == index)
-                    spriteBatch.DrawString(font, keybinds.AllKeys.ElementAt(i).Value.ToString(), window.Location.ToVector2() + new Vector2(185, i * 40 + 50), Color.Red, 0, Vector2.One, 1, SpriteEffects.None, 0.91f);
+                    spriteBatch.DrawString(font, keybinds.AllKeys.ElementAt(i).Value.ToString(), window.Location.ToVector2() + new Vector2(245, i * 40 + 50), Color.Red, 0, Vector2.One, 1, SpriteEffects.None, 0.91f);
                 else
-                    spriteBatch.DrawString(font, keybinds.AllKeys.ElementAt(i).Value.ToString(), window.Location.ToVector2() + new Vector2(180, i * 40 + 50), Color.White, 0, Vector2.One, 1, SpriteEffects.None, 0.91f);
+                    spriteBatch.DrawString(font, keybinds.AllKeys.ElementAt(i).Value.ToString(), window.Location.ToVector2() + new Vector2(240, i * 40 + 50), Color.White, 0, Vector2.One, 1, SpriteEffects.None, 0.91f);
             }
         }
 

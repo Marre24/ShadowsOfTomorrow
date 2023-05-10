@@ -29,7 +29,7 @@ namespace ShadowsOfTomorrow
         {
             Point size = new(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
             window = new(Point.Zero, size);
-            font = game.Content.Load<SpriteFont>("Fonts/DefaultFont");
+            font = game.Content.Load<SpriteFont>("Fonts/DialogueFont");
             this.game = game;
         }
 

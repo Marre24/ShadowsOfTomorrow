@@ -28,7 +28,7 @@ namespace ShadowsOfTomorrow
 
             buttonDownTexture = game.Content.Load<Texture2D>("UI/ButtonDown");
             buttonUpTexture = game.Content.Load<Texture2D>("UI/ButtonUp");
-            font = game.Content.Load<SpriteFont>("Fonts/DefaultFont");
+            font = game.Content.Load<SpriteFont>("Fonts/DialogueFont");
 
             this.game = game;
             this.player = player;

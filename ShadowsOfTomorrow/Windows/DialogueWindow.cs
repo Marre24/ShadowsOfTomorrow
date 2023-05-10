@@ -31,7 +31,7 @@ namespace ShadowsOfTomorrow
             this.boss = game.mapManager.Maps.First(map => map.MapName.ToLower() == "bossroom").boss;
             this.dialogue = dialogue;
 
-            font = game.Content.Load<SpriteFont>("Fonts/DefaultFont");
+            font = game.Content.Load<SpriteFont>("Fonts/DialogueFont");
             texture = game.Content.Load<Texture2D>("UI/DialogueBox_x3");
         }
 
@@ -71,7 +71,7 @@ namespace ShadowsOfTomorrow
             if (!dialogue.IsBoss)
                 UpdateIndex(state);
             else
-                window = new(game.player.camera.Window.Center + new Point(-200, - 100 - size.Y), size);
+                window = new(game.player.camera.Window.Center + new Point(-600, - 100 - size.Y), size);
 
             oldState = state;
         }

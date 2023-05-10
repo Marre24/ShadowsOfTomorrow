@@ -26,6 +26,7 @@ namespace ShadowsOfTomorrow
         {
             _graphics.PreferredBackBufferHeight = Screen.PrimaryScreen.Bounds.Height;
             _graphics.PreferredBackBufferWidth = Screen.PrimaryScreen.Bounds.Width;
+            _graphics.IsFullScreen = true;
             _graphics.ApplyChanges();
 
             player = new(this);
@@ -34,7 +35,7 @@ namespace ShadowsOfTomorrow
 
 
             mapManager.AddMaps();
-            mapManager.GoToSpawnPoint(0);
+            mapManager.GoToSpawnPoint(13);
 
             base.Initialize();
         }

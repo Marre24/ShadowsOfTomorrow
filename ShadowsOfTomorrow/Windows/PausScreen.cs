@@ -32,7 +32,7 @@ namespace ShadowsOfTomorrow
         {
             pixel = new Texture2D(graphicsDevice, 1, 1);
             pixel.SetData<Color>(new Color[] { Color.Black });
-            font = game.Content.Load<SpriteFont>("Fonts/DefaultFont");
+            font = game.Content.Load<SpriteFont>("Fonts/DialogueFont");
             texture = game.Content.Load<Texture2D>("UI/PausBox_x3");
             textSquare = new(camera.Window.Center, size);
             this.camera = camera;
@@ -47,9 +47,9 @@ namespace ShadowsOfTomorrow
             for (int i = 0; i < menuOptions.Count; i++)
             {
                 if (i == index)
-                    spriteBatch.DrawString(font, menuOptions[i], textSquare.Center.ToVector2() + new Vector2(-25, i * 40 - 75), Color.Red, 0, Vector2.One, 1, SpriteEffects.None, 0.92f);
+                    spriteBatch.DrawString(font, menuOptions[i], textSquare.Center.ToVector2() + new Vector2(-55, i * 40 - 75), Color.Red, 0, Vector2.One, 1, SpriteEffects.None, 0.92f);
                 else
-                    spriteBatch.DrawString(font, menuOptions[i], textSquare.Center.ToVector2() + new Vector2(-30, i * 40 - 75), Color.White, 0, Vector2.One, 1, SpriteEffects.None, 0.92f);
+                    spriteBatch.DrawString(font, menuOptions[i], textSquare.Center.ToVector2() + new Vector2(-60, i * 40 - 75), Color.White, 0, Vector2.One, 1, SpriteEffects.None, 0.92f);
             }
         }
 

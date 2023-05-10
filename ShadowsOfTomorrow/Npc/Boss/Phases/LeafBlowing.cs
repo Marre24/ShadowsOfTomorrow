@@ -57,8 +57,8 @@ namespace ShadowsOfTomorrow
 
             for (int i = 1; i <= leafAmount; i++)
             {
-                int min = game.player.camera.Window.Left + ((i - 1) * game.player.camera.Window.Right / leafAmount);
-                int maxi = i * game.player.camera.Window.Right / leafAmount;
+                int min = game.player.camera.Window.Left + ((i - 1) * boss.HitBox.Left / leafAmount);
+                int maxi = i * boss.HitBox.Left / leafAmount;
                 Vector2 location = new(random.Next(min, maxi), game.player.camera.Window.Top);
                 Vector2 dir = location - game.player.Location.ToVector2();
                 dir.Normalize();

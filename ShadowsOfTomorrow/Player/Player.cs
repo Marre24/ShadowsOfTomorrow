@@ -55,8 +55,6 @@ namespace ShadowsOfTomorrow
         private readonly Animation running;
         private readonly Animation climbing;
 
-        private readonly SpriteFont font;
-
         public Point Location { get => hitBox.Location; set => hitBox.Location = value;  }
         public Mach ActiveMach { get => _activeMach; set => _activeMach = value; }
         public Mach OldMach { get; private set; }
@@ -108,8 +106,6 @@ namespace ShadowsOfTomorrow
             running = new(game.Content.Load<Texture2D>("Sprites/Player/RunningLeft_x3"), game.Content.Load<Texture2D>("Sprites/Player/RunningRight_x3"), 10);
             climbing = new(game.Content.Load<Texture2D>("Sprites/Player/ClimbLeft_x3"), game.Content.Load<Texture2D>("Sprites/Player/ClimbRight_x3"), 12);
 
-            font = game.Content.Load<SpriteFont>("Fonts/DefaultFont");
-
             this.game = game;
 
             animationManager = new(idle, game);
@@ -121,13 +117,6 @@ namespace ShadowsOfTomorrow
         public void Draw(SpriteBatch spriteBatch)
         {
             animationManager.Draw(spriteBatch, Location.ToVector2(), Facing);
-
-            spriteBatch.DrawString(font, "Horizontal Speed: " + Math.Round(playerMovement.HorizontalSpeed, 2).ToString(), camera.Window.Location.ToVector2(), Color.White, 0, Vector2.One, 1, SpriteEffects.None, 0.91f);
-            spriteBatch.DrawString(font, "Vertical Speed: " + Math.Round(playerMovement.VerticalSpeed, 2).ToString(), camera.Window.Location.ToVector2() + new Vector2(0, 25), Color.White, 0, Vector2.One, 1, SpriteEffects.None, 0.91f);
-            spriteBatch.DrawString(font, ActiveMach.ToString(), camera.Window.Location.ToVector2() + new Vector2(0, 50), Color.White, 0, Vector2.One, 1, SpriteEffects.None, 0.91f);
-            spriteBatch.DrawString(font, CurrentAction.ToString(), camera.Window.Location.ToVector2() + new Vector2(0, 75), Color.White, 0, Vector2.One, 1, SpriteEffects.None, 0.91f);
-            spriteBatch.DrawString(font, isGrounded.ToString(), camera.Window.Location.ToVector2() + new Vector2(0, 100), Color.White, 0, Vector2.One, 1, SpriteEffects.None, 0.91f);
-            spriteBatch.DrawString(font, isNextToWall.ToString(), camera.Window.Location.ToVector2() + new Vector2(0, 125), Color.White, 0, Vector2.One, 1, SpriteEffects.None, 0.91f);
         }
 
         public void Update(GameTime gameTime)

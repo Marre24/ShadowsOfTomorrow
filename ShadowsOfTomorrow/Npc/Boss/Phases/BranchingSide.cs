@@ -50,6 +50,9 @@ namespace ShadowsOfTomorrow
                 if (branches[i].HitBox.Left > 45 * 48)
                     branches.Remove(branches[i]);
 
+            if (boss.isStunned)
+                return;
+
             if (gameTime.TotalGameTime.TotalSeconds < time + leafSpawnInterval)
                 return;
 
@@ -66,7 +69,7 @@ namespace ShadowsOfTomorrow
 
                 for (int i = 1; i <= leafAmount; i++)
                 {
-                    Vector2 location = new(random.Next(game.player.camera.Window.Left + ((i - 1) * game.player.camera.Window.Right / leafAmount), i * game.player.camera.Window.Right / leafAmount), game.player.camera.Window.Top - 200);
+                    Vector2 location = new(random.Next(game.player.camera.Window.Left + ((i - 1) * boss.HitBox.Left / leafAmount), i * boss.HitBox.Left / leafAmount), game.player.camera.Window.Top - 200);
                     leaves.Add(new(game, "Sprites/Bosses/Leaf_x3", location, new(0, 5), boss));
                 }
             }
