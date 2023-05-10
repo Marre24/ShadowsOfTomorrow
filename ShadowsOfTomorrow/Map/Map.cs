@@ -132,18 +132,22 @@ namespace ShadowsOfTomorrow
             CheckIfCollidesWithDoor();
 
             boss?.Update(gameTime);
-            if (branchCutScene.HasEnded)
+            if (branchCutScene.HaveEnded)
                 branchWall?.Update(gameTime);
             foreach (Npc npc in npcs)
                 npc.Update(gameTime);
 
             if (branchWall == null)
                 return;
-            if (MapName.Equals("RunFromBranches") && game.player.Location.X > 35 * 48 && !branchCutScene.HasBeenTriggered)
+
+
+            if (MapName.Equals("RunFromBranches") && game.player.Location.X > 35 * 48 && !branchCutScene.HaveBeenTriggered)
                 branchCutScene.Start(game.player);
-            if (branchCutScene.HasBeenTriggered && !branchCutScene.HasEnded)
+
+            if (branchCutScene.HaveBeenTriggered && !branchCutScene.HaveEnded)
                 branchCutScene.Play(this, game.player.camera, game.player, gameTime);
-            else if (branchCutScene.HasBeenTriggered && branchCutScene.HasEnded)
+
+            if (branchCutScene.HaveEnded)
                 branchWall.Update(gameTime);
 
         }
@@ -299,7 +303,7 @@ namespace ShadowsOfTomorrow
             if (branchWall != null)
             {
                 LoadBranchWall();
-                branchCutScene = new();
+                branchCutScene.Reset();
             }
             if (boss != null)
                 LoadBoss();

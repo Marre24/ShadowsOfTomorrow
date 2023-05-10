@@ -41,9 +41,12 @@ namespace ShadowsOfTomorrow
             Location += new Vector2(speed, 0);
         }
 
-        internal void Move()
+        internal void Move(bool fast)
         {
-            Location += new Vector2(3, 0);
+            if (fast)
+                Location += new Vector2(6, 0);
+            else
+                Location += new Vector2(3, 0);
         }
     }
 }

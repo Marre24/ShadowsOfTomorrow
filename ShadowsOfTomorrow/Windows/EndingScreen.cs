@@ -58,6 +58,9 @@ namespace ShadowsOfTomorrow
         {
             player.camera.Follow(window.Center);
 
+            if (Keyboard.GetState().IsKeyDown(Keys.Space))
+                game.Exit();
+
             var mouseState = Mouse.GetState();
             if (!buttonHitBox.Contains(mouseState.Position))
             {

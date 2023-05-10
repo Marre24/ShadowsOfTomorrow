@@ -10,16 +10,18 @@ namespace ShadowsOfTomorrow
 {
     public class BranchHuntStart
     {
-        public bool HasBeenTriggered { get; internal set; }
-        public bool HasEnded { get; internal set; }
+        public bool HaveBeenTriggered { get; internal set; }
+        public bool HaveShownCutscene { get; internal set; }
+        public bool HaveEnded { get; internal set; }
         private Rectangle rec;
         private double timeSinceStop = 0;
         private const double interval = 2;
 
-        public BranchHuntStart() 
+        public BranchHuntStart()
         { 
-            HasBeenTriggered = false;
-            HasEnded = false;
+            HaveShownCutscene = false;
+            HaveBeenTriggered = false;
+            HaveEnded = false;
         }
 
         public void Play(Map map, Camera camera, Player player, GameTime gameTime)
@@ -31,29 +33,38 @@ namespace ShadowsOfTomorrow
 
             if (camera.Window.Left - 96 - 2 >= map.Left)
             {
+                if (HaveShownCutscene)
+                    rec.Location -= new Point(4, 0);
                 rec.Location -= new Point(2, 0);
                 player.Facing = Facing.Left;
             }
             else if (map.branchWall.HitBox.Right < 15 * 48)
             {
-                map.branchWall.Move();
+                map.branchWall.Move(HaveShownCutscene);
                 timeSinceStop = gameTime.TotalGameTime.TotalSeconds;
             }
-            else if (gameTime.TotalGameTime.TotalSeconds >= timeSinceStop + interval)
+            else if (gameTime.TotalGameTime.TotalSeconds >= timeSinceStop + interval || HaveShownCutscene)
                 End(player);
         }
 
         private void End(Player player)
         {
-            HasEnded = true;
+            HaveShownCutscene = true;
+            HaveEnded = true;
             player.CurrentAction = Action.Standing;
         }
 
         public void Start(Player player)
         {
-            HasBeenTriggered = true;
+            HaveBeenTriggered = true;
             player.CurrentAction = Action.WachingCutScene;
             rec = new(new(player.HitBox.Left, player.HitBox.Bottom - 32), new(32, 32));
+        }
+
+        public void Reset()
+        {
+            HaveBeenTriggered = false;
+            HaveEnded = false;
         }
     }
 }
