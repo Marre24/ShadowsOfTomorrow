@@ -64,7 +64,7 @@ namespace ShadowsOfTomorrow
         public int talkingIndex = 0;
 
         private const double timeStunned = 3;
-        private double timeScinceStun = 0;
+        private double timeSinceStun = 0;
         private Rectangle blackRectangle;
         private Rectangle greenRectangle;
 
@@ -138,16 +138,16 @@ namespace ShadowsOfTomorrow
         {
             isStunned = true;
 
-            if (timeScinceStun == 0)
+            if (timeSinceStun == 0)
             {
-                timeScinceStun = gameTime.TotalGameTime.TotalSeconds;
+                timeSinceStun = gameTime.TotalGameTime.TotalSeconds;
                 return;
             }
 
-            if (timeScinceStun + timeStunned < gameTime.TotalGameTime.TotalSeconds)     //Break out of stun
+            if (timeSinceStun + timeStunned < gameTime.TotalGameTime.TotalSeconds)     //Break out of stun
             {
                 SetNewPhase();
-                timeScinceStun = 0;
+                timeSinceStun = 0;
                 stunOMeter = 0;
                 isStunned = false;
             }
@@ -180,7 +180,7 @@ namespace ShadowsOfTomorrow
             health--;
             talkingIndex++;
 
-            timeScinceStun = 0;
+            timeSinceStun = 0;
             stunOMeter = 0;
             isStunned = false;
 

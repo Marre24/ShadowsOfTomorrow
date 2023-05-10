@@ -80,6 +80,13 @@
 /processorParam:TextureFormat=Compressed
 /build:Fonts/DialogueFont.spritefont
 
+#begin Fonts/TitleFont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/TitleFont.spritefont
+
 #begin Sprites/Bosses/BoneTurtle.png
 /importer:TextureImporter
 /processor:TextureProcessor

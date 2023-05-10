@@ -18,8 +18,8 @@ namespace ShadowsOfTomorrow
         readonly List<string> menuOptions = new()
         {
             "Resume",
-            "Keybinds",
-            "Volyme",
+            "Key binds",
+            "Volume",
             "Exit Game",
         };
         private readonly Game1 game;
@@ -83,7 +83,7 @@ namespace ShadowsOfTomorrow
             if (state.IsKeyDown(game.player.Keybinds.DialogueDown) && oldState.IsKeyUp(game.player.Keybinds.DialogueDown))
                 index++;
 
-            else if (state.IsKeyDown(game.player.Keybinds.SelectText) && oldState.IsKeyUp(game.player.Keybinds.SelectText))
+            else if (state.IsKeyDown(game.player.Keybinds.DialogueUp) && oldState.IsKeyUp(game.player.Keybinds.DialogueUp))
                 index--;
 
             if (index > menuOptions.Count - 1)

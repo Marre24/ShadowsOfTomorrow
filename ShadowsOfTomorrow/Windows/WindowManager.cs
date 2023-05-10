@@ -62,7 +62,7 @@ namespace ShadowsOfTomorrow
             if (game.player.CurrentAction == Action.Dead)
                 deadScreen.Update(gameTime);
             if (game.player.CurrentAction == Action.InMainMenu)
-                startScreen.Update();
+                startScreen.Update(gameTime);
             if (game.player.CurrentAction == Action.ChangingKeybinds)
                 changeKeybindWindow.Update();
             if (game.player.CurrentAction == Action.Paused)

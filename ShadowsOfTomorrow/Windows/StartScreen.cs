@@ -14,14 +14,16 @@ namespace ShadowsOfTomorrow
     {
         private Rectangle window;
         private readonly SpriteFont font;
+        private readonly SpriteFont titleFont;
         readonly List<string> menuOptions = new()
         {
             "Start Game",
-            "Keybinds",
-            "Volyme",
+            "Key binds",
+            "Volume",
             "Exit",
         };
         private readonly Game1 game;
+        readonly StartCutScene startCutScene;
         private int index = 0;
         private KeyboardState oldState = Keyboard.GetState();
 
@@ -30,21 +32,32 @@ namespace ShadowsOfTomorrow
             Point size = new(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
             window = new(Point.Zero, size);
             font = game.Content.Load<SpriteFont>("Fonts/DialogueFont");
+            titleFont = game.Content.Load<SpriteFont>("Fonts/TitleFont");
             this.game = game;
+            startCutScene = new(game, game.player.camera, game.player);
         }
 
-        public void Update()
+        public void Update(GameTime gameTime)
         {
             KeyboardState state = Keyboard.GetState();
 
             game.player.camera.Follow(Point.Zero);
+
+            if (!startCutScene.HaveEnded)
+            {
+                startCutScene.Update(gameTime);
+                return;
+            }
 
             if (state.IsKeyDown(game.player.Keybinds.SelectText) && oldState.IsKeyUp(game.player.Keybinds.SelectText))
             {
                 switch (index)
                 {
                     case 0:
-                        game.mapManager.GoToSpawnPoint(1);
+                        if (game.player.LastSpawnPoint == 0)
+                            game.mapManager.GoToSpawnPoint(1);
+                        else
+                            game.mapManager.GoToSpawnPoint(game.player.LastSpawnPoint);
                         game.player.CurrentAction = Action.Standing;
                         break;
                     case 1:
@@ -78,6 +91,14 @@ namespace ShadowsOfTomorrow
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            if (!startCutScene.HaveEnded)
+            {
+                startCutScene.Draw(spriteBatch);
+                return;
+            }
+
+            spriteBatch.DrawString(titleFont, "Shadows Of Tomorrow", game.player.camera.Window.Center.ToVector2() - new Vector2(titleFont.MeasureString("Shadows Of Tomorrow").X / 2, 250), Color.White);
+            
             for (int i = 0; i < menuOptions.Count; i++)
             {
                 if (i == index)

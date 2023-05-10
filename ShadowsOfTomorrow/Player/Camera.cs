@@ -28,6 +28,19 @@ namespace ShadowsOfTomorrow
 
             Follow(target, map);
         }
+        public void Follow(Point target, bool shaking)
+        {
+            if (!shaking)
+                return;
+
+            float shakeRadius = 3.0f;
+            int shakeStartAngle = (150 + rand.Next(60));
+            Vector2 offset = new((float)(Math.Sin(shakeStartAngle) * shakeRadius), (float)(Math.Cos(shakeStartAngle) * shakeRadius));
+            target += offset.ToPoint();
+
+            Follow(target);
+        }
+
 
         public void Follow(Rectangle target, Map map)
         {
