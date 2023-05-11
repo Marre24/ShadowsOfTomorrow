@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -7,7 +8,6 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace ShadowsOfTomorrow
 {
@@ -17,6 +17,7 @@ namespace ShadowsOfTomorrow
 
         private Rectangle rec;
         private readonly Texture2D texture;
+        private readonly Game1 game;
         private readonly Camera camera;
         private readonly SpriteFont font;
         public Player player;
@@ -39,12 +40,12 @@ namespace ShadowsOfTomorrow
             "2",
             "1",
             "And we have liftoff",
-            "Bring us a habitable planet ____ , \n the human population is counting on you",
+            "Bring us a habitable planet ____, \n the human population is counting on you",
             "15 months later...",
         };
         readonly List<string> dialogueList2 = new()
         {
-            "_____ , can you hear us?",
+            "_____, can you hear us?",
             "Mayday, mayday, mayday",
             "The ship is going down",
             "I repeat the ship is going down",
@@ -64,6 +65,7 @@ namespace ShadowsOfTomorrow
             white.SetData<Color>(new Color[] { Color.White });
 
             HaveEnded = false;
+            this.game = game;
             this.camera = camera;
             this.player = player;
         }
@@ -72,8 +74,6 @@ namespace ShadowsOfTomorrow
 
         public void Update(GameTime gameTime)
         {
-            
-
             rec = new(camera.Window.Center - new Point(size.X / 2, size.Y / 2), size);
             switch (phaseCounter)
             {
@@ -111,10 +111,20 @@ namespace ShadowsOfTomorrow
         {
             camera.Follow(Point.Zero);
 
-            if (gameTime.TotalGameTime.TotalSeconds > dialogueList1[dialogueCounter].Split(" ").Length * 1.3 + timeSinceWordUpdate)
+            double time = dialogueList1[dialogueCounter].Split(" ").Length * 1.3;
+
+            if (time > 17)
+                time = 13;
+
+            if (gameTime.TotalGameTime.TotalSeconds > time + timeSinceWordUpdate)
             {
                 timeSinceWordUpdate = gameTime.TotalGameTime.TotalSeconds;
                 dialogueCounter++;
+            }
+
+            if (dialogueCounter == 9)
+            {
+                game.musicManager.Play(game.Content.Load<SoundEffect>("Music/ShipLaunch"));
             }
 
             if (dialogueCounter < dialogueList1.Count)
@@ -135,10 +145,16 @@ namespace ShadowsOfTomorrow
         {
             camera.Follow(Point.Zero, true);
 
+            game.musicManager.Play(game.Content.Load<SoundEffect>("Music/Alarm"));
+
             if (gameTime.TotalGameTime.TotalSeconds > dialogueList2[dialogueCounter].Split(" ").Length * 1 + timeSinceWordUpdate)
             {
                 timeSinceWordUpdate = gameTime.TotalGameTime.TotalSeconds;
                 dialogueCounter++;
+            }
+            if (dialogueCounter == 3)
+            {
+                game.musicManager.Play(game.Content.Load<SoundEffect>("Music/ShipChrash"));
             }
 
             if (isGoingUp)
@@ -172,6 +188,7 @@ namespace ShadowsOfTomorrow
 
         public void PhaseThree(GameTime gameTime)
         {
+            game.musicManager.Play(game.Content.Load<SoundEffect>("Music/EarRinging"));
             camera.Follow(Point.Zero, true);
 
             whiteTransparency += 0.007f;

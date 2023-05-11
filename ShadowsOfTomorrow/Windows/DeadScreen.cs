@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Screen = System.Windows.Forms.Screen;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 
 namespace ShadowsOfTomorrow
 {
@@ -46,6 +47,8 @@ namespace ShadowsOfTomorrow
         public void Update(GameTime gameTime)
         {
             player.camera.Follow(window.Center);
+            game.musicManager.Stop();
+            game.musicManager.Play((Song)null);
 
             if (Keyboard.GetState().IsKeyDown(Keys.Space))
             {

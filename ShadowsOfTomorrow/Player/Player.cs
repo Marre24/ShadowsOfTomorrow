@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
 
 namespace ShadowsOfTomorrow
 {
@@ -32,6 +33,7 @@ namespace ShadowsOfTomorrow
         Dead,
         InMainMenu,
         ChangingKeybinds,
+        ChangingVolyme,
         Paused,
     }
 
@@ -123,9 +125,13 @@ namespace ShadowsOfTomorrow
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            animationManager.Draw(spriteBatch, Location.ToVector2(), Facing);
+
+            if (game.mapManager.ActiveMapIndex != 6)
+                return;
+
             for (int i = 0; i < health; i++)
                 spriteBatch.Draw(heartTexture,new Vector2(150 + i * 50, 300), null, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.93f);
-            animationManager.Draw(spriteBatch, Location.ToVector2(), Facing);
         }
 
         public void Update(GameTime gameTime)
@@ -157,11 +163,13 @@ namespace ShadowsOfTomorrow
             animationManager.Update(gameTime);
             playerAttacking.Update(gameTime);
 
+            if (playerMovement.HorizontalSpeed != 0)
+                game.musicManager.Play(ActiveMach == Mach.Running || ActiveMach == Mach.Sprinting, gameTime);
+
             OldMach = ActiveMach;
             OldAction = CurrentAction;
             OldSize = Size;
         }
-
 
         private void UpdateHitBox()
         {
@@ -300,6 +308,9 @@ namespace ShadowsOfTomorrow
         {
             if (CurrentAction == Action.Stunned)
                 return;
+
+            game.musicManager.Play(game.Content.Load<SoundEffect>("Music/OofRoblox"), true);
+
             playerMovement.StandUp();
             health--;
             CurrentAction = Action.Stunned;

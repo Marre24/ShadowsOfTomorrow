@@ -44,7 +44,7 @@ namespace ShadowsOfTomorrow
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(font, endingText, window.Center.ToVector2(), Color.White);
+            spriteBatch.DrawString(font, endingText, window.Center.ToVector2() - new Vector2(200, 0), Color.White);
 
             if (buttonIsUp)
                 spriteBatch.Draw(buttonUpTexture, buttonHitBox, Color.White);

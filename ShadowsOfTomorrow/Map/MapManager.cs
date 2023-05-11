@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Media;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -61,6 +62,22 @@ namespace ShadowsOfTomorrow
             ActiveMap.Update(gameTime);
             foreach (var backgroundLayer in _maps[ActiveMap].ToList())
                 backgroundLayer.Update(gameTime);
+
+            switch (ActiveMapIndex)
+            {
+
+                case 4:
+                    if (ActiveMap.branchCutScene.HaveEnded)
+                        game.musicManager.Play(game.Content.Load<Song>("Music/ItsPizzaTime"));
+                    break;
+                case 6:
+                    game.musicManager.Play(game.Content.Load<Song>("Music/TheDeathIDeservioli"));
+                    break;
+
+                default:
+                    game.musicManager.Stop();
+                    break;
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)

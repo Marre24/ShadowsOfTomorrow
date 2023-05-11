@@ -24,7 +24,7 @@ namespace ShadowsOfTomorrow
 
         public TmxMap TmxMap => map;
         public Boss boss;
-        private readonly BranchHuntStart branchCutScene = new();
+        public readonly BranchHuntStart branchCutScene = new();
         public BranchWall branchWall;
         private readonly List<Npc> npcs = new();
         private readonly Dictionary<string, bool> npcNames = new()
@@ -347,6 +347,7 @@ namespace ShadowsOfTomorrow
 
         public void Reset()
         {
+            game.musicManager.Reset();
             destroyedTiles = new();
             if (branchWall != null)
             {

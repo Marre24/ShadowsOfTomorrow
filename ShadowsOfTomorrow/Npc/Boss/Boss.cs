@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -88,7 +89,7 @@ namespace ShadowsOfTomorrow
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            if (wasKilled)
+            if (wasKilled && game.player.CurrentAction != Action.Talking)
                 return;
             spriteBatch.Draw(texture, location.ToVector2(), null, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.9f);
 
@@ -103,7 +104,7 @@ namespace ShadowsOfTomorrow
 
         public void Update(GameTime gameTime)
         {
-            if (health <= 0 && ActivePhase != Phase.Dialogue)
+            if (health <= 0)
             {
                 wasKilled = true;
                 return;
@@ -176,6 +177,8 @@ namespace ShadowsOfTomorrow
             if (!isStunned)
                 return;
 
+            game.musicManager.Play(game.Content.Load<SoundEffect>("Music/OofMine"), true);
+
             health--;
             talkingIndex++;
 
@@ -227,6 +230,7 @@ namespace ShadowsOfTomorrow
 
         internal void GetHitByLeaf()
         {
+            game.musicManager.Play(game.Content.Load<SoundEffect>("Music/OofMine"), true);
             stunOMeter++;
         }
     }

@@ -87,6 +87,90 @@
 /processorParam:TextureFormat=Compressed
 /build:Fonts/TitleFont.spritefont
 
+#begin Music/Alarm.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Music/Alarm.wav
+
+#begin Music/EarRinging.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Music/EarRinging.wav
+
+#begin Music/FastStep1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Music/FastStep1.wav
+
+#begin Music/FastStep2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Music/FastStep2.wav
+
+#begin Music/FastStep3.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Music/FastStep3.wav
+
+#begin Music/ItsPizzaTime.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/ItsPizzaTime.mp3
+
+#begin Music/OofMine.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Music/OofMine.wav
+
+#begin Music/OofRoblox.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Music/OofRoblox.wav
+
+#begin Music/ShipChrash.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Music/ShipChrash.wav
+
+#begin Music/ShipLaunch.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Music/ShipLaunch.wav
+
+#begin Music/SlowStep1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Music/SlowStep1.wav
+
+#begin Music/SlowStep2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Music/SlowStep2.wav
+
+#begin Music/SlowStep3.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Music/SlowStep3.wav
+
+#begin Music/TheDeathIDeservioli.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/TheDeathIDeservioli.mp3
+
 #begin Sprites/Bosses/BoneTurtle.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -399,6 +483,18 @@
 #begin TileSets/RunFromBranches.tmx
 /copy:TileSets/RunFromBranches.tmx
 
+#begin UI/Bar_x3.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:UI/Bar_x3.png
+
 #begin UI/ButtonDown.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -422,6 +518,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:UI/ButtonUp.png
+
+#begin UI/ChangeBox_x3.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:UI/ChangeBox_x3.png
 
 #begin UI/DialogueBox_x3.png
 /importer:TextureImporter

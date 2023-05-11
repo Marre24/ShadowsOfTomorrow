@@ -22,13 +22,13 @@ namespace ShadowsOfTomorrow
         private int index = 0;
         private KeyboardState oldState = Keyboard.GetState();
         private bool checkingForInput = false;
-        Point size = new(400, 600);
+        Point size = new(420, 600);
 
         public ChangeKeybindWindow(Game1 game, Keybinds keybinds, StartScreen startScreen, PausScreen pausScreen)
         {
             window = new(game.player.camera.Window.Center + new Point(- size.X / 2, -100 - size.Y / 2), size);
             font = game.Content.Load<SpriteFont>("Fonts/DialogueFont");
-            texture = game.Content.Load<Texture2D>("UI/DialogueBox_x3");
+            texture = game.Content.Load<Texture2D>("UI/ChangeBox_x3");
             this.game = game;
             this.keybinds = keybinds;
             this.startScreen = startScreen;

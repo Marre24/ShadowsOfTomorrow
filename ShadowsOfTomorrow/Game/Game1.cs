@@ -14,6 +14,7 @@ namespace ShadowsOfTomorrow
         public Player player;
         public MapManager mapManager;
         public WindowManager windowManager;
+        public MusicManager musicManager;
 
         public Game1()
         {
@@ -32,10 +33,11 @@ namespace ShadowsOfTomorrow
             player = new(this);
             mapManager = new(this);
             windowManager = new(this);
+            musicManager = new(this);
 
 
             mapManager.AddMaps();
-            mapManager.GoToSpawnPoint(1);
+            mapManager.GoToSpawnPoint(9);
 
             base.Initialize();
         }
@@ -47,7 +49,7 @@ namespace ShadowsOfTomorrow
 
         protected override void Update(GameTime gameTime)
         {
-            if (player.CurrentAction == Action.Ended || player.CurrentAction == Action.Dead || player.CurrentAction == Action.InMainMenu || player.CurrentAction == Action.ChangingKeybinds || player.CurrentAction == Action.Paused)
+            if (player.CurrentAction == Action.Ended || player.CurrentAction == Action.Dead || player.CurrentAction == Action.InMainMenu || player.CurrentAction == Action.ChangingKeybinds || player.CurrentAction == Action.Paused || player.CurrentAction == Action.ChangingVolyme)
             {
                 windowManager.Update(gameTime);
                 return;
@@ -68,9 +70,9 @@ namespace ShadowsOfTomorrow
 
             _spriteBatch.Begin(transformMatrix: player.camera.Transform, sortMode: SpriteSortMode.FrontToBack);
 
-            if (player.CurrentAction == Action.Ended || player.CurrentAction == Action.Dead || player.CurrentAction == Action.InMainMenu || player.CurrentAction == Action.ChangingKeybinds || player.CurrentAction == Action.Paused)
+            if (player.CurrentAction == Action.Ended || player.CurrentAction == Action.Dead || player.CurrentAction == Action.InMainMenu || player.CurrentAction == Action.ChangingKeybinds || player.CurrentAction == Action.Paused || player.CurrentAction == Action.ChangingVolyme)
             {
-                if ((player.CurrentAction == Action.Paused || player.CurrentAction == Action.ChangingKeybinds) && player.LastSpawnPoint != 0)
+                if ((player.CurrentAction == Action.Paused || player.CurrentAction == Action.ChangingKeybinds || player.CurrentAction == Action.ChangingVolyme) && player.LastSpawnPoint != 0)
                 {
                     windowManager.Draw(_spriteBatch);
                     mapManager.Draw(_spriteBatch);

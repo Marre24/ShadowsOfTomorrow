@@ -64,6 +64,7 @@ namespace ShadowsOfTomorrow
                         game.player.CurrentAction = Action.ChangingKeybinds;
                         break;
                     case 2:
+                        game.player.CurrentAction = Action.ChangingVolyme;
                         break;
                     case 3:
                         game.Exit();

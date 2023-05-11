@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,7 @@ namespace ShadowsOfTomorrow
         private readonly DeadScreen deadScreen;
         private readonly StartScreen startScreen;
         private readonly ChangeKeybindWindow changeKeybindWindow;
+        private readonly ChangeVolyme changeVolyme;
         private readonly PausScreen pausScreen;
 
         public WindowManager(Game1 game) 
@@ -26,6 +28,7 @@ namespace ShadowsOfTomorrow
             pausScreen = new(game.GraphicsDevice, game.player.camera, game);
             changeKeybindWindow = new(game, game.player.Keybinds, startScreen, pausScreen);
             dialogueWindow = new(game);
+            changeVolyme = new(game, startScreen, pausScreen);
         }
 
         public void SetDialogue(Dialogue dialogue)
@@ -50,6 +53,9 @@ namespace ShadowsOfTomorrow
             if (game.player.CurrentAction == Action.ChangingKeybinds)
                 changeKeybindWindow.Draw(spriteBatch);
 
+            if (game.player.CurrentAction == Action.ChangingVolyme)
+                changeVolyme.Draw(spriteBatch);
+
             if (game.player.CurrentAction == Action.Paused)
                 pausScreen.Draw(spriteBatch);
         }
@@ -68,6 +74,8 @@ namespace ShadowsOfTomorrow
                 changeKeybindWindow.Update();
             if (game.player.CurrentAction == Action.Paused)
                 pausScreen.Update(gameTime);
+            if (game.player.CurrentAction == Action.ChangingVolyme)
+                changeVolyme.Update(gameTime);
         }
 
         public void SetEnd(Boss boss)
