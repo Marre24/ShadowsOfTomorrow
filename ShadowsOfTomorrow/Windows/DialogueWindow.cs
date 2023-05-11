@@ -113,7 +113,7 @@ namespace ShadowsOfTomorrow
 
         private void ShowAnswer(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(font, displayAnswer, window.Location.ToVector2() + new Vector2(50, 200), Color.White, 0, Vector2.One, 1, SpriteEffects.None, 0.91f);
+            spriteBatch.DrawString(font, displayAnswer, window.Location.ToVector2() + new Vector2(30, 200), Color.White, 0, Vector2.One, 1, SpriteEffects.None, 0.91f);
         }
 
         private void ShowQuestions(SpriteBatch spriteBatch)
@@ -123,9 +123,9 @@ namespace ShadowsOfTomorrow
             for (int i = 0; i < questions.Count; i++)
             {
                 if (i == index)
-                    spriteBatch.DrawString(font, questions[i], window.Location.ToVector2() + new Vector2(52, 100 + i * 40), Color.Red, 0, Vector2.One, 1, SpriteEffects.None, 0.91f);
+                    spriteBatch.DrawString(font, questions[i], window.Location.ToVector2() + new Vector2(32, 100 + i * 40), Color.Red, 0, Vector2.One, 1, SpriteEffects.None, 0.91f);
                 else
-                    spriteBatch.DrawString(font, questions[i], window.Location.ToVector2() + new Vector2(50, 100 + i * 40), Color.White, 0, Vector2.One, 1, SpriteEffects.None, 0.91f);
+                    spriteBatch.DrawString(font, questions[i], window.Location.ToVector2() + new Vector2(30, 100 + i * 40), Color.White, 0, Vector2.One, 1, SpriteEffects.None, 0.91f);
             }
         }
     }

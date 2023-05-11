@@ -25,7 +25,7 @@ namespace ShadowsOfTomorrow
             this.player = player;
             this.boss = boss;
             this.game = game;
-            maxStunOMeter = 2;
+            maxStunOMeter = 3;
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -46,7 +46,7 @@ namespace ShadowsOfTomorrow
             if (boss.isStunned)
                 return;
 
-            player.Location += new Point(-1, 0);
+            player.Location += new Point(-2, 0);
             
             if (gameTime.TotalGameTime.TotalSeconds < time + leafSpawnInterval)
                 return;

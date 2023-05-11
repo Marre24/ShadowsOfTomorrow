@@ -22,7 +22,7 @@ namespace ShadowsOfTomorrow
             this.game = game;
             this.leafSpawnInterval = leafSpawnInterval;
             this.boss = boss;
-            maxStunOMeter = 2;
+            maxStunOMeter = 4;
         }
 
         public override void Draw(SpriteBatch spriteBatch)

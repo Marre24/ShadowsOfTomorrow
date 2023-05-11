@@ -58,12 +58,12 @@ namespace ShadowsOfTomorrow
 
         private int stunOMeter = 0;
 
-        private const int startingHealth = 1;
+        private const int startingHealth = 4;
         public int health = startingHealth;
         public bool wasKilled;
         public int talkingIndex = 0;
 
-        private const double timeStunned = 3;
+        private const double timeStunned = 4;
         private double timeSinceStun = 0;
         private Rectangle blackRectangle;
         private Rectangle greenRectangle;
@@ -78,7 +78,6 @@ namespace ShadowsOfTomorrow
 
             greenPixel = new Texture2D(game.GraphicsDevice, 1, 1);
             greenPixel.SetData<Color>(new Color[] { Color.Green });
-
             
 
             texture = game.Content.Load<Texture2D>("Sprites/Bosses/TreevorLeaf_x3");
@@ -104,7 +103,7 @@ namespace ShadowsOfTomorrow
 
         public void Update(GameTime gameTime)
         {
-            if (health <= 0)
+            if (health <= 0 && ActivePhase != Phase.Dialogue)
             {
                 wasKilled = true;
                 return;
@@ -158,10 +157,10 @@ namespace ShadowsOfTomorrow
             switch (health)
             {
                 case 1:
-                    _activePhase = Phase.BranchingUp;
+                    _activePhase = Phase.BranchingSide;
                     break;
                 case 2:
-                    _activePhase = Phase.BranchingSide;
+                    _activePhase = Phase.BranchingUp;
                     break;
                 case 3:
                     _activePhase = Phase.LeafWind;

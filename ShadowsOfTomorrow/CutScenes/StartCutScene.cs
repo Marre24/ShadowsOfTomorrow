@@ -68,7 +68,7 @@ namespace ShadowsOfTomorrow
             this.player = player;
         }
 
-        double timeSinceWordUpdate = 5;
+        double timeSinceWordUpdate = 3.5;
 
         public void Update(GameTime gameTime)
         {
@@ -111,7 +111,7 @@ namespace ShadowsOfTomorrow
         {
             camera.Follow(Point.Zero);
 
-            if (gameTime.TotalGameTime.TotalSeconds > dialogueList1[dialogueCounter].Split(" ").Length * 1.6 + timeSinceWordUpdate)
+            if (gameTime.TotalGameTime.TotalSeconds > dialogueList1[dialogueCounter].Split(" ").Length * 1.3 + timeSinceWordUpdate)
             {
                 timeSinceWordUpdate = gameTime.TotalGameTime.TotalSeconds;
                 dialogueCounter++;
@@ -135,7 +135,7 @@ namespace ShadowsOfTomorrow
         {
             camera.Follow(Point.Zero, true);
 
-            if (gameTime.TotalGameTime.TotalSeconds > dialogueList2[dialogueCounter].Split(" ").Length * 1.5 + timeSinceWordUpdate)
+            if (gameTime.TotalGameTime.TotalSeconds > dialogueList2[dialogueCounter].Split(" ").Length * 1 + timeSinceWordUpdate)
             {
                 timeSinceWordUpdate = gameTime.TotalGameTime.TotalSeconds;
                 dialogueCounter++;

@@ -23,7 +23,7 @@ namespace ShadowsOfTomorrow
         {
             this.game = game;
             this.boss = boss;
-            maxStunOMeter = 1;
+            maxStunOMeter = 2;
         }
 
         public override void Draw(SpriteBatch spriteBatch)

@@ -1,20 +1,20 @@
 ﻿Treevor
-Huh;Who goes there?;Oh my god, is that an alien!? On our planet;This is something the mighty Treevor, protector of the plant Kingdom, has to deal with;So go on and raise your tiny limbs so you can die nobly in combat
-Okay, I will admit you are pretty strong and I have underestimated  you;Then I have no choice but to unleash my deadly combo;Wind and leaf GOOOOOO!!!
-My oh my I have not gotten this much resistance since ... well ever;I believe that the warmup is done and i can use my full potential;GOOOOOO stick attack;Erhm... Erhm...;This usually never happens, I have been quite stressed recently and the kids and wife have been sick for a while now;Let me try again;Ahhhhhhhhhhhhhhhhhhhhhhhhh newline GOOOOOO STICK ATTACK
-Wow, I am impressed with your stamina and dodging abilities;I got to be honest I am feeling kinda tired right now;But I have to muster up my last bit of energy;To protect those I love, my people need me!;I am sorry little one but it is either me or you
+Huh;Who goes there?;Oh my god, is that an alien!? On our planet;This is something the mighty Treevor, protector of the newline plant Kingdom, has to deal with;So go on and raise your tiny limbs so you can die newline nobly in combat
+Okay, I will admit you are pretty strong and I have newline underestimated you;Then I have no choice but to unleash my deadly combo;Wind and leaf GOOOOOO!!!
+My oh my I have not gotten this much resistance newline since ... well ever;I believe that the warmup is done and i can use my newline full potential;GOOOOOO stick attack;Erhm... Erhm...; ... ;This usually never happens, I have been quite stressed newline recently and the kids and wife have been sick newline for a while now;Let me try again;Aaaaaaaaaaaaahhhhhhhhhhhhhhhhhhhhhhhhh newline GOOOOOO STICK ATTACK
+Wow, I am impressed with your stamina and dodging newline abilities;I got to be honest I am feeling kinda tired right now;But I have to muster up my last bit of energy;To protect those I love, my people need me!;I am sorry little one but it is either me or you
 My time is near, Death's veil draws nigh, newline My body weak, my breaths but sighs.;Yet like a withered tree, I'll stand tall, newline My legacy, deep-rooted, shall never fall.;Oh the pain is just too much;Bye cruel world
 Blossom
-First|[Waaaasup;Sup my fellow flower, wait a minuit... newline Are you really a flower?][What is your name;Blossom, what is your name][How are you?;I am okay, just recovered from a devastating cold but I am feeling a lot better now][What is your occupation;I am a florist, and a mom]
+First|[Waaaasup;Sup my fellow flower, wait a minuite... newline Are you really a flower?][What is your name;Blossom, what is your name][How are you?;I am okay, just recovered from a devastating newline cold but I am feeling a lot better now][What is your occupation;I am a florist, and a mom]
 Blossom, what is your name|[____;What a beautiful and interesting name]
-Sup my fellow flower, wait a minuit... newline Are you really a flower?|[Yes;Are you sure?][No;Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa newline Please do not hurt me :(]
-Are you sure?|[Yes;Okay... I just wanted to let you know that regardless of whom you may be do not be afraid to be yourself][No I am not a flower;Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa newline Please do not hurt me :(]
+Sup my fellow flower, wait a minuite... newline Are you really a flower?|[Yes;Are you sure?][No;Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa newline Please do not hurt me :(]
+Are you sure?|[Yes;Okay... I just wanted to let you know that regardless newline of whom you may be do not be afraid to be yourself][No I am not a flower;Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa newline Please do not hurt me :(]
 I am a florist, and a mom|[What do you do in a day;I help with to tend to the ill and wounded]
 Marigold
-First|[Hi;My mum tells me to stay away from strangers. Are you a stranger?][What is your name;Marigold, When I grow up I am going just to be like my dad. A tree][Can you tell me a joke;My neighbor says he is too afraid to plant an apple tree. newline I told him, "Grow a pear"!]
-My mum tells me to stay away from strangers. Are you a stranger?|[Yes;Okay then bye][No;I do not believe you, bye]
+First|[Hi;My mum tells me to stay away from strangers. newline Are you a stranger?][What is your name;Marigold, When I grow up I am going just to be newline like my dad. A tree][Can you tell me a joke;My neighbor says he is too afraid to plant an newline apple tree. newline I told him, "Grow a pear"!]
+My mum tells me to stay away from strangers. newline Are you a stranger?|[Yes;Okay then bye][No;I do not believe you, bye]
 Violet
-First|[Hi;Hello][What is your name;Violet][Have you any tips if I where to fight...A big tree?;If I were to fight a big tree I would use their weapon against them for example hitting back leaf to stun them]
-If I were to fight a big tree I would use their weapon against them for example hitting back leaf to stun them|[Something else;When stunned, which you can see on the conveniently placed stunbar, I would attack them directly]
+First|[Hi;Hello][What is your name;Violet][Have you any tips if I where to fight...A big tree?;If I were to fight a big tree I would use their weapon newline against them for example hitting back leaf to stun them]
+If I were to fight a big tree I would use their weapon newline against them for example hitting back leaf to stun them|[Something else;When stunned, which you can see on the conveniently newline placed stunbar, I would attack them directly]
 Hello|[Have you heard any gossip?;Yea, some people say that the plant king is a tree]
-Yea, some people say that the plant king is a tree|[Have you not met him?;No I am too nervous, even my neighbors daughter tell me to grow a pear]
+Yea, some people say that the plant king is a tree|[Have you not met him?;No I am too nervous, even my neighbors daughter newline tell me to grow a pear]

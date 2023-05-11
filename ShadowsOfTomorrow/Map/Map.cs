@@ -322,7 +322,7 @@ namespace ShadowsOfTomorrow
                 $"Press {keybinds.CrouchKey} while in the air to preform a GROUND POUND",
                 $"While standing next to a BREAKABLE BLOCK press {keybinds.AttackKey} to DESTROY",
                 $"You can also RUN into BREAKABLE BLOCKS to destroy them",
-                $"Press {keybinds.TalkKey} to start a CONVERSATION with them",
+                $"Press {keybinds.TalkKey} to start a CONVERSATION",
             };
 
 

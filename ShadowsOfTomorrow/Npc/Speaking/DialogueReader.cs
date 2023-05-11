@@ -45,7 +45,7 @@ namespace ShadowsOfTomorrow
             {
                 if (!textFromFile[i + 1].Contains(';'))
                     break;
-                value.Add(textFromFile[i + 1].Split(';').ToList());
+                value.Add(textFromFile[i + 1].Replace("newline", "\n").Split(';').ToList());
             }
             return value;
         }

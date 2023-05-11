@@ -20,7 +20,7 @@ namespace ShadowsOfTomorrow
         public BranchingUp(Game1 game, Boss boss)
         {
             this.game = game;
-            maxStunOMeter = 2;
+            maxStunOMeter = 3;
             this.boss = boss;
         }
 
