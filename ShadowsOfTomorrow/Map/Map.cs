@@ -323,17 +323,26 @@ namespace ShadowsOfTomorrow
                 $"While standing next to a BREAKABLE BLOCK press {keybinds.AttackKey} to DESTROY",
                 $"You can also RUN into BREAKABLE BLOCKS to destroy them",
                 $"Press {keybinds.TalkKey} to start a CONVERSATION",
+                "Talk to the locals for information to progress"
             };
 
 
             foreach (var obj in layer.Objects)
             {
-                string t = text[int.Parse(obj.Name) - 1];
-                Rectangle rec = new((int)obj.X, (int)obj.Y, (int)font.MeasureString(t).X + 50, 80);
-                spriteBatch.Draw(texture, rec, null, Color.White, 0, Vector2.Zero, SpriteEffects.None, 0.94f);
-                spriteBatch.DrawString(font, t, rec.Location.ToVector2() + new Vector2(20, 20), Color.White, 0, Vector2.One, 1, SpriteEffects.None, 0.95f);
+                if (obj.Name != "Progress")
+                {
+                    string t = text[int.Parse(obj.Name) - 1];
+                    Rectangle rec = new((int)obj.X, (int)obj.Y, (int)font.MeasureString(t).X + 50, 80);
+                    spriteBatch.Draw(texture, rec, null, Color.White, 0, Vector2.Zero, SpriteEffects.None, 0.94f);
+                    spriteBatch.DrawString(font, t, rec.Location.ToVector2() + new Vector2(20, 20), Color.White, 0, Vector2.One, 1, SpriteEffects.None, 0.95f);
+                }
+                else if (game.windowManager.dialogueWindow != null && !game.windowManager.dialogueWindow.haveGivenInformation)
+                {
+                    Rectangle rec = new((int)obj.X, (int)obj.Y, (int)font.MeasureString(text[^1]).X + 50, 80);
+                    spriteBatch.Draw(texture, rec, null, Color.White, 0, Vector2.Zero, SpriteEffects.None, 0.94f);
+                    spriteBatch.DrawString(font, text[^1], rec.Location.ToVector2() + new Vector2(20, 20), Color.White, 0, Vector2.One, 1, SpriteEffects.None, 0.95f);
+                }
             }
-
         }
 
         public void Reset()

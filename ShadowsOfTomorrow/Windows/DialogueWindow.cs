@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Intrinsics.X86;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,22 +19,34 @@ namespace ShadowsOfTomorrow
         private readonly Texture2D texture;
         private readonly Game1 game;
         private Boss boss;
-        private readonly Dialogue dialogue;
+        private Dialogue activeDialogue;
         private string goTo = "First";
         private string displayAnswer = "";
         private int index = 0;
         private bool showingQuestions = true;
         private KeyboardState oldState = Keyboard.GetState();
+        public bool haveGivenInformation = false;
 
-        public DialogueWindow(Game1 game, Dialogue dialogue) 
+        public DialogueWindow(Game1 game) 
         {
             this.game = game;
-            this.boss = game.mapManager.Maps.First(map => map.MapName.ToLower() == "bossroom").boss;
-            this.dialogue = dialogue;
+            try
+            {
+                this.boss = game.mapManager.Maps.First(map => map.MapName.ToLower() == "bossroom").boss;
+            }
+            catch
+            {
+            }
 
             font = game.Content.Load<SpriteFont>("Fonts/DialogueFont");
             texture = game.Content.Load<Texture2D>("UI/DialogueBox_x3");
         }
+
+        public void SetDialogue(Dialogue dialogue)
+        {
+            activeDialogue = dialogue;
+        }
+
 
         public void Update(GameTime gameTime)
         {
@@ -46,7 +59,7 @@ namespace ShadowsOfTomorrow
 
             if (state.IsKeyDown(game.player.Keybinds.SelectText) && oldState.IsKeyUp(game.player.Keybinds.SelectText))
             {
-                if (dialogue.IsBoss)
+                if (activeDialogue.IsBoss)
                 {
                     if (boss.Dialogue.bossDialogue[boss.talkingIndex].Count <= ++index)
                     {
@@ -60,13 +73,13 @@ namespace ShadowsOfTomorrow
 
                 if (showingQuestions)
                 {
-                    displayAnswer = dialogue.GetAnswer(goTo, index);
-                    goTo = dialogue.GoTo(displayAnswer);
+                    displayAnswer = activeDialogue.GetAnswer(goTo, index);
+                    goTo = activeDialogue.GoTo(displayAnswer);
                 }
                 showingQuestions = !showingQuestions;
             }
 
-            if (!dialogue.IsBoss)
+            if (!activeDialogue.IsBoss)
                 UpdateIndex(state);
             else
                 window = new(game.player.camera.Window.Center + new Point(-600, - 100 - size.Y), size);
@@ -84,10 +97,10 @@ namespace ShadowsOfTomorrow
             else if (state.IsKeyDown(game.player.Keybinds.DialogueUp) && oldState.IsKeyUp(game.player.Keybinds.DialogueUp))
                 index--;
 
-            if (index > dialogue.GetQuestions(goTo).Count - 1)
+            if (index > activeDialogue.GetQuestions(goTo).Count - 1)
                 index = 0;
             if (index < 0)
-                index = dialogue.GetQuestions(goTo).Count - 1;
+                index = activeDialogue.GetQuestions(goTo).Count - 1;
 
             window = new(game.player.HitBox.Center + new Point(-size.X / 2, - 200 - size.Y), size);
         }
@@ -97,9 +110,9 @@ namespace ShadowsOfTomorrow
             spriteBatch.Draw(texture, window, null, Color.White, 0, Vector2.Zero, SpriteEffects.None, 0.9f);
 
             boss = game.mapManager.Maps.First(map => map.MapName.ToLower() == "bossroom").boss;
-            if (dialogue.IsBoss && boss.health >= 0)
+            if (activeDialogue.IsBoss && boss.health >= 0)
             {
-                spriteBatch.DrawString(font, dialogue.bossDialogue[boss.talkingIndex][index], window.Location.ToVector2() + new Vector2(50, 200), Color.White, 0, Vector2.One, 1, SpriteEffects.None, 0.91f);
+                spriteBatch.DrawString(font, activeDialogue.bossDialogue[boss.talkingIndex][index], window.Location.ToVector2() + new Vector2(50, 200), Color.White, 0, Vector2.One, 1, SpriteEffects.None, 0.91f);
                 return;
             }
             if (boss.health <= 0)
@@ -113,12 +126,14 @@ namespace ShadowsOfTomorrow
 
         private void ShowAnswer(SpriteBatch spriteBatch)
         {
+            if (displayAnswer.Equals("When stunned, which you can see on the conveniently \n placed stunbar, I would attack them directly"))
+                haveGivenInformation = true;
             spriteBatch.DrawString(font, displayAnswer, window.Location.ToVector2() + new Vector2(30, 200), Color.White, 0, Vector2.One, 1, SpriteEffects.None, 0.91f);
         }
 
         private void ShowQuestions(SpriteBatch spriteBatch)
         {
-            List<string> questions = dialogue.GetQuestions(goTo);
+            List<string> questions = activeDialogue.GetQuestions(goTo);
 
             for (int i = 0; i < questions.Count; i++)
             {

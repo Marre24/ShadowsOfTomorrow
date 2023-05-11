@@ -50,6 +50,7 @@ namespace ShadowsOfTomorrow
             if (Keyboard.GetState().IsKeyDown(Keys.Space))
             {
                 game.mapManager.GoToSpawnPoint(player.LastSpawnPoint);
+                game.mapManager.ActiveMap.Reset();
                 player.Reset();
             }
 

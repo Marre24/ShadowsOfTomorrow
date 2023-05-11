@@ -54,6 +54,8 @@ namespace ShadowsOfTomorrow
         private readonly Animation rolling;
         private readonly Animation running;
         private readonly Animation climbing;
+        private readonly Animation jump;
+        private readonly Animation falling;
 
         public Point Location { get => hitBox.Location; set => hitBox.Location = value;  }
         public Mach ActiveMach { get => _activeMach; set => _activeMach = value; }
@@ -66,6 +68,7 @@ namespace ShadowsOfTomorrow
         public Rectangle NextVerticalHitBox { get => new(new(Location.X, Location.Y + (int)Math.Round(playerMovement.VerticalSpeed)), Size); }
         public Rectangle NextHorizontalHitBox { get => new(new(Location.X + (int)Math.Round(playerMovement.HorizontalSpeed), Location.Y), Size); }
         public Facing Facing { get; set; }
+        public int Health => health;
 
         public Color[] TextureData
         {
@@ -84,6 +87,7 @@ namespace ShadowsOfTomorrow
         public readonly PlayerMovement playerMovement;
         public readonly PlayerAttacking playerAttacking;
         private readonly Input input;
+        private readonly Texture2D heartTexture;
 
         private Rectangle hitBox;
         private Mach _activeMach;
@@ -105,6 +109,9 @@ namespace ShadowsOfTomorrow
             rolling = new(game.Content.Load<Texture2D>("Sprites/Player/RollLeft_x3"), game.Content.Load<Texture2D>("Sprites/Player/RollRight_x3"), 1);
             running = new(game.Content.Load<Texture2D>("Sprites/Player/RunningLeft_x3"), game.Content.Load<Texture2D>("Sprites/Player/RunningRight_x3"), 10);
             climbing = new(game.Content.Load<Texture2D>("Sprites/Player/ClimbLeft_x3"), game.Content.Load<Texture2D>("Sprites/Player/ClimbRight_x3"), 12);
+            falling = new(game.Content.Load<Texture2D>("Sprites/Player/FallingLeft_x3"), game.Content.Load<Texture2D>("Sprites/Player/FallingRight_x3"), 1);
+            jump = new(game.Content.Load<Texture2D>("Sprites/Player/JumpLeft_x3"), game.Content.Load<Texture2D>("Sprites/Player/JumpRight_x3"), 1);
+            heartTexture = game.Content.Load<Texture2D>("UI/Heart_x3");
 
             this.game = game;
 
@@ -116,6 +123,8 @@ namespace ShadowsOfTomorrow
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            for (int i = 0; i < health; i++)
+                spriteBatch.Draw(heartTexture,new Vector2(150 + i * 50, 300), null, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.93f);
             animationManager.Draw(spriteBatch, Location.ToVector2(), Facing);
         }
 
@@ -171,6 +180,15 @@ namespace ShadowsOfTomorrow
 
         private void SetAnimation()
         {
+            if (!isGrounded && CurrentAction != Action.WallClimbing && CurrentAction != Action.GroundPounding)
+            {
+                if (playerMovement.VerticalSpeed > 0)
+                    animationManager.Play(falling);
+                else
+                    animationManager.Play(jump);
+                return;
+            }
+
             switch (ActiveMach)
             {
                 case Mach.Standing:

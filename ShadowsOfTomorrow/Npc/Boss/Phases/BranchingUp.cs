@@ -14,7 +14,7 @@ namespace ShadowsOfTomorrow
         private readonly Game1 game;
         private readonly Boss boss;
         private double time = 0;
-        private const double leafSpawnInterval = 2;
+        private double branchSpawnInterval = 2;
         private int amountOfBranchesSpawned = 0;
 
         public BranchingUp(Game1 game, Boss boss)
@@ -51,10 +51,11 @@ namespace ShadowsOfTomorrow
             if (boss.isStunned)
                 return;
 
-            if (gameTime.TotalGameTime.TotalSeconds < time + leafSpawnInterval)
+            if (gameTime.TotalGameTime.TotalSeconds < time + branchSpawnInterval)
                 return;
 
             time = gameTime.TotalGameTime.TotalSeconds;
+
 
             int branchAmount = 5;
 
@@ -79,6 +80,9 @@ namespace ShadowsOfTomorrow
 
             if (++amountOfBranchesSpawned % 5 == 0)
             {
+                if (branchSpawnInterval > 0.6)
+                    branchSpawnInterval -= 0.2;
+
                 int leafAmount = 4;
 
                 for (int i = 1; i <= leafAmount; i++)

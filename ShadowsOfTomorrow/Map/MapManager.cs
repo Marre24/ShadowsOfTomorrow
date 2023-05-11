@@ -74,6 +74,9 @@ namespace ShadowsOfTomorrow
         {
             if (spawnpoint == 13)
             {
+                if (!game.windowManager.dialogueWindow.haveGivenInformation && game.player.LastSpawnPoint != 0 && game.player.Health > 0)
+                    return;
+
                 game.windowManager.SetDialogue(Maps.First(map => map.MapName == "BossRoom").boss.Dialogue);
                 Maps.First(map => map.MapName == "BossRoom").boss.Reset();
                 game.player.CurrentAction = Action.Talking;

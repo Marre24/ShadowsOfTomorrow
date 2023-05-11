@@ -11,7 +11,7 @@ namespace ShadowsOfTomorrow
     public class WindowManager : IUpdateAndDraw
     {
         private readonly Game1 game;
-        private DialogueWindow dialogueWindow;
+        public DialogueWindow dialogueWindow;
         private EndingScreen endingScreen;
         private readonly DeadScreen deadScreen;
         private readonly StartScreen startScreen;
@@ -25,11 +25,12 @@ namespace ShadowsOfTomorrow
             startScreen = new(game);
             pausScreen = new(game.GraphicsDevice, game.player.camera, game);
             changeKeybindWindow = new(game, game.player.Keybinds, startScreen, pausScreen);
+            dialogueWindow = new(game);
         }
 
         public void SetDialogue(Dialogue dialogue)
         {
-            dialogueWindow = new(game, dialogue);
+            dialogueWindow.SetDialogue(dialogue);
         }
 
         public void Draw(SpriteBatch spriteBatch)

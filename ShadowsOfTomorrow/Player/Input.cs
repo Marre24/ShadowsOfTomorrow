@@ -22,10 +22,10 @@ namespace ShadowsOfTomorrow
         public void CheckPlayerInput(GameTime gameTime)
         {
             KeyboardState keyboardState = Keyboard.GetState();
-            if (player.CurrentAction == Action.Talking || player.CurrentAction == Action.WachingCutScene)
+            if (player.CurrentAction == Action.Talking || player.CurrentAction == Action.WachingCutScene || player.OldAction == Action.Paused)
                 return;
 
-            if (keyboardState.IsKeyDown(Keys.Escape))
+            if (keyboardState.IsKeyDown(Keys.Escape) && oldState.IsKeyUp(Keys.Escape) && player.OldAction != Action.Talking)
             {
                 player.CurrentAction = Action.Paused;
                 return;

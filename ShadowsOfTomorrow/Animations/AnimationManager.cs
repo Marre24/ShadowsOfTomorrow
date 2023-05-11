@@ -51,10 +51,7 @@ namespace ShadowsOfTomorrow
                 return;
 
             if (facing == null)
-            {
-                //för annat
                 return;
-            }
 
             if (facing == Facing.Left)
                 spriteBatch.Draw(_animation.LeftTexture, position, new Rectangle(_animation.CurrentFrame * _animation.FrameWidth, 0, _animation.FrameWidth, _animation.FrameHeight), 
