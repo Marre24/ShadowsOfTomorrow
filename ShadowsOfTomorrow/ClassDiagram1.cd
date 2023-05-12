@@ -1,0 +1,321 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="ShadowsOfTomorrow.Animation" Collapsed="true">
+    <Position X="10.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAKAAAAAQAAAAAAAAAAAAABBASAAAAAAAAAIAAAAACA=</HashCode>
+      <FileName>Animations\Animation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ShadowsOfTomorrow.AnimationManager" Collapsed="true">
+    <Position X="12.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAABAAAAAgAgAAgAAAAAAAgAAAAAAIoAAACAAAAAA=</HashCode>
+      <FileName>Animations\AnimationManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ShadowsOfTomorrow.BranchHuntStart" Collapsed="true">
+    <Position X="9.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAIQAAACAABAAAAAIAgACAAAABAAAAgAAAAAAAAAA=</HashCode>
+      <FileName>CutScenes\BranchHuntStart.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ShadowsOfTomorrow.StartCutScene" Collapsed="true">
+    <Position X="11.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACYBAAAAIgAAAkAAAJIUAIAAAAABggAJAAIAAAAIAAA=</HashCode>
+      <FileName>CutScenes\StartCutScene.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ShadowsOfTomorrow.Game1" Collapsed="true">
+    <Position X="10" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAgAAAAIAAAwAAAQAAAAAAAAAAAAADAIAAAAAAAAQ=</HashCode>
+      <FileName>Game\Game1.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ShadowsOfTomorrow.BackgroundLayer" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="3" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAgAMAAAAIAAIBAAAAgAIEAAAIAAAAAA=</HashCode>
+      <FileName>Map\BackgroundLayer.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="ShadowsOfTomorrow.Map" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="4.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>oAYAEgAAAGgihgCAA4AQIEAAABgMAxgMCACBAAiACAA=</HashCode>
+      <FileName>Map\Map.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="ShadowsOfTomorrow.MapManager" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="3" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQgAACAAABAAgAAAAAAAAAAAAAAAAAIAAAAACDAAAA=</HashCode>
+      <FileName>Map\MapManager.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="ShadowsOfTomorrow.MusicManager" Collapsed="true">
+    <Position X="5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABSBAAAAAECABAAIAAEAAACAAAAAEQAAqAQIAAAAAAA=</HashCode>
+      <FileName>Music\MusicManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ShadowsOfTomorrow.BaseClassPhase" Collapsed="true">
+    <Position X="5.75" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAIAAAAA=</HashCode>
+      <FileName>Npc\Boss\Phases\BaseClassPhase.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ShadowsOfTomorrow.BranchingSide" Collapsed="true">
+    <Position X="4.75" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQBAKAAAAAAAgAAAAAAAEAAAAAAAAAJAAQAAACAAAA=</HashCode>
+      <FileName>Npc\Boss\Phases\BranchingSide.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ShadowsOfTomorrow.BranchingUp" Collapsed="true">
+    <Position X="7" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAQBACAAAAAAAgAAAAAAAEAAAAAAAAAJAAQAAACAAAA=</HashCode>
+      <FileName>Npc\Boss\Phases\BranchingUp.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ShadowsOfTomorrow.LeafBlowing" Collapsed="true">
+    <Position X="9.25" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQBAIAAAAAABgAAAAAAAEAAAAAAAAAJAAQAAAAAAAA=</HashCode>
+      <FileName>Npc\Boss\Phases\LeafBlowing.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ShadowsOfTomorrow.LeafFalling" Collapsed="true">
+    <Position X="2.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQBAIAAAAAABgAAAAAAAEAAAAAAAAAJAAQAAAAAAAA=</HashCode>
+      <FileName>Npc\Boss\Phases\LeafFalling.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ShadowsOfTomorrow.Boss" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="11.75" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>FAQAAAgAAAACBgAAhAAAAARCA0AYEgLICAEAIAAgCCg=</HashCode>
+      <FileName>Npc\Boss\Boss.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="ShadowsOfTomorrow.Branch" Collapsed="true">
+    <Position X="7" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAYBAAAAAAAAAgAAAAAAAAAAAAACAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Npc\Boss\Branch.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ShadowsOfTomorrow.BranchWall" Collapsed="true">
+    <Position X="2.5" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAIAAAgAAAAAAAAAAAAAAAQAAAAAAAAAAAAA=</HashCode>
+      <FileName>Npc\Boss\BranchWall.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ShadowsOfTomorrow.Leaf" Collapsed="true">
+    <Position X="4.75" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAEEgAAAAAAAEAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>Npc\Boss\Leaf.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ShadowsOfTomorrow.PhaseManager" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="13.5" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAABIAAAABgAAAAAAAEAAAAAAAAAIgAAAAQAAAAA=</HashCode>
+      <FileName>Npc\Boss\PhaseManager.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="ShadowsOfTomorrow.Weapon" Collapsed="true">
+    <Position X="4.75" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAQAAAAAggAABAIAAAAAgAAQAgAIAAEAAAAAAAA=</HashCode>
+      <FileName>Npc\Boss\Weapon.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ShadowsOfTomorrow.Npc" Collapsed="true">
+    <Position X="12.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEQAAAAAAAAIAgAABAAAIAAAAAAAAAAJAAAAAAAAAQA=</HashCode>
+      <FileName>Npc\Friendly\Npc.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ShadowsOfTomorrow.Dialogue" Collapsed="true">
+    <Position X="15.25" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAhAAAAAAAAAAAAAAAAACAAAAABQAAAAAAAAAAAAAIA=</HashCode>
+      <FileName>Npc\Speaking\Dialogue.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ShadowsOfTomorrow.DialogueReader" Collapsed="true">
+    <Position X="17" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Npc\Speaking\DialogueReader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ShadowsOfTomorrow.Speech" Collapsed="true">
+    <Position X="12.75" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Npc\Speaking\Speech.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ShadowsOfTomorrow.Camera" Collapsed="true">
+    <Position X="15" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAKAAAgAAAAAAAQAAAAQAAAAAAAAAAAAACAAAAAE=</HashCode>
+      <FileName>Player\Camera.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ShadowsOfTomorrow.Input" Collapsed="true">
+    <Position X="16.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAgAAAAAAAACAAAAAAAAAAABAAAAAAAAAAA=</HashCode>
+      <FileName>Player\Input.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ShadowsOfTomorrow.Keybinds" Collapsed="true">
+    <Position X="18.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAQIACAQAgQAAAAACAAAQAIAAQAAAIAAAAAABAAA=</HashCode>
+      <FileName>Player\Keybinds.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ShadowsOfTomorrow.Player" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="15" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAYCGABQKgAyxhAoBAJAUAgsIIgQABBoAACBBAAggSg=</HashCode>
+      <FileName>Player\Player.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="ShadowsOfTomorrow.PlayerAttacking" Collapsed="true">
+    <Position X="16.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAEAAAAAAEAAAAAgAAAACAAoAAAAAJAAAAAAABAAA=</HashCode>
+      <FileName>Player\PlayerAttacking.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ShadowsOfTomorrow.PlayerMovement" Collapsed="true">
+    <Position X="18.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAUMIAQAIgBAICUAIAALAABDBAMIAEQJBAAGAAAAAAA=</HashCode>
+      <FileName>Player\PlayerMovement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ShadowsOfTomorrow.ChangeKeybindWindow" Collapsed="true">
+    <Position X="15" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAYAAAAAAAgAAgAAAIQAAAAgAIAAAgAIAAAAAAABEAA=</HashCode>
+      <FileName>Windows\ChangeKeybindWindow.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ShadowsOfTomorrow.DeadScreen" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="18.5" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAYAEACAAAAAAgAAAAAAAAAAAAAAAAAJAAQAAEAAAAA=</HashCode>
+      <FileName>Windows\DeadScreen.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="ShadowsOfTomorrow.DialogueWindow" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="15" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAYAgAAAAAgAAgAAQICAAEAAAAAABgAIBAAABACBAQA=</HashCode>
+      <FileName>Windows\DialogueWindow.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="ShadowsOfTomorrow.EndingScreen" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="16.75" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAYAEACAAAAAAgAAAAAAAAAAAAAAAAAJAAYAAEAAAAA=</HashCode>
+      <FileName>Windows\EndingScreen.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="ShadowsOfTomorrow.PausScreen" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="18.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIYAAAAAAggAAgEAAIAAAAAAAQAAAgAIAIAAAAABAAA=</HashCode>
+      <FileName>Windows\PausScreen.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="ShadowsOfTomorrow.StartScreen" Collapsed="true">
+    <Position X="15" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIYAACAAAAgAAgAAAAAAAAAAAQAAACAIAAAAAAABAAA=</HashCode>
+      <FileName>Windows\StartScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ShadowsOfTomorrow.WindowManager" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="16.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQACAAAAAAAggAAwAAAAgBAAIIAAAAIAAAAAAAAEAA=</HashCode>
+      <FileName>Windows\WindowManager.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="ShadowsOfTomorrow.ChangeVolyme" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="16.75" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIYABAAAAAgAAgAAAIAAAAAAAIMQAgIIAAAAAAABEAA=</HashCode>
+      <FileName>Windows\ChangeVolyme.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Interface Name="ShadowsOfTomorrow.IUpdateAndDraw" Collapsed="true">
+    <Position X="7.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\IUpdateAndDraw.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="ShadowsOfTomorrow.Phase" Collapsed="true">
+    <Position X="11.75" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAQAAACAAAAQAAAAAAAAAAAAAAAAAAAIAAAAA=</HashCode>
+      <FileName>Npc\Boss\Boss.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ShadowsOfTomorrow.Mach" Collapsed="true">
+    <Position X="18.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAIAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAQA=</HashCode>
+      <FileName>Player\Player.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ShadowsOfTomorrow.Action" Collapsed="true">
+    <Position X="15" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEgAAAAIBAAAQEABAAgAAACAQAACAAIAAAACAAABQA=</HashCode>
+      <FileName>Player\Player.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ShadowsOfTomorrow.Facing" Collapsed="true">
+    <Position X="16.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACACAAAAAAAA=</HashCode>
+      <FileName>Player\Player.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

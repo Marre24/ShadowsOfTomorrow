@@ -27,7 +27,7 @@ namespace ShadowsOfTomorrow
         {
             _graphics.PreferredBackBufferHeight = Screen.PrimaryScreen.Bounds.Height;
             _graphics.PreferredBackBufferWidth = Screen.PrimaryScreen.Bounds.Width;
-            //_graphics.IsFullScreen = true;
+            _graphics.IsFullScreen = true;
             _graphics.ApplyChanges();
 
             player = new(this);

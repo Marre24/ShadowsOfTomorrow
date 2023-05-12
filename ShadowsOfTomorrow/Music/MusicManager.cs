@@ -22,13 +22,13 @@ namespace ShadowsOfTomorrow
 
         public static float MusicVolume { get => MediaPlayer.Volume; set => MediaPlayer.Volume = value; }
 
-        public float SoundEffectsVolume { get; set; } = 0.3f;
+        public float SoundEffectsVolume { get; set; } = 0.1f;
 
         private const double FADE_SPEED = 0.01;
 
         public MusicManager(Game1 game1) 
         {
-            MusicVolume = 0.1f;
+            MusicVolume = 0.2f;
             fastWalk = new()
             {
                 game1.Content.Load<SoundEffect>("Music/FastStep1"),
@@ -78,19 +78,23 @@ namespace ShadowsOfTomorrow
 
         public void Play(Song song)
         {
-            if (!isFadingIn && !isFadingOut)
-                startVolume = MusicVolume;
+            //if (!isFadingIn && !isFadingOut)
+            //    startVolume = MusicVolume;
 
-            if (isFadingIn)
-                FadeIn();
-            if (isFadingOut)
-                FadeOut(song);
+            //if (isFadingIn)
+            //    FadeIn();
+            //if (isFadingOut)
+            //    FadeOut(song);
 
             if (song == null || activeSong == song)
                 return;
+            if (activeSong != song)
+                MediaPlayer.Stop();
+            activeSong = song;
+            MediaPlayer.Play(song);
 
-            isFadingOut = true;
-            isFadingIn = false;
+            //isFadingOut = true;
+            //isFadingIn = false;
         }
 
         float startVolume;
@@ -137,6 +141,7 @@ namespace ShadowsOfTomorrow
         internal void Stop()
         {
             activeSong = null;
+            MediaPlayer.Stop();
             isFadingOut = true;
         }
 
