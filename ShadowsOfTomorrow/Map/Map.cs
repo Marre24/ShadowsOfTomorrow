@@ -101,12 +101,12 @@ namespace ShadowsOfTomorrow
             TmxList<TmxObject> tmxObject = map.ObjectGroups["NpcSpawnPoint"].Objects;
 
             for (int i = 0; i < tmxObject.Count; i++)
-                npcs.Add(new(game, new((int)tmxObject[i].X, (int)tmxObject[i].Y), game.player, npcNames.ElementAt(i).Key, npcNames.ElementAt(i).Value));
+                npcs.Add(new(game, new((int)tmxObject[i].X, (int)tmxObject[i].Y), game.Player, npcNames.ElementAt(i).Key, npcNames.ElementAt(i).Value));
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            WriteHelpingText(game.player.Keybinds, spriteBatch);
+            WriteHelpingText(game.Player.Keybinds, spriteBatch);
 
             foreach (TmxLayer layer in map.Layers)
                 for (var i = 0; i < layer.Tiles.Count; i++)
@@ -149,11 +149,11 @@ namespace ShadowsOfTomorrow
                 return;
 
 
-            if (MapName.Equals("RunFromBranches") && game.player.Location.X > 35 * 48 && !branchCutScene.HaveBeenTriggered)
-                branchCutScene.Start(game.player);
+            if (MapName.Equals("RunFromBranches") && game.Player.Location.X > 35 * 48 && !branchCutScene.HaveBeenTriggered)
+                branchCutScene.Start(game.Player);
 
             if (branchCutScene.HaveBeenTriggered && !branchCutScene.HaveEnded)
-                branchCutScene.Play(this, game.player.camera, game.player, gameTime);
+                branchCutScene.Play(this, game.Player.camera, game.Player, gameTime);
 
             if (branchCutScene.HaveEnded)
                 branchWall.Update(gameTime);
@@ -177,12 +177,12 @@ namespace ShadowsOfTomorrow
                 doors.Add(new((int)obj.X, (int)obj.Y, (int)obj.Width, (int)obj.Height), obj);
 
             foreach (KeyValuePair<Rectangle, TmxObject> pair in doors)
-                if (game.player.HitBox.Intersects(pair.Key))
+                if (game.Player.HitBox.Intersects(pair.Key))
                 {
                     if (pair.Value.Name.ToLower() == "end")
                     {
-                        game.windowManager.SetEnd(boss);
-                        game.player.CurrentAction = Action.Ended;
+                        game.WindowManager.SetEnd(boss);
+                        game.Player.CurrentAction = Action.Ended;
                         break;
                     }
                     mapManager.GoToSpawnPoint(int.Parse(pair.Value.Name.Split('-')[1]));
@@ -252,8 +252,8 @@ namespace ShadowsOfTomorrow
                 if (!destroyedTiles.Contains(new(tile.X * Size.X, tile.Y * Size.Y)))
                     if (rectangle.Intersects(new(new(tile.X * Size.X, tile.Y * Size.Y), Size)) && tile.Gid != 0)
                     {
-                        game.player.hasDestroyedBlock = true;
-                        game.player.destroyBlockTime = gameTime.TotalGameTime.TotalSeconds;
+                        game.Player.hasDestroyedBlock = true;
+                        game.Player.destroyBlockTime = gameTime.TotalGameTime.TotalSeconds;
 
                         destroyedTiles.Add(new(tile.X * Size.X, tile.Y * Size.Y));
                     }
@@ -336,7 +336,7 @@ namespace ShadowsOfTomorrow
                     spriteBatch.Draw(texture, rec, null, Color.White, 0, Vector2.Zero, SpriteEffects.None, 0.94f);
                     spriteBatch.DrawString(font, t, rec.Location.ToVector2() + new Vector2(20, 20), Color.White, 0, Vector2.One, 1, SpriteEffects.None, 0.95f);
                 }
-                else if (game.windowManager.dialogueWindow != null && !game.windowManager.dialogueWindow.haveGivenInformation)
+                else if (game.WindowManager.dialogueWindow != null && !game.WindowManager.dialogueWindow.haveGivenInformation)
                 {
                     Rectangle rec = new((int)obj.X, (int)obj.Y, (int)font.MeasureString(text[^1]).X + 50, 80);
                     spriteBatch.Draw(texture, rec, null, Color.White, 0, Vector2.Zero, SpriteEffects.None, 0.94f);
@@ -347,7 +347,7 @@ namespace ShadowsOfTomorrow
 
         public void Reset()
         {
-            game.musicManager.Reset();
+            game.MusicManager.Reset();
             destroyedTiles = new();
             if (branchWall != null)
             {

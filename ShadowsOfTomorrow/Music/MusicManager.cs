@@ -24,7 +24,6 @@ namespace ShadowsOfTomorrow
 
         public float SoundEffectsVolume { get; set; } = 0.1f;
 
-        private const double FADE_SPEED = 0.01;
 
         public MusicManager(Game1 game1) 
         {
@@ -59,8 +58,6 @@ namespace ShadowsOfTomorrow
         }
 
         double time = 0;
-        public bool isFadingIn;
-        private bool isFadingOut;
         const double interval = 0.6;
 
         public void Play(bool isFast, GameTime gameTime)
@@ -78,71 +75,18 @@ namespace ShadowsOfTomorrow
 
         public void Play(Song song)
         {
-            //if (!isFadingIn && !isFadingOut)
-            //    startVolume = MusicVolume;
-
-            //if (isFadingIn)
-            //    FadeIn();
-            //if (isFadingOut)
-            //    FadeOut(song);
-
             if (song == null || activeSong == song)
                 return;
             if (activeSong != song)
                 MediaPlayer.Stop();
             activeSong = song;
             MediaPlayer.Play(song);
-
-            //isFadingOut = true;
-            //isFadingIn = false;
-        }
-
-        float startVolume;
-        bool first = true;
-
-        private void FadeOut(Song song)
-        {
-            float volume = MusicVolume;
-            volume -= (float)FADE_SPEED;
-            if (volume < 0)
-            {
-                volume = 0;
-                isFadingOut = false;
-                isFadingIn = true;
-                MediaPlayer.Stop();
-                 if (song != null)
-                    MediaPlayer.Play(song);
-            }
-
-            if (first)
-            {
-                startVolume = MusicVolume;
-                first = false;
-            }
-
-            MusicVolume = volume;
-            activeSong = song;
-        }
-
-        private void FadeIn()
-        {
-            first = true;
-
-            float volume = MusicVolume;
-            volume += (float)FADE_SPEED;
-            if (volume > startVolume)
-            {
-                volume = startVolume;
-                isFadingIn = false;
-            }
-            MusicVolume = volume;
         }
 
         internal void Stop()
         {
             activeSong = null;
             MediaPlayer.Stop();
-            isFadingOut = true;
         }
 
         internal void Reset()

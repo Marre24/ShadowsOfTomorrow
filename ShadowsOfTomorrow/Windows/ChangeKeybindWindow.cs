@@ -26,7 +26,7 @@ namespace ShadowsOfTomorrow
 
         public ChangeKeybindWindow(Game1 game, Keybinds keybinds, StartScreen startScreen, PausScreen pausScreen)
         {
-            window = new(game.player.camera.Window.Center + new Point(- size.X / 2, -100 - size.Y / 2), size);
+            window = new(game.Player.camera.Window.Center + new Point(- size.X / 2, -100 - size.Y / 2), size);
             font = game.Content.Load<SpriteFont>("Fonts/DialogueFont");
             texture = game.Content.Load<Texture2D>("UI/ChangeBox_x3");
             this.game = game;
@@ -38,17 +38,17 @@ namespace ShadowsOfTomorrow
         public void Update()
         {
             KeyboardState state = Keyboard.GetState();
-            window = new(game.player.camera.Window.Center + new Point(-size.X / 2, -100 - size.Y / 2), size);
+            window = new(game.Player.camera.Window.Center + new Point(-size.X / 2, -100 - size.Y / 2), size);
 
-            if (game.player.LastSpawnPoint == 0)
-                game.player.camera.Follow(Point.Zero);
+            if (game.Player.LastSpawnPoint == 0)
+                game.Player.camera.Follow(Point.Zero);
 
             if (state.IsKeyDown(keybinds.SelectText) && oldState.IsKeyUp(keybinds.SelectText) && index == keybinds.AllKeys.Count)
             {
-                if (game.player.LastSpawnPoint == 0)
-                    game.player.CurrentAction = Action.InMainMenu;
+                if (game.Player.LastSpawnPoint == 0)
+                    game.Player.CurrentAction = Action.InMainMenu;
                 else
-                    game.player.CurrentAction = Action.Paused;
+                    game.Player.CurrentAction = Action.Paused;
 
                 startScreen.SetOldState(state);
                 pausScreen.SetOldState(state);

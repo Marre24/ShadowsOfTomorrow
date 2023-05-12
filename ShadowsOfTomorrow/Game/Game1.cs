@@ -11,10 +11,10 @@ namespace ShadowsOfTomorrow
         private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        public Player player;
-        public MapManager mapManager;
-        public WindowManager windowManager;
-        public MusicManager musicManager;
+        public Player Player { get; private set; }
+        public MapManager MapManager { get; private set; }
+        public WindowManager WindowManager { get; private set; }
+        public MusicManager MusicManager { get; private set; }
 
         public Game1()
         {
@@ -30,14 +30,14 @@ namespace ShadowsOfTomorrow
             _graphics.IsFullScreen = true;
             _graphics.ApplyChanges();
 
-            player = new(this);
-            mapManager = new(this);
-            windowManager = new(this);
-            musicManager = new(this);
+            Player = new(this);
+            MapManager = new(this);
+            WindowManager = new(this);
+            MusicManager = new(this);
 
 
-            mapManager.AddMaps();
-            mapManager.GoToSpawnPoint(9);
+            MapManager.AddMaps();
+            MapManager.GoToSpawnPoint(0);
 
             base.Initialize();
         }
@@ -49,17 +49,17 @@ namespace ShadowsOfTomorrow
 
         protected override void Update(GameTime gameTime)
         {
-            if (player.CurrentAction == Action.Ended || player.CurrentAction == Action.Dead || player.CurrentAction == Action.InMainMenu || player.CurrentAction == Action.ChangingKeybinds || player.CurrentAction == Action.Paused || player.CurrentAction == Action.ChangingVolyme)
+            if (Player.CurrentAction == Action.Ended || Player.CurrentAction == Action.Dead || Player.CurrentAction == Action.InMainMenu || Player.CurrentAction == Action.ChangingKeybinds || Player.CurrentAction == Action.Paused || Player.CurrentAction == Action.ChangingVolyme)
             {
-                windowManager.Update(gameTime);
+                WindowManager.Update(gameTime);
                 return;
             }
 
-            if (player.CurrentAction == Action.Talking)
-                windowManager.Update(gameTime);
+            if (Player.CurrentAction == Action.Talking)
+                WindowManager.Update(gameTime);
 
-            mapManager.Update(gameTime);
-            player.Update(gameTime);
+            MapManager.Update(gameTime);
+            Player.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -68,31 +68,31 @@ namespace ShadowsOfTomorrow
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            _spriteBatch.Begin(transformMatrix: player.camera.Transform, sortMode: SpriteSortMode.FrontToBack);
+            _spriteBatch.Begin(transformMatrix: Player.camera.Transform, sortMode: SpriteSortMode.FrontToBack);
 
-            if (player.CurrentAction == Action.Ended || player.CurrentAction == Action.Dead || player.CurrentAction == Action.InMainMenu || player.CurrentAction == Action.ChangingKeybinds || player.CurrentAction == Action.Paused || player.CurrentAction == Action.ChangingVolyme)
+            if (Player.CurrentAction == Action.Ended || Player.CurrentAction == Action.Dead || Player.CurrentAction == Action.InMainMenu || Player.CurrentAction == Action.ChangingKeybinds || Player.CurrentAction == Action.Paused || Player.CurrentAction == Action.ChangingVolyme)
             {
-                if ((player.CurrentAction == Action.Paused || player.CurrentAction == Action.ChangingKeybinds || player.CurrentAction == Action.ChangingVolyme) && player.LastSpawnPoint != 0)
+                if ((Player.CurrentAction == Action.Paused || Player.CurrentAction == Action.ChangingKeybinds || Player.CurrentAction == Action.ChangingVolyme) && Player.LastSpawnPoint != 0)
                 {
-                    windowManager.Draw(_spriteBatch);
-                    mapManager.Draw(_spriteBatch);
-                    player.Draw(_spriteBatch);
+                    WindowManager.Draw(_spriteBatch);
+                    MapManager.Draw(_spriteBatch);
+                    Player.Draw(_spriteBatch);
                     _spriteBatch.End();
                     return;
                 }
 
                 GraphicsDevice.Clear(Color.Black);
-                windowManager.Draw(_spriteBatch);
+                WindowManager.Draw(_spriteBatch);
                 _spriteBatch.End();
                 return;
             }
 
-            mapManager.Draw(_spriteBatch);
+            MapManager.Draw(_spriteBatch);
             
-            player.Draw(_spriteBatch);
+            Player.Draw(_spriteBatch);
 
-            if (player.CurrentAction == Action.Talking)
-                windowManager.Draw(_spriteBatch);
+            if (Player.CurrentAction == Action.Talking)
+                WindowManager.Draw(_spriteBatch);
 
             _spriteBatch.End();
             base.Draw(gameTime);

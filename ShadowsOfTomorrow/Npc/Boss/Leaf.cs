@@ -33,9 +33,9 @@ namespace ShadowsOfTomorrow
 
         public override void Update(GameTime gameTime)
         {
-            if (game.player.playerAttacking.Hitbox.Intersects(hitbox) && game.player.CurrentAction == Action.Attacking)
+            if (game.Player.playerAttacking.Hitbox.Intersects(hitbox) && game.Player.CurrentAction == Action.Attacking)
             {
-                if (game.player.Facing == Facing.Right)
+                if (game.Player.Facing == Facing.Right)
                     HitLeaf(new(5, 0));
                 else
                     HitLeaf(new(-5, 0));

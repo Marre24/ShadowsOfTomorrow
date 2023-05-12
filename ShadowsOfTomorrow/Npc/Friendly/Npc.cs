@@ -51,8 +51,8 @@ namespace ShadowsOfTomorrow
         {
             if (player.HitBox.Intersects(HitBox) && Keyboard.GetState().IsKeyDown(player.Keybinds.TalkKey)) 
             {
-                game.windowManager.SetDialogue(dialogue);
-                game.player.CurrentAction = Action.Talking;
+                game.WindowManager.SetDialogue(dialogue);
+                game.Player.CurrentAction = Action.Talking;
             }
         }
 

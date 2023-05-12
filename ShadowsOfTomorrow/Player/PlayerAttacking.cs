@@ -41,17 +41,17 @@ namespace ShadowsOfTomorrow
 
         private void CheckIfHittingBoss()
         {
-            if (game.mapManager.ActiveMap.boss == null)
+            if (game.MapManager.ActiveMap.boss == null)
                 return;
 
-            if (game.mapManager.ActiveMap.boss.HitBox.Intersects(Hitbox))
-                game.mapManager.ActiveMap.boss.OnHit();
+            if (game.MapManager.ActiveMap.boss.HitBox.Intersects(Hitbox))
+                game.MapManager.ActiveMap.boss.OnHit();
 
         }
 
         private void CheckIfHittingTiles(GameTime gameTime)
         {
-            Map map = game.mapManager.ActiveMap;
+            Map map = game.MapManager.ActiveMap;
             if (!map.TmxMap.Layers.Contains("DestroyableTiles"))
                 return;
             TmxLayer layer = map.TmxMap.Layers["DestroyableTiles"];
@@ -61,8 +61,8 @@ namespace ShadowsOfTomorrow
                 if (!map.destroyedTiles.Contains(new(tile.X * map.Size.X, tile.Y * map.Size.Y)))
                     if (Hitbox.Intersects(new(new(tile.X * map.Size.X, tile.Y * map.Size.Y), map.Size)) && tile.Gid != 0)
                     {
-                        game.player.hasDestroyedBlock = true;
-                        game.player.destroyBlockTime = gameTime.TotalGameTime.TotalSeconds;
+                        game.Player.hasDestroyedBlock = true;
+                        game.Player.destroyBlockTime = gameTime.TotalGameTime.TotalSeconds;
                         map.destroyedTiles.Add(new(tile.X * map.Size.X, tile.Y * map.Size.Y));
                     }
             }

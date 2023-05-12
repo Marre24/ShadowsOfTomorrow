@@ -58,18 +58,18 @@ namespace ShadowsOfTomorrow
             textSquare = new(camera.Window.Center - new Point(size.X / 2, size.Y / 2), size);
             KeyboardState state = Keyboard.GetState();
 
-            if (state.IsKeyDown(game.player.Keybinds.SelectText) && oldState.IsKeyUp(game.player.Keybinds.SelectText))
+            if (state.IsKeyDown(game.Player.Keybinds.SelectText) && oldState.IsKeyUp(game.Player.Keybinds.SelectText))
             {
                 switch (index)
                 {
                     case 0:
-                        game.player.CurrentAction = Action.Standing;
+                        game.Player.CurrentAction = Action.Standing;
                         break;
                     case 1:
-                        game.player.CurrentAction = Action.ChangingKeybinds;
+                        game.Player.CurrentAction = Action.ChangingKeybinds;
                         break;
                     case 2:
-                        game.player.CurrentAction = Action.ChangingVolyme;
+                        game.Player.CurrentAction = Action.ChangingVolyme;
                         break;
                     case 3:
                         game.Exit();
@@ -81,10 +81,10 @@ namespace ShadowsOfTomorrow
                 return;
             }
 
-            if (state.IsKeyDown(game.player.Keybinds.DialogueDown) && oldState.IsKeyUp(game.player.Keybinds.DialogueDown))
+            if (state.IsKeyDown(game.Player.Keybinds.DialogueDown) && oldState.IsKeyUp(game.Player.Keybinds.DialogueDown))
                 index++;
 
-            else if (state.IsKeyDown(game.player.Keybinds.DialogueUp) && oldState.IsKeyUp(game.player.Keybinds.DialogueUp))
+            else if (state.IsKeyDown(game.Player.Keybinds.DialogueUp) && oldState.IsKeyUp(game.Player.Keybinds.DialogueUp))
                 index--;
 
             if (index > menuOptions.Count - 1)

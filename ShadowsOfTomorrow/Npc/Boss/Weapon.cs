@@ -43,18 +43,18 @@ namespace ShadowsOfTomorrow
 
         public virtual void Update(GameTime gameTime)
         {
-            if (game.player.animationManager.CurrentCropTexture == null || !game.player.HitBox.Intersects(hitbox))
+            if (game.Player.animationManager.CurrentCropTexture == null || !game.Player.HitBox.Intersects(hitbox) || game.Player.CurrentAction == Action.Stunned)
                 return;
-            game.player.animationManager.CurrentCropTexture.GetData(game.player.TextureData);
+            game.Player.animationManager.CurrentCropTexture.GetData(game.Player.TextureData);
             texture.GetData(TextureData);
 
-            if (HasIntersectingPixels(game.player.HitBox, game.player.TextureData, HitBox, TextureData))
+            if (HasIntersectingPixels(game.Player.HitBox, game.Player.TextureData, HitBox, TextureData))
             {
                 hasHitSomeone = true;
-                if (game.player.playerMovement.HorizontalSpeed >= 0)
-                    game.player.OnHit(Facing.Right);
+                if (game.Player.playerMovement.HorizontalSpeed >= 0)
+                    game.Player.OnHit(Facing.Right);
                 else
-                    game.player.OnHit(Facing.Left);
+                    game.Player.OnHit(Facing.Left);
             }
         }
 

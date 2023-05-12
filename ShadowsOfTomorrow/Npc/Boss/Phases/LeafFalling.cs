@@ -37,7 +37,7 @@ namespace ShadowsOfTomorrow
                 leaf.Update(gameTime);
 
             for (int i = 0; i < leaves.Count; i++)
-                if (leaves[i].Hitbox.Top >= game.player.camera.Window.Bottom || leaves[i].hasHitSomeone)
+                if (leaves[i].Hitbox.Top >= game.Player.camera.Window.Bottom || leaves[i].hasHitSomeone)
                     leaves.Remove(leaves[i]);
 
             if (boss.isStunned)
@@ -53,10 +53,10 @@ namespace ShadowsOfTomorrow
 
             for (int i = 1; i <= leafAmount; i++)
             {
-                int min = game.player.camera.Window.Left + ((i - 1) * boss.HitBox.Left / leafAmount);
+                int min = game.Player.camera.Window.Left + ((i - 1) * boss.HitBox.Left / leafAmount);
                 int maxi = i * boss.HitBox.Left / leafAmount;
-                Vector2 location = new(random.Next(min, maxi), game.player.camera.Window.Top);
-                Vector2 dir = location - game.player.Location.ToVector2();
+                Vector2 location = new(random.Next(min, maxi), game.Player.camera.Window.Top);
+                Vector2 dir = location - game.Player.Location.ToVector2();
                 dir.Normalize();
                 float x = -dir.X;
                 if (x >= max)

@@ -23,7 +23,7 @@ namespace ShadowsOfTomorrow
             this.boss = boss;
             this.game = game;
             leafFalling = new(game, 1, boss);
-            leafBlowing = new(game, 1, game.player, boss);
+            leafBlowing = new(game, 1, game.Player, boss);
             branchingSide = new(game, boss);
             branchingUp = new(game, boss);
         }
@@ -33,7 +33,7 @@ namespace ShadowsOfTomorrow
             switch (boss.ActivePhase)
             {
                 case Phase.Dialogue:
-                    game.windowManager.Draw(spriteBatch);
+                    game.WindowManager.Draw(spriteBatch);
                     break;
                 case Phase.LeafFalling:
                     leafFalling.Draw(spriteBatch);
@@ -56,7 +56,7 @@ namespace ShadowsOfTomorrow
             switch (boss.ActivePhase)
             {
                 case Phase.Dialogue:
-                    game.windowManager.Update(gameTime);
+                    game.WindowManager.Update(gameTime);
                     break;
                 case Phase.LeafFalling:
                     leafFalling.Update(gameTime);

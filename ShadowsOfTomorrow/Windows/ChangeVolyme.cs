@@ -29,7 +29,7 @@ namespace ShadowsOfTomorrow
 
         public ChangeVolyme(Game1 game, StartScreen startScreen, PausScreen pausScreen)
         {
-            window = new(game.player.camera.Window.Center + new Point(-size.X / 2, -100 - size.Y / 2), size);
+            window = new(game.Player.camera.Window.Center + new Point(-size.X / 2, -100 - size.Y / 2), size);
             font = game.Content.Load<SpriteFont>("Fonts/DialogueFont");
             texture = game.Content.Load<Texture2D>("UI/ChangeBox_x3");
             barTexture = game.Content.Load<Texture2D>("UI/Bar_x3");
@@ -46,48 +46,42 @@ namespace ShadowsOfTomorrow
             upperBarLocation = window.Center.ToVector2() + new Vector2(-200, -100);
             lowerBarLocation = window.Center.ToVector2() + new Vector2(-200, 100);
 
-            upperLeafLocation = new(upperBarLocation.X + game.musicManager.SoundEffectsVolume * 300, upperBarLocation.Y);
+            upperLeafLocation = new(upperBarLocation.X + game.MusicManager.SoundEffectsVolume * 300, upperBarLocation.Y);
             lowerLeafLocation = new(lowerBarLocation.X + MusicManager.MusicVolume * 300, lowerBarLocation.Y);
 
             KeyboardState state = Keyboard.GetState();
-            window = new(game.player.camera.Window.Center + new Point(-size.X / 2, -100 - size.Y / 2), size);
+            window = new(game.Player.camera.Window.Center + new Point(-size.X / 2, -100 - size.Y / 2), size);
 
-            if (game.player.LastSpawnPoint == 0)
-                game.player.camera.Follow(Point.Zero);
+            if (game.Player.LastSpawnPoint == 0)
+                game.Player.camera.Follow(Point.Zero);
 
             const float increment = 0.05f;
 
-            if (state.IsKeyDown(game.player.Keybinds.RightKey) && oldState.IsKeyUp(game.player.Keybinds.RightKey) && index == 0 && game.musicManager.SoundEffectsVolume <= 1 - increment)
-                game.musicManager.SoundEffectsVolume += increment;
-            if (state.IsKeyDown(game.player.Keybinds.LeftKey) && oldState.IsKeyUp(game.player.Keybinds.LeftKey) && index == 0 && game.musicManager.SoundEffectsVolume >= increment)
-                game.musicManager.SoundEffectsVolume -= increment;
-            if (state.IsKeyDown(game.player.Keybinds.RightKey) && oldState.IsKeyUp(game.player.Keybinds.RightKey) && index == 1 && MusicManager.MusicVolume <= 1 - increment)
-            {
-                game.musicManager.isFadingIn = false;
+            if (state.IsKeyDown(game.Player.Keybinds.RightKey) && oldState.IsKeyUp(game.Player.Keybinds.RightKey) && index == 0 && game.MusicManager.SoundEffectsVolume <= 1 - increment)
+                game.MusicManager.SoundEffectsVolume += increment;
+            if (state.IsKeyDown(game.Player.Keybinds.LeftKey) && oldState.IsKeyUp(game.Player.Keybinds.LeftKey) && index == 0 && game.MusicManager.SoundEffectsVolume >= increment)
+                game.MusicManager.SoundEffectsVolume -= increment;
+            if (state.IsKeyDown(game.Player.Keybinds.RightKey) && oldState.IsKeyUp(game.Player.Keybinds.RightKey) && index == 1 && MusicManager.MusicVolume <= 1 - increment)
                 MusicManager.MusicVolume += increment;
-            }
-            if (state.IsKeyDown(game.player.Keybinds.LeftKey) && oldState.IsKeyUp(game.player.Keybinds.LeftKey) && index == 1 && MusicManager.MusicVolume > increment)
-            {
-                game.musicManager.isFadingIn = false;
+            if (state.IsKeyDown(game.Player.Keybinds.LeftKey) && oldState.IsKeyUp(game.Player.Keybinds.LeftKey) && index == 1 && MusicManager.MusicVolume > increment)
                 MusicManager.MusicVolume -= increment;
-            }
 
 
-            if (state.IsKeyDown(game.player.Keybinds.SelectText) && oldState.IsKeyUp(game.player.Keybinds.SelectText) && index == 2)
+            if (state.IsKeyDown(game.Player.Keybinds.SelectText) && oldState.IsKeyUp(game.Player.Keybinds.SelectText) && index == 2)
             {
-                if (game.player.LastSpawnPoint == 0)
-                    game.player.CurrentAction = Action.InMainMenu;
+                if (game.Player.LastSpawnPoint == 0)
+                    game.Player.CurrentAction = Action.InMainMenu;
                 else
-                    game.player.CurrentAction = Action.Paused;
+                    game.Player.CurrentAction = Action.Paused;
 
                 startScreen.SetOldState(state);
                 pausScreen.SetOldState(state);
             }
 
-            if (state.IsKeyDown(game.player.Keybinds.DialogueDown) && oldState.IsKeyUp(game.player.Keybinds.DialogueDown))
+            if (state.IsKeyDown(game.Player.Keybinds.DialogueDown) && oldState.IsKeyUp(game.Player.Keybinds.DialogueDown))
                 index++;
 
-            else if (state.IsKeyDown(game.player.Keybinds.DialogueUp) && oldState.IsKeyUp(game.player.Keybinds.DialogueUp))
+            else if (state.IsKeyDown(game.Player.Keybinds.DialogueUp) && oldState.IsKeyUp(game.Player.Keybinds.DialogueUp))
                 index--;
 
             if (index > 2)

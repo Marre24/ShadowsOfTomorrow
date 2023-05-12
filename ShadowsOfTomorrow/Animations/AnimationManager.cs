@@ -37,14 +37,6 @@ namespace ShadowsOfTomorrow
             _timer = 0;
         }
 
-        public void Stop()
-        {
-            _timer = 0;
-
-            _animation.CurrentFrame = 0;
-        }
-
-
         public void Draw(SpriteBatch spriteBatch, Vector2 position, Facing? facing)
         {
             if (_animation == null) 

@@ -11,15 +11,14 @@ namespace ShadowsOfTomorrow
     public class BranchHuntStart
     {
         public bool HaveBeenTriggered { get; internal set; }
-        public bool HaveShownCutscene { get; internal set; }
         public bool HaveEnded { get; internal set; }
         private Rectangle rec;
         private double timeSinceStop = 0;
         private const double interval = 2;
+        private bool haveShownCutscene = false;
 
         public BranchHuntStart()
         { 
-            HaveShownCutscene = false;
             HaveBeenTriggered = false;
             HaveEnded = false;
         }
@@ -33,23 +32,23 @@ namespace ShadowsOfTomorrow
 
             if (camera.Window.Left - 96 - 2 >= map.Left)
             {
-                if (HaveShownCutscene)
+                if (haveShownCutscene)
                     rec.Location -= new Point(4, 0);
                 rec.Location -= new Point(2, 0);
                 player.Facing = Facing.Left;
             }
             else if (map.branchWall.HitBox.Right < 15 * 48)
             {
-                map.branchWall.Move(HaveShownCutscene);
+                map.branchWall.Move(haveShownCutscene);
                 timeSinceStop = gameTime.TotalGameTime.TotalSeconds;
             }
-            else if (gameTime.TotalGameTime.TotalSeconds >= timeSinceStop + interval || HaveShownCutscene)
+            else if (gameTime.TotalGameTime.TotalSeconds >= timeSinceStop + interval || haveShownCutscene)
                 End(player);
         }
 
         private void End(Player player)
         {
-            HaveShownCutscene = true;
+            haveShownCutscene = true;
             HaveEnded = true;
             player.CurrentAction = Action.Standing;
         }

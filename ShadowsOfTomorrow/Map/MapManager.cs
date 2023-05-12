@@ -15,11 +15,10 @@ namespace ShadowsOfTomorrow
         public Map ActiveMap { get => Maps[ActiveMapIndex]; }
         public List<Map> Maps => _maps.Keys.ToList();
 
-        public int ActiveMapIndex { get => _activeMapIndex; private set => _activeMapIndex = value; }
+        public int ActiveMapIndex { get; private set; }
 
         private readonly Dictionary<Map, List<BackgroundLayer>> _maps = new();
         private readonly Game1 game;
-        private int _activeMapIndex;
 
         public MapManager(Game1 game) 
         {
@@ -48,13 +47,13 @@ namespace ShadowsOfTomorrow
         public void SetActiveMapTo(int i, TmxObject spawnPoint)
         {
             ActiveMapIndex = i;
-            game.player.Location = new((int)spawnPoint.X, (int)spawnPoint.Y);
+            game.Player.Location = new((int)spawnPoint.X, (int)spawnPoint.Y);
         }
 
         public void SetActiveMapTo(string name, TmxObject spawnPoint)
         {
             ActiveMapIndex = Maps.FindIndex(map => map.MapName == name);
-            game.player.Location = new ((int)spawnPoint.X, (int)spawnPoint.Y);
+            game.Player.Location = new ((int)spawnPoint.X, (int)spawnPoint.Y);
         }
 
         public void Update(GameTime gameTime)
@@ -68,14 +67,14 @@ namespace ShadowsOfTomorrow
 
                 case 4:
                     if (ActiveMap.branchCutScene.HaveEnded)
-                        game.musicManager.Play(game.Content.Load<Song>("Music/ItsPizzaTime"));
+                        game.MusicManager.Play(game.Content.Load<Song>("Music/ItsPizzaTime"));
                     break;
                 case 6:
-                    game.musicManager.Play(game.Content.Load<Song>("Music/TheDeathIDeservioli"));
+                    game.MusicManager.Play(game.Content.Load<Song>("Music/TheDeathIDeservioli"));
                     break;
 
                 default:
-                    game.musicManager.Stop();
+                    game.MusicManager.Stop();
                     break;
             }
         }
@@ -91,21 +90,21 @@ namespace ShadowsOfTomorrow
         {
             if (spawnpoint == 13)
             {
-                if (!game.windowManager.dialogueWindow.haveGivenInformation && game.player.LastSpawnPoint != 0 && game.player.Health > 0)
+                if (!game.WindowManager.dialogueWindow.haveGivenInformation && game.Player.LastSpawnPoint != 0 && game.Player.Health > 0)
                     return;
 
-                game.windowManager.SetDialogue(Maps.First(map => map.MapName == "BossRoom").boss.Dialogue);
+                game.WindowManager.SetDialogue(Maps.First(map => map.MapName == "BossRoom").boss.Dialogue);
                 Maps.First(map => map.MapName == "BossRoom").boss.Reset();
-                game.player.CurrentAction = Action.Talking;
+                game.Player.CurrentAction = Action.Talking;
             }
 
             if (spawnpoint == 0)
             {
-                game.player.CurrentAction = Action.InMainMenu;
+                game.Player.CurrentAction = Action.InMainMenu;
                 return;
             }
 
-            game.player.LastSpawnPoint = spawnpoint;
+            game.Player.LastSpawnPoint = spawnpoint;
             foreach (Map map in Maps)
             {
                 TmxObjectGroup spawnpoints = map.TmxMap.ObjectGroups.First(group => group.Name.ToLower() == "spawnpoints");

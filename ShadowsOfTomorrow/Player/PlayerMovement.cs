@@ -237,7 +237,7 @@ namespace ShadowsOfTomorrow
             if (player.isNextToWall && player.ActiveMach == Mach.Walking)
                 HorizontalSpeed = 0;
 
-            (bool canMoveX, bool canMoveY) = game.mapManager.ActiveMap.WillCollide(player, gameTime);
+            (bool canMoveX, bool canMoveY) = game.MapManager.ActiveMap.WillCollide(player, gameTime);
 
             CheckForWallClimb(canMoveX, canMoveY);
 

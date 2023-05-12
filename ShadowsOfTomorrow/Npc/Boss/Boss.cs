@@ -89,7 +89,7 @@ namespace ShadowsOfTomorrow
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            if (wasKilled && game.player.CurrentAction != Action.Talking)
+            if (wasKilled && game.Player.CurrentAction != Action.Talking)
                 return;
             spriteBatch.Draw(texture, location.ToVector2(), null, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.9f);
 
@@ -112,7 +112,7 @@ namespace ShadowsOfTomorrow
             blackRectangle = new(HitBox.Center + new Point(-200, - (texture.Height / 2) -120), new(400, 100));
             greenRectangle = new(blackRectangle.Location + new Point(5,5), new(50 + (stunOMeter * blackRectangle.Size.X - 90) / ActivePhaseClass.maxStunOMeter, blackRectangle.Size.Y - 10));
 
-            if (oldPhase == Phase.Dialogue && game.player.CurrentAction != Action.Talking)
+            if (oldPhase == Phase.Dialogue && game.Player.CurrentAction != Action.Talking)
                 SetNewPhase();
 
             if (stunOMeter >= ActivePhaseClass.maxStunOMeter)
@@ -122,13 +122,13 @@ namespace ShadowsOfTomorrow
                 phaseManager.Update(gameTime);
 
 
-            if (game.player.animationManager.CurrentCropTexture != null && !isStunned && _activePhase != Phase.Dialogue && game.player.HitBox.Intersects(HitBox))
+            if (game.Player.animationManager.CurrentCropTexture != null && !isStunned && _activePhase != Phase.Dialogue && game.Player.HitBox.Intersects(HitBox))
             {
-                game.player.animationManager.CurrentCropTexture.GetData(game.player.TextureData);
+                game.Player.animationManager.CurrentCropTexture.GetData(game.Player.TextureData);
                 texture.GetData(TextureData);
 
-                if (HasIntersectingPixels(game.player.HitBox, game.player.TextureData, HitBox, TextureData))
-                    game.player.OnHit(Facing.Right);
+                if (HasIntersectingPixels(game.Player.HitBox, game.Player.TextureData, HitBox, TextureData))
+                    game.Player.OnHit(Facing.Right);
             }
 
             oldPhase = _activePhase;
@@ -177,7 +177,7 @@ namespace ShadowsOfTomorrow
             if (!isStunned)
                 return;
 
-            game.musicManager.Play(game.Content.Load<SoundEffect>("Music/OofMine"), true);
+            game.MusicManager.Play(game.Content.Load<SoundEffect>("Music/OofMine"), true);
 
             health--;
             talkingIndex++;
@@ -186,12 +186,12 @@ namespace ShadowsOfTomorrow
             stunOMeter = 0;
             isStunned = false;
 
-            game.player.playerMovement.HorizontalSpeed = -20;
-            game.player.playerMovement.VerticalSpeed = -15;
-            game.player.isGrounded = false;
+            game.Player.playerMovement.HorizontalSpeed = -20;
+            game.Player.playerMovement.VerticalSpeed = -15;
+            game.Player.isGrounded = false;
 
-            game.player.CurrentAction = Action.Talking;
-            game.windowManager.SetDialogue(Dialogue);
+            game.Player.CurrentAction = Action.Talking;
+            game.WindowManager.SetDialogue(Dialogue);
             _activePhase = Phase.Dialogue;
         }
 
@@ -230,7 +230,7 @@ namespace ShadowsOfTomorrow
 
         internal void GetHitByLeaf()
         {
-            game.musicManager.Play(game.Content.Load<SoundEffect>("Music/OofMine"), true);
+            game.MusicManager.Play(game.Content.Load<SoundEffect>("Music/OofMine"), true);
             stunOMeter++;
         }
     }

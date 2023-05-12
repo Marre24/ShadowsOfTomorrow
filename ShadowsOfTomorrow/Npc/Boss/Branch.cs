@@ -29,7 +29,6 @@ namespace ShadowsOfTomorrow
         {
             spriteBatch.Draw(texture, hitbox, null, Color.White, 0, Vector2.Zero, SpriteEffects.None, 0.92f);
 
-            //base.Draw(spriteBatch);
         }
 
         public override void Update(GameTime gameTime)

@@ -20,12 +20,13 @@ namespace ShadowsOfTomorrow
         private readonly Game1 game;
         private readonly Camera camera;
         private readonly SpriteFont font;
-        public Player player;
-        int phaseCounter = 0;
-        int dialogueCounter = 0;
-        float transparency = 0;
-        float whiteTransparency = 0;
-        bool isGoingUp = true;
+        private readonly Player player;
+        private int phaseCounter = 0;
+        private int dialogueCounter = 0;
+        private float transparency = 0;
+        private float whiteTransparency = 0;
+        private bool isGoingUp = true;
+        private double timeSinceWordUpdate = 3.5;
 
         readonly List<string> dialogueList1 = new()
         {
@@ -53,6 +54,7 @@ namespace ShadowsOfTomorrow
         private readonly Texture2D red;
         private readonly Texture2D white;
         readonly Point size = new(900, 420);
+        private double time;
 
         public StartCutScene(Game1 game, Camera camera, Player player)
         {
@@ -69,8 +71,6 @@ namespace ShadowsOfTomorrow
             this.camera = camera;
             this.player = player;
         }
-
-        double timeSinceWordUpdate = 3.5;
 
         public void Update(GameTime gameTime)
         {
@@ -124,7 +124,7 @@ namespace ShadowsOfTomorrow
 
             if (dialogueCounter == 9)
             {
-                game.musicManager.Play(game.Content.Load<SoundEffect>("Music/ShipLaunch"));
+                game.MusicManager.Play(game.Content.Load<SoundEffect>("Music/ShipLaunch"));
             }
 
             if (dialogueCounter < dialogueList1.Count)
@@ -145,7 +145,7 @@ namespace ShadowsOfTomorrow
         {
             camera.Follow(Point.Zero, true);
 
-            game.musicManager.Play(game.Content.Load<SoundEffect>("Music/Alarm"));
+            game.MusicManager.Play(game.Content.Load<SoundEffect>("Music/Alarm"));
 
             if (gameTime.TotalGameTime.TotalSeconds > dialogueList2[dialogueCounter].Split(" ").Length * 1 + timeSinceWordUpdate)
             {
@@ -154,7 +154,7 @@ namespace ShadowsOfTomorrow
             }
             if (dialogueCounter == 3)
             {
-                game.musicManager.Play(game.Content.Load<SoundEffect>("Music/ShipChrash"));
+                game.MusicManager.Play(game.Content.Load<SoundEffect>("Music/ShipChrash"));
             }
 
             if (isGoingUp)
@@ -184,11 +184,10 @@ namespace ShadowsOfTomorrow
             spriteBatch.Draw(red, camera.Window, null, Color.White * transparency, 0, Vector2.Zero, SpriteEffects.None, 0.93f);
         }
 
-        private double time;
 
         public void PhaseThree(GameTime gameTime)
         {
-            game.musicManager.Play(game.Content.Load<SoundEffect>("Music/EarRinging"));
+            game.MusicManager.Play(game.Content.Load<SoundEffect>("Music/EarRinging"));
             camera.Follow(Point.Zero, true);
 
             whiteTransparency += 0.007f;

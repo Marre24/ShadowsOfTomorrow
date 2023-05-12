@@ -34,14 +34,14 @@ namespace ShadowsOfTomorrow
             font = game.Content.Load<SpriteFont>("Fonts/DialogueFont");
             titleFont = game.Content.Load<SpriteFont>("Fonts/TitleFont");
             this.game = game;
-            startCutScene = new(game, game.player.camera, game.player);
+            startCutScene = new(game, game.Player.camera, game.Player);
         }
 
         public void Update(GameTime gameTime)
         {
             KeyboardState state = Keyboard.GetState();
 
-            game.player.camera.Follow(Point.Zero);
+            game.Player.camera.Follow(Point.Zero);
 
             if (!startCutScene.HaveEnded)
             {
@@ -49,22 +49,22 @@ namespace ShadowsOfTomorrow
                 return;
             }
 
-            if (state.IsKeyDown(game.player.Keybinds.SelectText) && oldState.IsKeyUp(game.player.Keybinds.SelectText))
+            if (state.IsKeyDown(game.Player.Keybinds.SelectText) && oldState.IsKeyUp(game.Player.Keybinds.SelectText))
             {
                 switch (index)
                 {
                     case 0:
-                        if (game.player.LastSpawnPoint == 0)
-                            game.mapManager.GoToSpawnPoint(1);
+                        if (game.Player.LastSpawnPoint == 0)
+                            game.MapManager.GoToSpawnPoint(1);
                         else
-                            game.mapManager.GoToSpawnPoint(game.player.LastSpawnPoint);
-                        game.player.CurrentAction = Action.Standing;
+                            game.MapManager.GoToSpawnPoint(game.Player.LastSpawnPoint);
+                        game.Player.CurrentAction = Action.Standing;
                         break;
                     case 1:
-                        game.player.CurrentAction = Action.ChangingKeybinds;
+                        game.Player.CurrentAction = Action.ChangingKeybinds;
                         break;
                     case 2:
-                        game.player.CurrentAction = Action.ChangingVolyme;
+                        game.Player.CurrentAction = Action.ChangingVolyme;
                         break;
                     case 3:
                         game.Exit();
@@ -76,10 +76,10 @@ namespace ShadowsOfTomorrow
                 return;
             }
 
-            if (state.IsKeyDown(game.player.Keybinds.DialogueDown) && oldState.IsKeyUp(game.player.Keybinds.DialogueDown))
+            if (state.IsKeyDown(game.Player.Keybinds.DialogueDown) && oldState.IsKeyUp(game.Player.Keybinds.DialogueDown))
                 index++;
 
-            else if (state.IsKeyDown(game.player.Keybinds.DialogueUp) && oldState.IsKeyUp(game.player.Keybinds.DialogueUp))
+            else if (state.IsKeyDown(game.Player.Keybinds.DialogueUp) && oldState.IsKeyUp(game.Player.Keybinds.DialogueUp))
                 index--;
 
             if (index > menuOptions.Count - 1)
@@ -98,7 +98,7 @@ namespace ShadowsOfTomorrow
                 return;
             }
 
-            spriteBatch.DrawString(titleFont, "Shadows Of Tomorrow", game.player.camera.Window.Center.ToVector2() - new Vector2(titleFont.MeasureString("Shadows Of Tomorrow").X / 2, 250), Color.White);
+            spriteBatch.DrawString(titleFont, "Shadows Of Tomorrow", game.Player.camera.Window.Center.ToVector2() - new Vector2(titleFont.MeasureString("Shadows Of Tomorrow").X / 2, 250), Color.White);
             
             for (int i = 0; i < menuOptions.Count; i++)
             {

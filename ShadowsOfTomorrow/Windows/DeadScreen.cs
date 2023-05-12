@@ -47,13 +47,13 @@ namespace ShadowsOfTomorrow
         public void Update(GameTime gameTime)
         {
             player.camera.Follow(window.Center);
-            game.musicManager.Stop();
-            game.musicManager.Play((Song)null);
+            game.MusicManager.Stop();
+            game.MusicManager.Play((Song)null);
 
             if (Keyboard.GetState().IsKeyDown(Keys.Space))
             {
-                game.mapManager.GoToSpawnPoint(player.LastSpawnPoint);
-                game.mapManager.ActiveMap.Reset();
+                game.MapManager.GoToSpawnPoint(player.LastSpawnPoint);
+                game.MapManager.ActiveMap.Reset();
                 player.Reset();
             }
 
@@ -68,7 +68,7 @@ namespace ShadowsOfTomorrow
             buttonHitBox = new(window.Center - new Point(120, -206), new(46 * 6, 13 * 6));
             if (mouseState.LeftButton == ButtonState.Pressed)
             {
-                game.mapManager.GoToSpawnPoint(player.LastSpawnPoint);
+                game.MapManager.GoToSpawnPoint(player.LastSpawnPoint);
                 player.Reset();
             }
         }

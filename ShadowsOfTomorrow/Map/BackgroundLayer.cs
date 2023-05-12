@@ -10,13 +10,13 @@ namespace ShadowsOfTomorrow
 {
     public class BackgroundLayer : IUpdateAndDraw
     {
-        private readonly Texture2D texture;
         Rectangle Rec1 => new((int)position.X, (int)position.Y, texture.Width, texture.Height);
         Rectangle Rec2 => new((int)position2.X, (int)position2.Y, texture.Width, texture.Height);
 
         private Vector2 position;
         private Vector2 position2;
         private readonly Game1 game;
+        private readonly Texture2D texture;
         private readonly float depth;
         private readonly float moveScale;
         private readonly float defaultMoveSpeed;
@@ -38,18 +38,18 @@ namespace ShadowsOfTomorrow
             {
                 position.X += defaultMoveSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
                 position2.X += defaultMoveSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                CheckPosition(game.player);
+                CheckPosition(game.Player);
 
                 return;
             }
 
-            float speed = game.player.playerMovement.HorizontalSpeed;
+            float speed = game.Player.playerMovement.HorizontalSpeed;
 
             position.X += (speed * moveScale) * (float)gameTime.ElapsedGameTime.TotalSeconds;
             position2.X += (speed * moveScale) * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
 
-            CheckPosition(game.player);
+            CheckPosition(game.Player);
         }
 
         private void CheckPosition(Player player)

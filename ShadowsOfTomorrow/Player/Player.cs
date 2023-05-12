@@ -127,7 +127,7 @@ namespace ShadowsOfTomorrow
         {
             animationManager.Draw(spriteBatch, Location.ToVector2(), Facing);
 
-            if (game.mapManager.ActiveMapIndex != 6)
+            if (game.MapManager.ActiveMapIndex != 6)
                 return;
 
             for (int i = 0; i < health; i++)
@@ -147,24 +147,24 @@ namespace ShadowsOfTomorrow
             if (CurrentAction != Action.WachingCutScene)
             {
                 if (hasDestroyedBlock && destroyBlockTime + 0.6 > gameTime.TotalGameTime.TotalSeconds)
-                    camera.Follow(new(new(hitBox.Left, hitBox.Bottom - 32), new(32, 32)), game.mapManager.ActiveMap, true);
+                    camera.Follow(new(new(hitBox.Left, hitBox.Bottom - 32), new(32, 32)), game.MapManager.ActiveMap, true);
                 else
                 {
                     destroyBlockTime = 0;
                     hasDestroyedBlock = false;
-                    camera.Follow(new(new(hitBox.Left, hitBox.Bottom - 32), new(32, 32)), game.mapManager.ActiveMap);
+                    camera.Follow(new(new(hitBox.Left, hitBox.Bottom - 32), new(32, 32)), game.MapManager.ActiveMap);
                 }
             }
 
 
             input.CheckPlayerInput(gameTime);
-            game.mapManager.ActiveMap.IsNextToWall(this);
+            game.MapManager.ActiveMap.IsNextToWall(this);
             playerMovement.Update(gameTime);
             animationManager.Update(gameTime);
             playerAttacking.Update(gameTime);
 
             if (playerMovement.HorizontalSpeed != 0)
-                game.musicManager.Play(ActiveMach == Mach.Running || ActiveMach == Mach.Sprinting, gameTime);
+                game.MusicManager.Play(ActiveMach == Mach.Running || ActiveMach == Mach.Sprinting, gameTime);
 
             OldMach = ActiveMach;
             OldAction = CurrentAction;
@@ -309,7 +309,7 @@ namespace ShadowsOfTomorrow
             if (CurrentAction == Action.Stunned)
                 return;
 
-            game.musicManager.Play(game.Content.Load<SoundEffect>("Music/OofRoblox"), true);
+            game.MusicManager.Play(game.Content.Load<SoundEffect>("Music/OofRoblox"), true);
 
             playerMovement.StandUp();
             health--;
@@ -337,7 +337,7 @@ namespace ShadowsOfTomorrow
 
         internal bool HaveBlockOverHead(Rectangle rec)
         {
-            return game.mapManager.ActiveMap.IsInsideWall(new Rectangle(new(rec.Left, rec.Bottom - 95), new(57, 95)));
+            return game.MapManager.ActiveMap.IsInsideWall(new Rectangle(new(rec.Left, rec.Bottom - 95), new(57, 95)));
         }
     }
 }

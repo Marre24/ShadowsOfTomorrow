@@ -26,8 +26,8 @@ namespace ShadowsOfTomorrow
 
         public override void Update(GameTime gameTime)
         {
-            if (hitbox.Intersects(game.player.HitBox))
-                game.player.Die();
+            if (hitbox.Intersects(game.Player.HitBox))
+                game.Player.Die();
 
             if (Location.X >= 45 * 48)
                 speed = 3;
