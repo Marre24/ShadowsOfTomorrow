@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Audio;
 
 namespace ShadowsOfTomorrow
 {
+    //Beskriver hur snabbt spelaren springer
     public enum Mach
     {
         Standing,
@@ -17,6 +18,7 @@ namespace ShadowsOfTomorrow
         Sprinting,
     }
 
+    //Beskriver vad spelaren gör och ska göra, driver hela playerklassen framåt
     public enum Action
     {
         Standing,
@@ -171,7 +173,7 @@ namespace ShadowsOfTomorrow
             OldSize = Size;
         }
 
-        private void UpdateHitBox()
+        public void UpdateHitBox()
         {
             int yDiff = Math.Abs(OldSize.Y - Size.Y);
             int xDiff = Math.Abs(OldSize.X - Size.X);
@@ -180,7 +182,7 @@ namespace ShadowsOfTomorrow
                 Location += new Point(0, yDiff);
             if (Size.Y > OldSize.Y)
                 Location -= new Point(0, yDiff);
-            if (Facing == Facing.Right && xDiff > 0 && xDiff < 20)
+            if (Facing == Facing.Right && xDiff > 0 && xDiff < 20 && CurrentAction != Action.Stunned)
                 Location += new Point(xDiff, 0);
 
             hitBox = new Rectangle(hitBox.Location, Size);
@@ -188,7 +190,7 @@ namespace ShadowsOfTomorrow
 
         private void SetAnimation()
         {
-            if (!isGrounded && CurrentAction != Action.WallClimbing && CurrentAction != Action.GroundPounding)
+            if (!isGrounded && CurrentAction != Action.WallClimbing && CurrentAction != Action.GroundPounding && CurrentAction != Action.Stunned && !game.MapManager.ActiveMap.IsUnderCeiling(this))
             {
                 if (playerMovement.VerticalSpeed > 0)
                     animationManager.Play(falling);

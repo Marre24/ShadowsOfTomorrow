@@ -11,9 +11,18 @@ namespace ShadowsOfTomorrow
         private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
+        //Dom här instanserna tar är de fyra klasser som tar hand om vad som ska göras och när
+
+        //Spelaren fokuserar på allt spelare relaterade grejer
         public Player Player { get; private set; }
+
+        //Mapmanagern uppdaterar och hanterar allt som läses in i .tmx filerna
         public MapManager MapManager { get; private set; }
+
+        //windowmanagern uppdaterar det som inte är mapp relaterat men som fyller upp skärmen
         public WindowManager WindowManager { get; private set; }
+
+        //musicmanagern spelar upp ljudeffekter samt 
         public MusicManager MusicManager { get; private set; }
 
         public Game1()
@@ -37,7 +46,7 @@ namespace ShadowsOfTomorrow
 
 
             MapManager.AddMaps();
-            MapManager.GoToSpawnPoint(0);
+            MapManager.GoToSpawnPoint(1);
 
             base.Initialize();
         }
@@ -49,6 +58,8 @@ namespace ShadowsOfTomorrow
 
         protected override void Update(GameTime gameTime)
         {
+            //updaterar det som behövs
+
             if (Player.CurrentAction == Action.Ended || Player.CurrentAction == Action.Dead || Player.CurrentAction == Action.InMainMenu || Player.CurrentAction == Action.ChangingKeybinds || Player.CurrentAction == Action.Paused || Player.CurrentAction == Action.ChangingVolyme)
             {
                 WindowManager.Update(gameTime);
@@ -66,6 +77,8 @@ namespace ShadowsOfTomorrow
 
         protected override void Draw(GameTime gameTime)
         {
+            //Ritar det som behövs
+
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             _spriteBatch.Begin(transformMatrix: Player.camera.Transform, sortMode: SpriteSortMode.FrontToBack);

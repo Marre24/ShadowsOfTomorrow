@@ -21,6 +21,7 @@ namespace ShadowsOfTomorrow
         private readonly float moveScale;
         private readonly float defaultMoveSpeed;
 
+        //Skapar och hanterar ett specifikt lager så det blir en parralax effekt
         public BackgroundLayer(Game1 game, float depth, float moveScale, Vector2 position, string textureName, float defaultMoveSpeed = 0.0f)
         {
             texture = game.Content.Load<Texture2D>("Backgrounds/" + textureName);
@@ -52,6 +53,7 @@ namespace ShadowsOfTomorrow
             CheckPosition(game.Player);
         }
 
+        //kollar så att bakgrunden är fylld av bilder
         private void CheckPosition(Player player)
         {
             if (!player.camera.Window.Intersects(Rec1) && !player.camera.Window.Intersects(Rec2))

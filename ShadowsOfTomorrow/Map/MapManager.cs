@@ -44,12 +44,6 @@ namespace ShadowsOfTomorrow
             _maps.Add(new(game, "BossRoom", this), layers.ToList());
         }
 
-        public void SetActiveMapTo(int i, TmxObject spawnPoint)
-        {
-            ActiveMapIndex = i;
-            game.Player.Location = new((int)spawnPoint.X, (int)spawnPoint.Y);
-        }
-
         public void SetActiveMapTo(string name, TmxObject spawnPoint)
         {
             ActiveMapIndex = Maps.FindIndex(map => map.MapName == name);
@@ -64,10 +58,20 @@ namespace ShadowsOfTomorrow
 
             switch (ActiveMapIndex)
             {
-
+                case 0 or 1:
+                    game.MusicManager.Play(game.Content.Load<Song>("Music/Mondays"));
+                    break;
+                case 2 or 3:
+                    game.MusicManager.Play(game.Content.Load<Song>("Music/UnearthlyBlues"));
+                    break;
                 case 4:
                     if (ActiveMap.branchCutScene.HaveEnded)
                         game.MusicManager.Play(game.Content.Load<Song>("Music/ItsPizzaTime"));
+                    else
+                        game.MusicManager.Play(game.Content.Load<Song>("Music/Meatophobia"));
+                    break;
+                case 5:
+                    game.MusicManager.Play(game.Content.Load<Song>("Music/HoppinOutdoors"));
                     break;
                 case 6:
                     game.MusicManager.Play(game.Content.Load<Song>("Music/TheDeathIDeservioli"));

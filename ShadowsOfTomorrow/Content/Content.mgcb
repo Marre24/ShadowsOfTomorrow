@@ -117,11 +117,29 @@
 /processorParam:Quality=Best
 /build:Music/FastStep3.wav
 
+#begin Music/HoppinOutdoors.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/HoppinOutdoors.mp3
+
 #begin Music/ItsPizzaTime.mp3
 /importer:Mp3Importer
 /processor:SongProcessor
 /processorParam:Quality=Best
 /build:Music/ItsPizzaTime.mp3
+
+#begin Music/Meatophobia.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/Meatophobia.mp3
+
+#begin Music/Mondays.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/Mondays.mp3
 
 #begin Music/OofMine.wav
 /importer:WavImporter
@@ -170,6 +188,12 @@
 /processor:SongProcessor
 /processorParam:Quality=Best
 /build:Music/TheDeathIDeservioli.mp3
+
+#begin Music/UnearthlyBlues.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/UnearthlyBlues.mp3
 
 #begin Sprites/Bosses/BoneTurtle.png
 /importer:TextureImporter

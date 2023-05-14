@@ -9,7 +9,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TiledSharp;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace ShadowsOfTomorrow
 {
@@ -283,7 +282,7 @@ namespace ShadowsOfTomorrow
             return platformLayer;
         }
 
-        internal void IsNextToWall(Player player)
+        public void IsNextToWall(Player player)
         {
             foreach (var layer in GetCollisionLayers())
                 foreach (var tile in layer.Tiles)
@@ -303,6 +302,20 @@ namespace ShadowsOfTomorrow
                     }
 
             player.isNextToWall = false;
+        }
+
+        public bool IsUnderCeiling(Player player)
+        {
+            foreach (var layer in GetCollisionLayers())
+                foreach (var tile in layer.Tiles)
+                    if (layer.Name.ToLower() != "destroyabletiles" && tile.Gid != 0)
+                    {
+                        Rectangle rec = new(new(tile.X * size.X, tile.Y * size.Y), size);
+                        if (rec.Intersects(new(player.HitBox.Left, player.HitBox.Bottom - 96 - 1, player.Size.X, 96)))
+                            return true;
+                    }
+
+            return false;
         }
 
         private void WriteHelpingText(Keybinds keybinds, SpriteBatch spriteBatch)
@@ -347,7 +360,6 @@ namespace ShadowsOfTomorrow
 
         public void Reset()
         {
-            game.MusicManager.Reset();
             destroyedTiles = new();
             if (branchWall != null)
             {
